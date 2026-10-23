@@ -159,6 +159,12 @@ async function loadNotices(){
   const b=ME&&boardOf(ME.department);
   $("dcard").hidden=!b;if(b){$("dh").textContent=BOARD[b]+" নোটিশ বোর্ড";await board(b,"dnotices")}
 }
+async function shrink(f){
+  const m=await createImageBitmap(f),r=Math.min(1,1600/Math.max(m.width,m.height));
+  const c=document.createElement("canvas");c.width=Math.round(m.width*r);c.height=Math.round(m.height*r);
+  c.getContext("2d").drawImage(m,0,0,c.width,c.height);
+  return new Promise(ok=>c.toBlob(ok,"image/jpeg",.85));
+}
 const claim=async()=>{const k=crypto.randomUUID();localStorage.setItem(SID,k);await sb.rpc("claim_session",{sid:k})};
 const valid=async()=>{const k=localStorage.getItem(SID);if(!k)return false;const {data}=await sb.rpc("check_session",{sid:k});return data===true};
 const setBoards=d=>{$("aBoard").innerHTML=(d.role==="super_admin"?["gallery","dental_radio","physio"]:[boardOf(d.department)]).filter(Boolean).map(k=>`<option value="${k}">${BOARD[k]}</option>`).join("")};
@@ -211,9 +217,11 @@ $("admForm").onsubmit=async e=>{
   const {data:{session}}=await sb.auth.getSession();
   let url=null;const f=$("aImg").files[0];
   if(f){
-    if(!f.type.startsWith("image/")||f.size>2*1024*1024){msg("admMsg","শুধু ছবি দিন, ২ MB এর বেশি নয়।",0);return}
-    const p=Date.now()+"_"+Math.random().toString(36).slice(2,8)+"."+(f.name.split(".").pop()||"jpg").toLowerCase();
-    const up=await sb.storage.from("uploads").upload(p,f,{contentType:f.type});
+    if(!f.type.startsWith("image/")){msg("admMsg","শুধু ছবি ফাইল দিন।",0);return}
+    let b;try{b=await shrink(f)}catch(x){msg("admMsg","ছবিটি পড়া যায়নি। অন্য ছবি দিন।",0);return}
+    if(!b||b.size>2*1024*1024){msg("admMsg","ছবি এখনো ২ MB-র বেশি।",0);return}
+    const p=Date.now()+"_"+Math.random().toString(36).slice(2,8)+".jpg";
+    const up=await sb.storage.from("uploads").upload(p,b,{contentType:"image/jpeg"});
     if(up.error){msg("admMsg","ছবি আপলোড হয়নি।",0);return}
     url=sb.storage.from("uploads").getPublicUrl(p).data.publicUrl;
   }
