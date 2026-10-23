@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f2a43">
+<title>বি গ্যালারি – IHT রাজশাহী</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@600;800&family=Hind+Siliguri:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf4f6;--card:#fff;--ink:#0f2a43;--mute:#587087;--teal:#0e8f8a;--tint:#d9f2ee;--line:#d6e5e8;--urg:#ffe7ea;--coral:#d93a4a;--bad:#c62828;--shadow:0 12px 32px rgba(15,42,67,.12)}
+@media(prefers-color-scheme:dark){:root{--bg:#0a1722;--card:#112433;--ink:#e8f1f6;--mute:#8fa9bb;--teal:#3cc7bf;--tint:#14363a;--line:#1e3a4c;--urg:#3a1c26;--coral:#ff7a85;--bad:#ff8a80;--shadow:0 12px 32px rgba(0,0,0,.4)}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.7 "Hind Siliguri",system-ui,sans-serif;padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+.hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(150deg,#0f2a43 0%,#0a6f78 62%,#14a89f 100%);padding:calc(44px + env(safe-area-inset-top)) 22px 82px;border-radius:0 0 34px 34px}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.28),rgba(255,255,255,0) 70%)}
+.hero::before{width:260px;height:260px;right:-70px;top:-60px}
+.hero::after{width:180px;height:180px;left:-60px;bottom:-70px}
+.hero>*{position:relative;max-width:640px;margin-left:auto;margin-right:auto}
+h1{font:800 58px/1.1 "Baloo Da 2","Hind Siliguri",sans-serif;margin:0}
+.sub{margin:6px auto 0;font-size:19px;font-weight:500;opacity:.95}
+.pill,.chips span{display:inline-block;padding:2px 14px;border-radius:999px;font-size:15px}
+.pill{background:rgba(255,255,255,.18);margin-top:12px}
+.hero .chips{margin-top:16px}
+.hero .chips span{border:1px solid rgba(255,255,255,.4);margin:0 8px 8px 0}
+main{position:relative;max-width:640px;margin:-46px auto 0;padding:0 16px}
+.card{background:var(--card);border-radius:22px;padding:22px 20px;box-shadow:var(--shadow);margin-bottom:16px}
+h2{font:600 26px/1.3 "Baloo Da 2","Hind Siliguri",sans-serif;margin:0 0 6px}
+.mute{color:var(--mute);margin:0}
+.note{margin-top:12px;padding:12px 16px;border-radius:16px;background:var(--tint)}
+.note.urgent{background:var(--urg)}
+.note b{font-size:18px}
+.note p{margin:2px 0}
+.note small{color:var(--mute)}
+.tag{display:inline-block;margin-right:8px;padding:0 10px;border-radius:999px;background:var(--coral);color:#fff;font-size:14px}
+.soon{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:var(--card);border-radius:20px;padding:16px;box-shadow:var(--shadow)}
+.tile i{display:block;font-style:normal;font-size:30px;line-height:1.3}
+.tile b{display:block;font-weight:700}
+.tile span{display:inline-block;margin-top:4px;padding:0 10px;border-radius:999px;background:var(--tint);color:var(--teal);font-size:14px;font-weight:500}
+label{display:block;margin-top:14px;font-weight:500}
+input,select{width:100%;height:50px;font:inherit;padding:0 14px;margin-top:4px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.go{margin-top:20px;width:100%;height:52px;font:700 18px "Hind Siliguri",sans-serif;border:0;border-radius:14px;background:linear-gradient(135deg,#0a6f78,#14a89f);color:#fff;cursor:pointer}
+.go:active{transform:scale(.98)}
+.msg{margin:14px 0 0;min-height:1.5em}
+.ok{color:var(--teal)}
+.bad{color:var(--bad)}
+.av{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font:800 36px "Baloo Da 2",sans-serif;color:#fff;background:linear-gradient(135deg,#0f2a43,#14a89f);margin-bottom:10px}
+.who{font:600 28px/1.3 "Baloo Da 2","Hind Siliguri",sans-serif;margin:0}
+.chips span{background:var(--tint);color:var(--teal);font-weight:500;margin:10px 8px 0 0}
+#bar{position:fixed;left:0;right:0;bottom:0;display:flex;gap:4px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--card);box-shadow:0 -8px 28px rgba(15,42,67,.14);border-radius:24px 24px 0 0}
+#bar button{flex:1;border:0;background:none;color:var(--mute);font:500 14px/1.3 "Hind Siliguri",sans-serif;padding:6px 2px;border-radius:16px;cursor:pointer}
+#bar button i{display:block;font-style:normal;font-size:22px}
+#bar button.on{background:var(--tint);color:var(--teal);font-weight:700}
+</style>
+</head>
+<body>
+<header class="hero">
+<h1>বি গ্যালারি</h1>
+<p class="sub">ইনস্টিটিউট অব হেলথ টেকনোলজি, রাজশাহী</p>
+<span class="pill">শিক্ষাবর্ষ ২০২৫-২৬</span>
+<div class="chips"><span>ফিজিওথেরাপি</span><span>ডেন্টাল</span><span>রেডিওথেরাপি</span></div>
+</header>
+
+<main>
+<div id="home">
+<section class="card">
+<h2>নোটিশ</h2>
+<div id="notices"><p class="mute">লোড হচ্ছে...</p></div>
+</section>
+<div class="soon">
+<div class="tile"><i>📅</i><b>দৈনিক রুটিন</b><span>শীঘ্রই</span></div>
+<div class="tile"><i>📚</i><b>বই ও নোট</b><span>শীঘ্রই</span></div>
+<div class="tile"><i>📝</i><b>প্রশ্নের সমাধান</b><span>শীঘ্রই</span></div>
+<div class="tile"><i>💬</i><b>প্রশ্ন-উত্তর</b><span>শীঘ্রই</span></div>
+</div>
+</div>
+
+<section class="card" id="reg" hidden>
+<h2>রেজিস্ট্রেশন</h2>
+<p class="mute">ভর্তির রোল নম্বর দিন। নাম ও বিভাগ তালিকা থেকে নিজেই বসবে।</p>
+<form id="regForm">
+<label>ভর্তির রোল নম্বর<input id="rRoll" inputmode="numeric" required></label>
+<label>ইমেইল<input id="rEmail" type="email" autocomplete="email" required></label>
+<label>পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)<input id="rPass" type="password" minlength="6" autocomplete="new-password" required></label>
+<label>আপনি<select id="rGender" required><option value="">বেছে নিন</option><option value="male">ছাত্র</option><option value="female">ছাত্রী</option></select></label>
+<label>কোন জেলা থেকে এসেছেন<input id="rDist" required></label>
+<button class="go">রেজিস্ট্রেশন করুন</button>
+<p id="regMsg" class="msg" role="status"></p>
+</form>
+</section>
+
+<section class="card" id="login" hidden>
+<h2>লগইন</h2>
+<form id="logForm">
+<label>ইমেইল<input id="lEmail" type="email" autocomplete="email" required></label>
+<label>পাসওয়ার্ড<input id="lPass" type="password" autocomplete="current-password" required></label>
+<button class="go">লগইন করুন</button>
+<p id="logMsg" class="msg" role="status"></p>
+</form>
+</section>
+
+<section class="card" id="me" hidden>
+<div class="av" id="meAv"></div>
+<p class="who" id="meName"></p>
+<div class="chips" id="meChips"></div>
+</section>
+</main>
+
+<nav id="bar"></nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script>
+const sb=supabase.createClient("https://hahuyaxhgzdgqgwzizti.supabase.co","sb_publishable_LfEdlV4gk4pZ4aV_kPpiXg_nUSFj7N6");
+const $=id=>document.getElementById(id);
+const ROLE={student:"শিক্ষার্থী",captain:"ক্যাপ্টেন",super_admin:"সুপার অ্যাডমিন"};
+const DEPT={Dental:"ডেন্টাল"};
+const en=s=>s.replace(/[০-৯]/g,d=>"০১২৩৪৫৬৭৮৯".indexOf(d)).trim();
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function msg(id,t,ok){const e=$(id);e.textContent=t;e.className="msg "+(ok?"ok":"bad")}
+function show(v){
+  ["home","reg","login","me"].forEach(x=>$(x).hidden=x!==v);
+  document.querySelectorAll("#bar button[data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  window.scrollTo(0,0);
+}
+async function loadNotices(){
+  const {data,error}=await sb.from("notices").select("title,body,is_emergency,created_at").order("created_at",{ascending:false}).limit(10);
+  const box=$("notices");
+  if(error||!data||!data.length){box.innerHTML='<p class="mute">এখনো কোনো নোটিশ নেই। ক্যাপ্টেন নোটিশ দিলে এখানে দেখা যাবে।</p>';return}
+  box.innerHTML=data.map(n=>`<div class="note${n.is_emergency?" urgent":""}"><b>${n.is_emergency?'<span class="tag">জরুরি</span>':""}${esc(n.title)}</b><p>${esc(n.body||"")}</p><small>${new Date(n.created_at).toLocaleDateString("bn-BD")}</small></div>`).join("");
+}
+async function refresh(){
+  const {data:{session}}=await sb.auth.getSession();
+  const logged=!!session;
+  const items=logged?[["home","🏠","হোম"],["me","👤","আমার পেজ"]]:[["home","🏠","হোম"],["reg","✍️","রেজিস্ট্রেশন"],["login","🔑","লগইন"]];
+  $("bar").innerHTML=items.map(i=>`<button data-v="${i[0]}"><i>${i[1]}</i>${i[2]}</button>`).join("")+(logged?'<button id="out"><i>🚪</i>লগআউট</button>':"");
+  if(!logged){show("home");return}
+  const {data}=await sb.from("profiles").select("full_name,roll,department,role").eq("id",session.user.id).single();
+  if(data){
+    $("meAv").textContent=data.full_name.trim().charAt(0);
+    $("meName").textContent=data.full_name;
+    $("meChips").innerHTML=`<span>${esc(DEPT[data.department]||data.department)}</span><span>রোল ${esc(data.roll)}</span><span>${esc(ROLE[data.role]||"")}</span>`;
+  }
+  show("me");
+}
+$("bar").onclick=async e=>{
+  const b=e.target.closest("button");if(!b)return;
+  if(b.id==="out"){await sb.auth.signOut();return refresh()}
+  show(b.dataset.v);
+};
+$("regForm").onsubmit=async e=>{
+  e.preventDefault();msg("regMsg","অপেক্ষা করুন...",1);
+  const {data,error}=await sb.auth.signUp({
+    email:$("rEmail").value.trim(),
+    password:$("rPass").value,
+    options:{data:{roll:en($("rRoll").value),gender:$("rGender").value,district:$("rDist").value.trim()}}
+  });
+  if(error){msg("regMsg","রেজিস্ট্রেশন হয়নি। রোল নম্বর ঠিক আছে কিনা দেখুন। এই রোলে আগেই রেজিস্ট্রেশন হয়ে থাকলে ক্যাপ্টেনকে জানান।",0);return}
+  if(!data.session){msg("regMsg","রেজিস্ট্রেশন হয়েছে। এবার লগইন করুন।",1);return}
+  msg("regMsg","",1);await refresh();
+};
+$("logForm").onsubmit=async e=>{
+  e.preventDefault();msg("logMsg","অপেক্ষা করুন...",1);
+  const {error}=await sb.auth.signInWithPassword({email:$("lEmail").value.trim(),password:$("lPass").value});
+  if(error){msg("logMsg","লগইন হয়নি। ইমেইল ও পাসওয়ার্ড আবার দেখুন।",0);return}
+  msg("logMsg","",1);await refresh();
+};
+refresh();loadNotices();
+</script>
+</body>
+</html>
