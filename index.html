@@ -59,6 +59,8 @@ textarea:focus{outline:3px solid var(--teal);outline-offset:2px}
 #bar button{flex:1;border:0;background:none;color:var(--mute);font:500 14px/1.3 "Hind Siliguri",sans-serif;padding:6px 2px;border-radius:16px;cursor:pointer}
 #bar button i{display:block;font-style:normal;font-size:22px}
 #bar button.on{background:var(--tint);color:var(--teal);font-weight:700}
+.n-student{color:#2563eb}.n-captain{color:#d97706}.n-super_admin{color:#9333ea}
+.note img{display:block;max-width:100%;border-radius:12px;margin:8px 0}
 </style>
 </head>
 <body>
@@ -71,10 +73,8 @@ textarea:focus{outline:3px solid var(--teal);outline-offset:2px}
 
 <main>
 <div id="home">
-<section class="card">
-<h2>নোটিশ</h2>
-<div id="notices"><p class="mute">লোড হচ্ছে...</p></div>
-</section>
+<section class="card"><h2>গ্যালারি নোটিশ বোর্ড</h2><div id="notices"><p class="mute">লোড হচ্ছে...</p></div></section>
+<section class="card" id="dcard" hidden><h2 id="dh"></h2><div id="dnotices"></div></section>
 <div class="soon">
 <div class="tile"><i>📅</i><b>দৈনিক রুটিন</b><span>শীঘ্রই</span></div>
 <div class="tile"><i>📚</i><b>বই ও নোট</b><span>শীঘ্রই</span></div>
@@ -88,6 +88,7 @@ textarea:focus{outline:3px solid var(--teal);outline-offset:2px}
 <p class="mute">ভর্তির রোল নম্বর দিন। নাম ও বিভাগ তালিকা থেকে নিজেই বসবে।</p>
 <form id="regForm">
 <label>ভর্তির রোল নম্বর<input id="rRoll" inputmode="numeric" required></label>
+<label>নিবন্ধন কোড (ক্যাপ্টেনের কাছ থেকে নিন)<input id="rCode" inputmode="numeric" required></label>
 <label>ইমেইল<input id="rEmail" type="email" autocomplete="email" required></label>
 <label>পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)<input id="rPass" type="password" minlength="6" autocomplete="new-password" required></label>
 <label>আপনি<select id="rGender" required><option value="">বেছে নিন</option><option value="male">ছাত্র</option><option value="female">ছাত্রী</option></select></label>
@@ -116,8 +117,10 @@ textarea:focus{outline:3px solid var(--teal);outline-offset:2px}
 <section class="card" id="adm" hidden>
 <h2>নোটিশ দিন</h2>
 <form id="admForm">
+<label>কোন বোর্ডে<select id="aBoard"></select></label>
 <label>শিরোনাম<input id="aTitle" required></label>
 <label>বিস্তারিত<textarea id="aBody"></textarea></label>
+<label>ছবি (ঐচ্ছিক, সর্বোচ্চ ২ MB)<input id="aImg" type="file" accept="image/*"></label>
 <label class="chk"><input id="aUrg" type="checkbox">জরুরি নোটিশ</label>
 <button class="go">নোটিশ দিন</button>
 <p id="admMsg" class="msg" role="status"></p>
@@ -143,26 +146,39 @@ function show(v){
   document.querySelectorAll("#bar button[data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
   window.scrollTo(0,0);
 }
-async function loadNotices(){
-  const {data,error}=await sb.from("notices").select("title,body,is_emergency,created_at").order("created_at",{ascending:false}).limit(10);
-  const box=$("notices");
-  if(error||!data||!data.length){box.innerHTML='<p class="mute">এখনো কোনো নোটিশ নেই। ক্যাপ্টেন নোটিশ দিলে এখানে দেখা যাবে।</p>';return}
-  box.innerHTML=data.map(n=>`<div class="note${n.is_emergency?" urgent":""}"><b>${n.is_emergency?'<span class="tag">জরুরি</span>':""}${esc(n.title)}</b><p>${esc(n.body||"")}</p><small>${new Date(n.created_at).toLocaleDateString("bn-BD")}</small></div>`).join("");
+const BOARD={gallery:"গ্যালারি",dental_radio:"ডেন্টাল ও রেডিওথেরাপি",physio:"ফিজিওথেরাপি"};
+const boardOf=d=>{d=(d||"").toLowerCase();return d==="physiotherapy"?"physio":(d==="dental"||d==="radiotherapy")?"dental_radio":null};
+const SID="bg_sid";let ME=null;
+const noteHTML=n=>`<div class="note${n.is_emergency?" urgent":""}"><b>${n.is_emergency?'<span class="tag">জরুরি</span>':""}${esc(n.title)}</b><p>${esc(n.body||"")}</p>${n.image_url?`<img src="${esc(n.image_url)}" alt="" loading="lazy">`:""}<small>${new Date(n.created_at).toLocaleDateString("bn-BD")}</small></div>`;
+async function board(b,box){
+  const {data,error}=await sb.from("notices").select("title,body,image_url,is_emergency,created_at").eq("board",b).order("created_at",{ascending:false}).limit(10);
+  $(box).innerHTML=(error||!data||!data.length)?'<p class="mute">এখনো কোনো নোটিশ নেই।</p>':data.map(noteHTML).join("");
 }
+async function loadNotices(){
+  await board("gallery","notices");
+  const b=ME&&boardOf(ME.department);
+  $("dcard").hidden=!b;if(b){$("dh").textContent=BOARD[b]+" নোটিশ বোর্ড";await board(b,"dnotices")}
+}
+const claim=async()=>{const k=crypto.randomUUID();localStorage.setItem(SID,k);await sb.rpc("claim_session",{sid:k})};
+const valid=async()=>{const k=localStorage.getItem(SID);if(!k)return false;const {data}=await sb.rpc("check_session",{sid:k});return data===true};
+const setBoards=d=>{$("aBoard").innerHTML=(d.role==="super_admin"?["gallery","dental_radio","physio"]:[boardOf(d.department)]).filter(Boolean).map(k=>`<option value="${k}">${BOARD[k]}</option>`).join("")};
+setInterval(async()=>{const {data:{session}}=await sb.auth.getSession();if(session&&!(await valid())){await sb.auth.signOut();localStorage.removeItem(SID);await refresh();alert("অন্য ডিভাইসে এই অ্যাকাউন্টে লগইন হয়েছে। আপনাকে লগআউট করা হলো।")}},20000);
 async function refresh(){
   const {data:{session}}=await sb.auth.getSession();
   const logged=!!session;
   const items=logged?[["home","🏠","হোম"],["me","👤","আমার পেজ"]]:[["home","🏠","হোম"],["reg","✍️","রেজিস্ট্রেশন"],["login","🔑","লগইন"]];
   $("bar").innerHTML=items.map(i=>`<button data-v="${i[0]}"><i>${i[1]}</i>${i[2]}</button>`).join("")+(logged?'<button id="out"><i>🚪</i>লগআউট</button>':"");
-  if(!logged){show("home");return}
-  const {data}=await sb.from("profiles").select("full_name,roll,department,role").eq("id",session.user.id).single();
+  if(!logged){ME=null;loadNotices();show("home");return}
+  if(!(await valid())){await sb.auth.signOut();localStorage.removeItem(SID);return refresh()}
+  const {data}=await sb.from("profiles").select("full_name,roll,department,role,gender").eq("id",session.user.id).single();
+  ME=data;
   if(data){
-    $("meAv").textContent=data.full_name.trim().charAt(0);
-    $("meName").textContent=data.full_name;
+    $("meAv").textContent=data.gender==="female"?"👧":data.gender==="male"?"👦":data.full_name.trim().charAt(0);
+    $("meName").textContent=data.full_name;$("meName").className="who n-"+data.role;
     $("meChips").innerHTML=`<span>${esc(DEPT[data.department]||data.department)}</span><span>রোল ${esc(data.roll)}</span><span>${esc(ROLE[data.role]||"")}</span>`;
   }
-  if(data&&data.role!=="student"){$("out").insertAdjacentHTML("beforebegin",'<button data-v="adm"><i>🛠️</i>অ্যাডমিন</button>');loadAdmin()}
-  show("me");
+  if(data&&data.role!=="student"){$("out").insertAdjacentHTML("beforebegin",'<button data-v="adm"><i>🛠️</i>অ্যাডমিন</button>');setBoards(data);loadAdmin()}
+  loadNotices();show("me");
 }
 $("bar").onclick=async e=>{
   const b=e.target.closest("button");if(!b)return;
@@ -174,17 +190,17 @@ $("regForm").onsubmit=async e=>{
   const {data,error}=await sb.auth.signUp({
     email:$("rEmail").value.trim(),
     password:$("rPass").value,
-    options:{data:{roll:en($("rRoll").value),gender:$("rGender").value,district:$("rDist").value.trim()}}
+    options:{data:{roll:en($("rRoll").value),code:en($("rCode").value),gender:$("rGender").value,district:$("rDist").value.trim()}}
   });
-  if(error){msg("regMsg","রেজিস্ট্রেশন হয়নি। রোল নম্বর ঠিক আছে কিনা দেখুন। এই রোলে আগেই রেজিস্ট্রেশন হয়ে থাকলে ক্যাপ্টেনকে জানান।",0);return}
+  if(error){msg("regMsg","রেজিস্ট্রেশন হয়নি। রোল নম্বর ও কোড ঠিক আছে কিনা দেখুন। এই রোলে আগেই রেজিস্ট্রেশন হয়ে থাকলে ক্যাপ্টেনকে জানান।",0);return}
   if(!data.session){msg("regMsg","রেজিস্ট্রেশন হয়েছে। এবার লগইন করুন।",1);return}
-  msg("regMsg","",1);await refresh();
+  await claim();msg("regMsg","",1);await refresh();
 };
 $("logForm").onsubmit=async e=>{
   e.preventDefault();msg("logMsg","অপেক্ষা করুন...",1);
   const {error}=await sb.auth.signInWithPassword({email:$("lEmail").value.trim(),password:$("lPass").value});
   if(error){msg("logMsg","লগইন হয়নি। ইমেইল ও পাসওয়ার্ড আবার দেখুন।",0);return}
-  msg("logMsg","",1);await refresh();
+  await claim();msg("logMsg","",1);await refresh();
 };
 async function loadAdmin(){
   const {data}=await sb.from("notices").select("id,title,is_emergency,created_at").order("created_at",{ascending:false}).limit(20);
@@ -193,7 +209,15 @@ async function loadAdmin(){
 $("admForm").onsubmit=async e=>{
   e.preventDefault();msg("admMsg","অপেক্ষা করুন...",1);
   const {data:{session}}=await sb.auth.getSession();
-  const {error}=await sb.from("notices").insert({title:$("aTitle").value.trim(),body:$("aBody").value.trim(),is_emergency:$("aUrg").checked,created_by:session.user.id});
+  let url=null;const f=$("aImg").files[0];
+  if(f){
+    if(!f.type.startsWith("image/")||f.size>2*1024*1024){msg("admMsg","শুধু ছবি দিন, ২ MB এর বেশি নয়।",0);return}
+    const p=Date.now()+"_"+Math.random().toString(36).slice(2,8)+"."+(f.name.split(".").pop()||"jpg").toLowerCase();
+    const up=await sb.storage.from("uploads").upload(p,f,{contentType:f.type});
+    if(up.error){msg("admMsg","ছবি আপলোড হয়নি।",0);return}
+    url=sb.storage.from("uploads").getPublicUrl(p).data.publicUrl;
+  }
+  const {error}=await sb.from("notices").insert({title:$("aTitle").value.trim(),body:$("aBody").value.trim(),board:$("aBoard").value,image_url:url,is_emergency:$("aUrg").checked,created_by:session.user.id});
   if(error){msg("admMsg","নোটিশ দেওয়া যায়নি। আবার চেষ্টা করুন।",0);return}
   $("admForm").reset();msg("admMsg","নোটিশ দেওয়া হয়েছে।",1);loadAdmin();loadNotices();
 };
