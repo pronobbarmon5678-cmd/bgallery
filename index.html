@@ -49,6 +49,12 @@ input:focus,select:focus,button:focus-visible{outline:3px solid var(--teal);outl
 .av{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font:800 36px "Baloo Da 2",sans-serif;color:#fff;background:linear-gradient(135deg,#0f2a43,#14a89f);margin-bottom:10px}
 .who{font:600 28px/1.3 "Baloo Da 2","Hind Siliguri",sans-serif;margin:0}
 .chips span{background:var(--tint);color:var(--teal);font-weight:500;margin:10px 8px 0 0}
+textarea{width:100%;min-height:96px;font:inherit;padding:12px 14px;margin-top:4px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+textarea:focus{outline:3px solid var(--teal);outline-offset:2px}
+.chk{display:flex;gap:10px;align-items:center}
+.chk input{width:22px;height:22px;margin:0}
+.ghost{margin-top:16px;padding:8px 22px;font:500 16px "Hind Siliguri",sans-serif;border-radius:999px;border:1.5px solid var(--teal);background:none;color:var(--teal);cursor:pointer}
+.del{float:right;border:0;background:none;color:var(--bad);font:500 15px "Hind Siliguri",sans-serif;cursor:pointer}
 #bar{position:fixed;left:0;right:0;bottom:0;display:flex;gap:4px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--card);box-shadow:0 -8px 28px rgba(15,42,67,.14);border-radius:24px 24px 0 0}
 #bar button{flex:1;border:0;background:none;color:var(--mute);font:500 14px/1.3 "Hind Siliguri",sans-serif;padding:6px 2px;border-radius:16px;cursor:pointer}
 #bar button i{display:block;font-style:normal;font-size:22px}
@@ -105,6 +111,19 @@ input:focus,select:focus,button:focus-visible{outline:3px solid var(--teal);outl
 <div class="av" id="meAv"></div>
 <p class="who" id="meName"></p>
 <div class="chips" id="meChips"></div>
+<button class="ghost" id="out2">লগআউট</button>
+</section>
+<section class="card" id="adm" hidden>
+<h2>নোটিশ দিন</h2>
+<form id="admForm">
+<label>শিরোনাম<input id="aTitle" required></label>
+<label>বিস্তারিত<textarea id="aBody"></textarea></label>
+<label class="chk"><input id="aUrg" type="checkbox">জরুরি নোটিশ</label>
+<button class="go">নোটিশ দিন</button>
+<p id="admMsg" class="msg" role="status"></p>
+</form>
+<h2 style="margin-top:22px">দেওয়া নোটিশ</h2>
+<div id="admList"></div>
 </section>
 </main>
 
@@ -120,7 +139,7 @@ const en=s=>s.replace(/[০-৯]/g,d=>"০১২৩৪৫৬৭৮৯".indexOf(d
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function msg(id,t,ok){const e=$(id);e.textContent=t;e.className="msg "+(ok?"ok":"bad")}
 function show(v){
-  ["home","reg","login","me"].forEach(x=>$(x).hidden=x!==v);
+  ["home","reg","login","me","adm"].forEach(x=>$(x).hidden=x!==v);
   document.querySelectorAll("#bar button[data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
   window.scrollTo(0,0);
 }
@@ -142,6 +161,7 @@ async function refresh(){
     $("meName").textContent=data.full_name;
     $("meChips").innerHTML=`<span>${esc(DEPT[data.department]||data.department)}</span><span>রোল ${esc(data.roll)}</span><span>${esc(ROLE[data.role]||"")}</span>`;
   }
+  if(data&&data.role!=="student"){$("out").insertAdjacentHTML("beforebegin",'<button data-v="adm"><i>🛠️</i>অ্যাডমিন</button>');loadAdmin()}
   show("me");
 }
 $("bar").onclick=async e=>{
@@ -166,6 +186,23 @@ $("logForm").onsubmit=async e=>{
   if(error){msg("logMsg","লগইন হয়নি। ইমেইল ও পাসওয়ার্ড আবার দেখুন।",0);return}
   msg("logMsg","",1);await refresh();
 };
+async function loadAdmin(){
+  const {data}=await sb.from("notices").select("id,title,is_emergency,created_at").order("created_at",{ascending:false}).limit(20);
+  $("admList").innerHTML=(data&&data.length)?data.map(n=>`<div class="note${n.is_emergency?" urgent":""}"><button class="del" data-id="${n.id}">মুছুন</button><b>${esc(n.title)}</b><br><small>${new Date(n.created_at).toLocaleDateString("bn-BD")}</small></div>`).join(""):'<p class="mute">এখনো কোনো নোটিশ দেননি।</p>';
+}
+$("admForm").onsubmit=async e=>{
+  e.preventDefault();msg("admMsg","অপেক্ষা করুন...",1);
+  const {data:{session}}=await sb.auth.getSession();
+  const {error}=await sb.from("notices").insert({title:$("aTitle").value.trim(),body:$("aBody").value.trim(),is_emergency:$("aUrg").checked,created_by:session.user.id});
+  if(error){msg("admMsg","নোটিশ দেওয়া যায়নি। আবার চেষ্টা করুন।",0);return}
+  $("admForm").reset();msg("admMsg","নোটিশ দেওয়া হয়েছে।",1);loadAdmin();loadNotices();
+};
+$("admList").onclick=async e=>{
+  const b=e.target.closest(".del");if(!b||!confirm("এই নোটিশ মুছে ফেলবেন?"))return;
+  const {error}=await sb.from("notices").delete().eq("id",b.dataset.id);
+  if(!error){loadAdmin();loadNotices()}
+};
+$("out2").onclick=async()=>{await sb.auth.signOut();refresh()};
 refresh();loadNotices();
 </script>
 </body>
