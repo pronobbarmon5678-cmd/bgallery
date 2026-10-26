@@ -92,8 +92,9 @@ textarea:focus{outline:3px solid var(--teal);outline-offset:2px}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(217,58,74,.5)}50%{box-shadow:0 0 0 10px rgba(217,58,74,0)}}
 @keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
-body{background:linear-gradient(180deg,#dff3f6 0%,#f3e9fb 55%,#fff1e4 100%) fixed}
-@media(prefers-color-scheme:dark){body{background:linear-gradient(180deg,#0a1722 0%,#1a1030 60%,#26150f 100%) fixed}}
+html{min-height:100%;background:linear-gradient(180deg,#dff3f6 0%,#f3e9fb 55%,#fff1e4 100%);background-color:#f3e9fb}
+body{background:transparent!important;min-height:100%}
+@media(prefers-color-scheme:dark){html{background:linear-gradient(180deg,#0a1722 0%,#1a1030 60%,#26150f 100%);background-color:#1a1030}}
 .hero{background:linear-gradient(120deg,#0f2a43,#0a6f78,#7c3aed,#db2777,#f59e0b,#0a6f78);background-size:400% 400%;animation:flow 14s ease infinite}
 .hero h1{background:linear-gradient(90deg,#fff,#ffe9a8,#aef3ff,#fff);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:flow 6s linear infinite;text-shadow:none;filter:drop-shadow(0 3px 10px rgba(0,0,0,.3))}
 .hero::before{animation:floaty 7s ease-in-out infinite}.hero::after{animation:floaty 9s ease-in-out infinite reverse}
@@ -200,7 +201,7 @@ input,select,textarea{font-size:var(--fs-b)}
 </section>
 
 <section class="card" id="adm" hidden>
-<h2 data-i="postN"></h2>
+<h2 data-i="postN"></h2><p class="mute" id="admHint"></p>
 <form id="admForm">
 <label><span data-i="whichB"></span><select id="aBoard"></select></label>
 <label><span data-i="title"></span><input id="aTitle" required></label>
@@ -234,7 +235,7 @@ b_gallery:"গ্যালারি",b_dental_radio:"ডেন্টাল ও �
 nav_home:"হোম",nav_notice:"নোটিশ",nav_res:"বই-নোট",nav_about:"পরিচিতি",nav_login:"লগইন",nav_me:"আমার পেজ",
 needReg:"রেজিস্ট্রেশন দরকার",needRegT:"ফ্রি বই, শীট ও কমিউনিটি ব্যবহার করতে রেজিস্ট্রেশন করে লগইন করুন। নোটিশ সবাই বিনা লগইনে দেখতে পারবে।",
 t_routine:"দৈনিক রুটিন",t_books:"বই ও শীট",t_sol:"প্রশ্নের সমাধান",t_comm:"কমিউনিটি",soon:"শীঘ্রই",
-about:"আমাদের সম্পর্কে",aboutT:"বি গ্যালারি – ইনস্টিটিউট অব হেলথ টেকনোলজি, রাজশাহীর শিক্ষার্থীদের নিজস্ব সাইট।",madeBy:"ওয়েবসাইট তৈরি করেছেন",est:"প্রতিষ্ঠা",aff:"অধিভুক্ত",addr:"ঠিকানা",phone:"ফোন",email:"ইমেইল",web:"ওয়েবসাইট",role:"পরিচয়",nav_acct:"অ্যাকাউন্ট",
+about:"আমাদের সম্পর্কে",aboutT:"বি গ্যালারি – ইনস্টিটিউট অব হেলথ টেকনোলজি, রাজশাহীর শিক্ষার্থীদের নিজস্ব সাইট।",madeBy:"ওয়েবসাইট তৈরি করেছেন",est:"প্রতিষ্ঠা",aff:"অধিভুক্ত",addr:"ঠিকানা",phone:"ফোন",email:"ইমেইল",web:"ওয়েবসাইট",role:"পরিচয়",nav_acct:"অ্যাকাউন্ট",nav_sadm:"সুপার অ্যাডমিন",nav_cadm:"ক্যাপ্টেন",
 regBtn:"রেজিস্ট্রেশন করুন",regT:"আইডি কার্ডের মোবাইল নম্বর, কোড (নম্বরের শেষ ২ অঙ্ক) ও পাসওয়ার্ড দিন। এই নম্বর ও পাসওয়ার্ড দিয়েই লগইন করবেন।",
 roll:"ভর্তির রোল নম্বর",code:"কোড (মোবাইল নম্বরের শেষ ২ অঙ্ক)",mobile:"মোবাইল নম্বর",pass:"পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)",you:"আপনি",pick:"বেছে নিন",male:"ছাত্র",female:"ছাত্রী",dist:"কোন জেলা থেকে এসেছেন",
 haveAcc:"আগে থেকেই অ্যাকাউন্ট আছে? লগইন",noAcc:"অ্যাকাউন্ট নেই? রেজিস্ট্রেশন",loginBtn:"লগইন করুন",wait:"অপেক্ষা করুন...",
@@ -249,7 +250,7 @@ b_gallery:"Gallery",b_dental_radio:"Dental & Radiotherapy",b_physio:"Physiothera
 nav_home:"Home",nav_notice:"Notices",nav_res:"Books",nav_about:"About",nav_login:"Login",nav_me:"My page",
 needReg:"Registration required",needRegT:"Register and log in to use free books, sheets and the community. Notices are open to everyone without login.",
 t_routine:"Daily routine",t_books:"Books & sheets",t_sol:"Question solutions",t_comm:"Community",soon:"Coming soon",
-about:"About us",aboutT:"B Gallery – the students' own site of the Institute of Health Technology, Rajshahi.",madeBy:"Website made by",est:"Established",aff:"Affiliated with",addr:"Address",phone:"Phone",email:"Email",web:"Website",role:"Role",nav_acct:"Account",
+about:"About us",aboutT:"B Gallery – the students' own site of the Institute of Health Technology, Rajshahi.",madeBy:"Website made by",est:"Established",aff:"Affiliated with",addr:"Address",phone:"Phone",email:"Email",web:"Website",role:"Role",nav_acct:"Account",nav_sadm:"Super admin",nav_cadm:"Captain",
 regBtn:"Register",regT:"Enter your ID-card mobile number, the code (last 2 digits of the number) and a password. You will log in with the same number and password.",
 roll:"Admission roll number",code:"Code (last 2 digits of your mobile number)",mobile:"Mobile number",pass:"Password (at least 6 characters)",you:"You are",pick:"Choose",male:"Male student",female:"Female student",dist:"Home district",
 haveAcc:"Already have an account? Log in",noAcc:"No account? Register",loginBtn:"Log in",wait:"Please wait...",
@@ -282,10 +283,11 @@ $("tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;NB=b.datas
 const loadNotices=()=>{board("gallery","hn",3);drawTabs();board(NB,"nlist",30)};
 function buildBar(){
   const it=[["home","🏠","nav_home"],["notice","📢","nav_notice"],["res","📚","nav_res"],["about","ℹ️","nav_about"],["acct","👤",LOGGED?"nav_me":"nav_login"]];
+  if(LOGGED&&ME&&ME.role!=="student")it.splice(4,0,["adm","🛠️",ME.role==="super_admin"?"nav_sadm":"nav_cadm"]);
   $("bar").innerHTML=it.map(i=>`<button data-v="${i[0]}"><i>${i[1]}</i>${t(i[2])}</button>`).join("");
   hi();
 }
-function hi(){const m={reg:"acct",login:"acct",me:"acct",adm:"acct"}[CUR]||CUR;document.querySelectorAll("#bar button").forEach(b=>b.classList.toggle("on",b.dataset.v===m))}
+function hi(){const m={reg:"acct",login:"acct",me:"acct"}[CUR]||CUR;document.querySelectorAll("#bar button").forEach(b=>b.classList.toggle("on",b.dataset.v===m))}
 function show(v){
   if(v==="res"){$("gate").hidden=LOGGED;$("tiles").hidden=!LOGGED}
   CUR=v;["home","notice","res","about","reg","login","me","adm"].forEach(x=>$(x).hidden=x!==v);hi();window.scrollTo(0,0);
@@ -302,13 +304,14 @@ function applyLang(){
 $("lang").onclick=()=>{lang=lang==="bn"?"en":"bn";localStorage.setItem("bg_lang",lang);applyLang()};
 document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)show(g.dataset.go==="acct"?(LOGGED?"me":"login"):g.dataset.go)});
 $("bar").onclick=e=>{const b=e.target.closest("button");if(!b)return;const v=b.dataset.v;show(v==="acct"?(LOGGED?"me":"login"):v)};
-function drawMe(){
+function drawMe(){admHint();
   if(!ME)return;
   $("meAv").textContent=ME.gender==="female"?"👧":ME.gender==="male"?"👦":ME.full_name.trim().charAt(0);
   $("meName").textContent=ME.full_name;$("meName").className="who n-"+ME.role;
   $("meChips").innerHTML=`<span>${esc(t("d_"+ME.department)===("d_"+ME.department)?ME.department:t("d_"+ME.department))}</span>${ME.roll?`<span>${t("roll_")} ${esc(ME.roll)}</span>`:""}<span>${t("R_"+ME.role)}</span>`;
   $("toAdm").hidden=ME.role==="student";
 }
+function admHint(){const h=$("admHint");if(!h||!ME)return;h.textContent=ME.role==="super_admin"?"সুপার অ্যাডমিন: সব বোর্ডে নোটিশ দিতে ও মুছতে পারবেন, নিচে ব্যবহারকারী ঠিক করতে পারবেন।":"ক্যাপ্টেন: শুধু আপনার নির্ধারিত বোর্ডে নোটিশ দিতে ও নিজের নোটিশ মুছতে পারবেন।"}
 const postable=()=>!ME?[]:ME.role==="super_admin"?BOARDS:[ME.captain_of||boardOf(ME.department)].filter(Boolean);
 const setBoards=()=>{const v=$("aBoard").value;$("aBoard").innerHTML=postable().map(k=>`<option value="${k}">${t("b_"+k)}</option>`).join("");if(v)$("aBoard").value=v};
 async function shrink(f){
@@ -382,11 +385,11 @@ $("admList").onclick=async e=>{
 // ===== সুপার অ্যাডমিন: ব্যবহারকারী ব্যবস্থাপনা =====
 async function loadUsers(){
   const q=$("uq").value.replace(/[,%()*]/g,"").trim();
-  let r=sb.from("profiles").select("id,full_name,roll,department,role,captain_of").order("roll").limit(40);
+  let r=sb.from("profiles").select("id,full_name,roll,phone,department,role,captain_of").order("roll").limit(40);
   if(q)r=r.or(`full_name.ilike.%${q}%,roll.ilike.%${q}%`);
   const {data}=await r;
   const ro=["student","captain","super_admin"];
-  $("ulist").innerHTML=(data||[]).map(u=>`<div class="urow" data-id="${u.id}"><b>${esc(u.full_name)}</b> <small>${esc(u.roll)} · ${esc(u.department)}</small>
+  $("ulist").innerHTML=(data||[]).map(u=>`<div class="urow" data-id="${u.id}"><b>${esc(u.full_name)}</b> <small>${esc(u.roll||u.phone||"")} · ${esc(u.department||"")}</small>
 <select class="ur">${ro.map(x=>`<option value="${x}"${x===u.role?" selected":""}>${t("R_"+x)}</option>`).join("")}</select>
 <select class="uc"><option value="">${t("noCap")}</option>${BOARDS.map(x=>`<option value="${x}"${x===u.captain_of?" selected":""}>${t("b_"+x)}</option>`).join("")}</select>
 <button class="go us">${t("save")}</button></div>`).join("");
