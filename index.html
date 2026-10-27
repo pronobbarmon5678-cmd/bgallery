@@ -234,10 +234,6 @@ input,select,textarea{font-size:var(--fs-b)}
 <button class="go" data-i="postBtn"></button><p id="admMsg" class="msg" role="status"></p>
 </form>
 <h2 style="margin-top:22px" data-i="myN"></h2><div id="admList"></div>
-<div id="umgr" hidden>
-<h2 style="margin-top:22px" data-i="users"></h2>
-<input id="uq" data-p="search"><div id="ulist"></div>
-</div>
 </section>
 </main>
 <nav id="bar"></nav>
@@ -382,8 +378,6 @@ $("out2").onclick=async()=>{await sb.auth.signOut();localStorage.removeItem(SID)
 async function loadAdmin(){
   const {data}=await sb.from("notices").select("id,title,board,is_emergency,created_at").order("created_at",{ascending:false}).limit(20);
   $("admList").innerHTML=(data&&data.length)?data.map(n=>`<div class="note${n.is_emergency?" urgent":""}"><button class="del" data-id="${n.id}">${t("del")}</button><b>${esc(n.title)}</b><br><small>${esc(t("b_"+n.board))} · ${dateS(n.created_at)}</small></div>`).join(""):`<p class="mute">${t("noneMine")}</p>`;
-  $("umgr").hidden=!(ME&&ME.role==="super_admin");
-  if(ME&&ME.role==="super_admin")loadUsers();
 }
 $("admForm").onsubmit=async e=>{
   e.preventDefault();msg("admMsg","wait",1);
@@ -406,25 +400,6 @@ $("admList").onclick=async e=>{
   const b=e.target.closest(".del");if(!b||!confirm(t("delQ")))return;
   const {error}=await sb.from("notices").delete().eq("id",b.dataset.id);
   if(!error){loadAdmin();loadNotices()}
-};
-// ===== সুপার অ্যাডমিন: ব্যবহারকারী ব্যবস্থাপনা =====
-async function loadUsers(){
-  const q=$("uq").value.replace(/[,%()*]/g,"").trim();
-  let r=sb.from("profiles").select("id,full_name,roll,phone,department,role,captain_of").order("roll").limit(40);
-  if(q)r=r.or(`full_name.ilike.%${q}%,roll.ilike.%${q}%`);
-  const {data}=await r;
-  const ro=["student","captain","super_admin"];
-  $("ulist").innerHTML=(data||[]).map(u=>`<div class="urow" data-id="${u.id}"><b>${esc(u.full_name)}</b> <small>${esc(u.roll||u.phone||"")} · ${esc(u.department||"")}</small>
-<select class="ur">${ro.map(x=>`<option value="${x}"${x===u.role?" selected":""}>${t("R_"+x)}</option>`).join("")}</select>
-<select class="uc"><option value="">${t("noCap")}</option>${BOARDS.map(x=>`<option value="${x}"${x===u.captain_of?" selected":""}>${t("b_"+x)}</option>`).join("")}</select>
-<button class="go us">${t("save")}</button></div>`).join("");
-}
-let ut;$("uq").oninput=()=>{clearTimeout(ut);ut=setTimeout(loadUsers,350)};
-$("ulist").onclick=async e=>{
-  const b=e.target.closest(".us");if(!b)return;const row=b.closest(".urow");
-  const role=row.querySelector(".ur").value,cap=row.querySelector(".uc").value||null;
-  const {error}=await sb.from("profiles").update({role,captain_of:role==="captain"?cap:null}).eq("id",row.dataset.id);
-  b.textContent=error?"×":t("saved");setTimeout(()=>b.textContent=t("save"),1500);
 };
 refresh("home");
 </script>
