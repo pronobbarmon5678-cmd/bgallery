@@ -1,0 +1,13 @@
+{
+  "name": "বি গ্যালারি – IHT Rajshahi",
+  "short_name": "বি গ্যালারি",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f2a43",
+  "theme_color": "#0f2a43",
+  "lang": "bn",
+  "icons": [
+    {"src": "logo.png", "sizes": "any", "type": "image/png", "purpose": "any"}
+  ]
+}

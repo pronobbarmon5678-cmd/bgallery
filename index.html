@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f2a43">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="logo.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="বি গ্যালারি">
 <title>B Gallery – IHT Rajshahi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@600;800&family=Hind+Siliguri:wght@400;500;700&display=swap" rel="stylesheet">
@@ -845,6 +850,7 @@ $("admCList").onclick=async e=>{
 (function(){const h=document.querySelector(".hero");for(let i=0;i<9;i++){const b=document.createElement("span");b.className="bub";const z=14+Math.random()*50;b.style.cssText=`width:${z}px;height:${z}px;left:${Math.random()*92}%;top:${Math.random()*92}%;animation-delay:${Math.random()*5}s;animation-duration:${5+Math.random()*6}s`;h.appendChild(b)}})();
 document.addEventListener("pointerdown",e=>{const b=e.target.closest(".go,.ghost,.tabs button,.seg button,.wd button,#bar button,.ib,.tile,#lang,.lnk");if(!b)return;const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height),x=document.createElement("span");x.className="rip";x.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;b.appendChild(x);setTimeout(()=>x.remove(),650)});
 refresh("home");
+if("serviceWorker" in navigator)window.addEventListener("load",()=>{try{navigator.serviceWorker.register("sw.js").catch(()=>{})}catch(x){}});
 </script>
 </body>
 </html>
