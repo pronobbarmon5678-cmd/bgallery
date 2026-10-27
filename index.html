@@ -280,6 +280,48 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 #nlist>.ncard{animation:capIn .55s cubic-bezier(.2,.8,.2,1) both}
 #nlist>.ncard.urgent{animation:capIn .55s cubic-bezier(.2,.8,.2,1) both,pulse 2s infinite}
 #nlist>.ncard:nth-child(2){animation-delay:.12s}#nlist>.ncard:nth-child(3){animation-delay:.24s}#nlist>.ncard:nth-child(n+4){animation-delay:.36s}
+/* ===== v15: class notices (শুধু নতুন যোগ, পুরোনো নিয়ম অপরিবর্তিত) ===== */
+#nlist[hidden],#clist[hidden],#admN[hidden],#admC[hidden]{display:none!important}
+#bar{z-index:20} /* নিচের মেনুর ওপর ক্যাপ্টেন-ব্যানার চেপে বসে ট্যাপ আটকাত, তাই মেনু সবার ওপরে */
+.seg{display:flex;gap:4px;padding:4px;margin:10px 0 6px;border-radius:999px;background:var(--tint)}
+.seg button{position:relative;overflow:hidden;flex:1;min-width:0;border:0;background:none;color:var(--teal);font:600 15px/1.3 "Hind Siliguri",sans-serif;padding:8px 10px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
+.seg button.on{background:linear-gradient(90deg,#0a6f78,#7c3aed);color:#fff;box-shadow:0 4px 12px rgba(124,58,237,.28)}
+.seg button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+#clist{display:grid;gap:14px}
+.cday{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 6px 18px rgba(15,42,67,.08);animation:capIn .55s cubic-bezier(.2,.8,.2,1) both}
+.cday:nth-child(2){animation-delay:.1s}.cday:nth-child(3){animation-delay:.2s}.cday:nth-child(n+4){animation-delay:.3s}
+.cdh{display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;padding:9px 16px;color:#fff;background:linear-gradient(120deg,#0a6f78,#7c3aed,#db2777)}
+.cday.today{border-color:#f59e0b}
+.cday.today .cdh{background:linear-gradient(120deg,#d97706,#db2777)}
+.cdw{font:800 21px/1.35 "Baloo Da 2","Hind Siliguri",sans-serif}
+.cdd{font-size:15px;font-weight:500}
+.cdb{margin-left:auto;padding:0 10px;border-radius:999px;background:rgba(255,255,255,.26);font-size:13px;font-weight:600}
+.ctab{width:100%;border-collapse:collapse}
+.ctab th{padding:5px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--mute);background:var(--tint)}
+.ctab th:first-child,.ctab td.ct{width:108px}
+.ctab tbody{border-top:1px solid var(--line)}
+.ctab tbody:first-of-type{border-top:0}
+.ctab td{padding:10px 16px 8px;vertical-align:top}
+.ctab td.ct{padding-right:6px}
+.ct b{display:block;font-size:15px;line-height:1.4;white-space:nowrap}
+.ct small{display:block;color:var(--mute);font-size:13px;line-height:1.3}
+.cs b{font-size:17px;line-height:1.4}
+.cty{display:inline-block;margin-left:8px;padding:0 10px;border-radius:999px;font-size:13px;font-weight:600;line-height:1.5;vertical-align:2px;background:var(--tint);color:var(--teal)}
+.cty.p{background:#fff0d6;color:#b45309}
+@media(prefers-color-scheme:dark){.cty.p{background:#3a2a10;color:#fbbf24}}
+.ctc{display:flex;align-items:center;gap:6px;margin-top:2px;color:var(--mute);font-size:15px}
+.ctab td.cr{padding:0 16px 10px}
+.crd{padding:6px 12px;border-radius:12px;background:var(--tint);font-size:15px;line-height:1.5;word-break:break-word}
+.crd small{margin-right:6px;font-size:13px;font-weight:700;color:var(--teal)}
+.fld{margin-top:14px}
+.fld>.lbl{display:block;font-size:15px;font-weight:600}
+.wd{display:flex;gap:5px;margin:6px 0 8px}
+.wd button{position:relative;overflow:hidden;flex:1 1 0;min-width:0;padding:8px 0;border-radius:12px;border:1.5px solid var(--teal);background:none;color:var(--teal);font:600 13px/1.2 "Hind Siliguri",sans-serif;cursor:pointer}
+.wd button.on{background:linear-gradient(135deg,#0a6f78,#7c3aed);border-color:transparent;color:#fff}
+.wd button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.cdp{margin:8px 0 0;font-weight:600;color:var(--teal)}
+.cdp:empty{display:none}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 </style>
 </head>
 <body>
@@ -319,7 +361,7 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 <section class="card"><h2 data-i="latest"></h2><div id="hn"></div><button class="ghost" data-go="notice" data-i="allN"></button></section>
 </div>
 
-<section class="card" id="notice" hidden><h2 data-i="notices"></h2><div class="tabs" id="tabs"></div><div class="capb" id="capb" hidden></div><div id="nlist"></div></section>
+<section class="card" id="notice" hidden><h2 data-i="notices"></h2><div class="seg" id="modeSeg"><button type="button" data-m="n" class="on" data-i="c_tabN"></button><button type="button" data-m="c" data-i="c_tabC"></button></div><div class="tabs" id="tabs"></div><div class="capb" id="capb" hidden></div><div id="nlist"></div><div id="clist" hidden></div></section>
 
 <section id="res" hidden>
 <div class="card" id="gate" hidden><h2 data-i="needReg"></h2><p class="mute" data-i="needRegT"></p><button class="go" data-go="reg" data-i="regBtn"></button><button class="link" data-go="login" data-i="haveAcc"></button></div>
@@ -371,6 +413,8 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 </section>
 
 <section class="card" id="adm" hidden>
+<div class="seg" id="admSeg"><button type="button" data-am="n" class="on" data-i="a_note"></button><button type="button" data-am="c" data-i="a_class"></button></div>
+<div id="admN">
 <h2 data-i="postN"></h2><p class="mute" id="admHint"></p>
 <form id="admForm">
 <label><span data-i="whichB"></span><select id="aBoard"></select></label>
@@ -381,6 +425,21 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 <button class="go" data-i="postBtn"></button><p id="admMsg" class="msg" role="status"></p>
 </form>
 <h2 style="margin-top:22px" data-i="myN"></h2><div id="admList"></div>
+</div>
+<div id="admC" hidden>
+<h2 data-i="c_postH"></h2><p class="mute" id="cHint"></p>
+<form id="clsForm">
+<label><span data-i="c_board"></span><select id="cBoard"></select></label>
+<label><span data-i="c_type"></span><select id="cType" required></select></label>
+<label><span data-i="c_teacher"></span><select id="cTeacher" required></select></label>
+<label><span data-i="c_subject"></span><select id="cSubject" required></select></label>
+<div class="fld"><span class="lbl" data-i="c_day"></span><div class="wd" id="cDays"></div><input id="cDate" type="date" required><p class="cdp" id="cDayShow"></p></div>
+<div class="two"><label><span data-i="c_from"></span><select id="cFrom" required></select></label><label><span data-i="c_to"></span><select id="cTo" required></select></label></div>
+<label><span data-i="c_reading"></span><input id="cRead" maxlength="200" data-p="c_readPh"></label>
+<button class="go" data-i="c_post"></button><p id="cMsg" class="msg" role="status"></p>
+</form>
+<h2 style="margin-top:22px" data-i="c_mine"></h2><div id="admCList"></div>
+</div>
 </section>
 </main>
 <nav id="bar"></nav>
@@ -460,8 +519,8 @@ async function board(b,box,lim){
   $(box).innerHTML=(error||!data||!data.length)?`<p class="mute">${t("none")}</p>`:data.map(noteHTML).join("");
 }
 function drawTabs(){const v=visB();if(!v.includes(NB))NB=v[0];$("tabs").innerHTML=v.map(b=>`<button data-b="${b}" class="${b===NB?"on":""}">${t("tb_"+b)}</button>`).join("")}
-$("tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;NB=b.dataset.b;drawTabs();board(NB,"nlist",30);capShow(NB)};
-const loadNotices=()=>{board("gallery","hn",3);drawTabs();board(NB,"nlist",30);capShow(NB)};
+$("tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;NB=b.dataset.b;drawTabs();board(NB,"nlist",30);capShow(NB);clsReload()};
+const loadNotices=()=>{board("gallery","hn",3);drawTabs();board(NB,"nlist",30);capShow(NB);clsReload()};
 const CAPL={bn:{cap:"ক্যাপ্টেন",adm:"গ্যালারি অ্যাডমিন",roll:"রোল",none:"এখনো কোনো ক্যাপ্টেন ঠিক করা হয়নি",hd:"ক্যাপ্টেন"},en:{cap:"Captain",adm:"Gallery admin",roll:"Roll",none:"No captain has been set yet",hd:"Captains"}};
 let capTok=0;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -522,6 +581,7 @@ function applyLang(){
   drawAbout();
   $("rGender").innerHTML=`<option value="">${t("pick")}</option><option value="male">${t("male")}</option><option value="female">${t("female")}</option>`;
   buildBar();loadNotices();drawMe();if(ME&&ME.role!=="student"){setBoards();loadAdmin()}
+  clsApply();
 }
 $("lang").onclick=()=>{lang=lang==="bn"?"en":"bn";localStorage.setItem("bg_lang",lang);applyLang()};
 document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)show(g.dataset.go==="acct"?(LOGGED?"me":"login"):g.dataset.go)});
@@ -602,8 +662,163 @@ $("admList").onclick=async e=>{
   const {error}=await sb.from("notices").delete().eq("id",b.dataset.id);
   if(!error){loadAdmin();loadNotices()}
 };
+// ===================== ক্লাস নোটিশ (v15) =====================
+// শুধু নতুন যোগ করা হয়েছে। নোটিশ, লগইন, ক্যাপ্টেন-নিয়ম আগের মতোই আছে।
+// ▼▼ বিষয়, শিক্ষক ও ক্লাসের ধরনের তালিকা এখানে বদলানো যায় ▼▼
+// প্রতিটি সারি: ["কী (ইংরেজি, ডাটাবেসে সেভ হয়)", "বাংলা নাম", "English name"]
+const CLS={
+  types:[["gallery","গ্যালারি ক্লাস","Gallery class","গ্যালারি","Gallery"],["practical","প্র্যাকটিক্যাল ক্লাস","Practical class","প্র্যাকটিক্যাল","Practical"]],
+  subjects:[["anatomy","অ্যানাটমি","Anatomy"],["physiology","ফিজিওলজি","Physiology"],["computer","কম্পিউটার","Computer"],["community","কমিউনিটি মেডিসিন","Community Medicine"],["english","ইংলিশ","English"]],
+  teachers:[["tuli","তুলি ম্যাডাম","Tuli Madam"],["arifulkabir","আরিফুল কবির স্যার","Ariful Kabir Sir"],["afrozmahmud","আফরোজ মাহমুদ","Afroz Mahmud"],["mahmudul","মাহমুদুল স্যার","Mahmudul Sir"],["milon","মিলন স্যার","Milon Sir"],["sharmin","শারমিন সুলতানা","Sharmin Sultana"],["riya","রিয়া ম্যাডাম","Riya Madam"],["akhtaruzzaman","আখতারুজ্জামান স্যার","Akhtaruzzaman Sir"]],
+  // কোনো বোর্ডের জন্য আলাদা তালিকা লাগলে এখানে দিন, যেমন: physio:{subjects:[["kinesio","কাইনেসিওলজি","Kinesiology"]],teachers:[...]}
+  byBoard:{}
+};
+// ▲▲ তালিকা শেষ ▲▲
+Object.assign(L.bn,{c_tabN:"নোটিশ",c_tabC:"ক্লাস",a_note:"নোটিশ দিন",a_class:"ক্লাস যোগ করুন",
+c_none:"এখনো কোনো ক্লাস দেওয়া হয়নি।",c_setup:"ক্লাস নোটিশ এখনো চালু হয়নি (ডাটাবেসের সেটআপ বাকি আছে)।",c_loadFail:"ক্লাসের তালিকা লোড করা যায়নি।",
+c_thT:"সময়",c_thC:"বিষয়, শিক্ষক ও পড়া",c_read:"পড়া:",c_today:"আজ",c_tom:"আগামীকাল",c_yest:"গতকাল",
+c_postH:"ক্লাস নোটিশ দিন",c_hintC:"ক্যাপ্টেন: শুধু আপনার নিজের ডিপার্টমেন্টের বোর্ডে ক্লাস দিতে ও মুছতে পারবেন।",c_hintS:"সুপার অ্যাডমিন: সব বোর্ডে ক্লাস দিতে ও মুছতে পারবেন।",
+c_board:"কোন বোর্ডে",c_type:"ক্লাসের ধরন",c_teacher:"শিক্ষক",c_subject:"বিষয়",c_day:"বার ও তারিখ",c_date:"তারিখ",c_from:"কয়টা থেকে",c_to:"কয়টা পর্যন্ত",c_reading:"কী পড়া দিয়েছে (ঐচ্ছিক)",c_readPh:"যেমন: অধ্যায় ৩, পৃষ্ঠা ২০-৩৫",c_pick:"— বেছে নিন —",c_post:"ক্লাস নোটিশ দিন",
+c_mine:"দেওয়া ক্লাস",c_noneMine:"এখনো কোনো ক্লাস দেননি।",
+c_errPick:"শিক্ষক, বিষয়, বার/তারিখ ও সময় সব বেছে নিন।",c_errTime:"শেষের সময় শুরুর সময়ের পরে হতে হবে।",c_posted:"ক্লাস নোটিশ দেওয়া হয়েছে।",c_postFail:"ক্লাস দেওয়া যায়নি।",c_perm:"এই বোর্ডে ক্লাস দেওয়ার অনুমতি নেই।",c_delQ:"এই ক্লাস মুছে ফেলবেন?",c_delFail:"ক্লাস মোছা যায়নি।"});
+Object.assign(L.en,{c_tabN:"Notices",c_tabC:"Classes",a_note:"Post notice",a_class:"Add class",
+c_none:"No classes have been posted yet.",c_setup:"Class notices are not switched on yet (database setup is pending).",c_loadFail:"Could not load the class list.",
+c_thT:"Time",c_thC:"Subject, teacher & reading",c_read:"Reading:",c_today:"Today",c_tom:"Tomorrow",c_yest:"Yesterday",
+c_postH:"Post a class notice",c_hintC:"Captain: you can post and delete classes only on your own department's board.",c_hintS:"Super admin: you can post and delete classes on every board.",
+c_board:"Which board",c_type:"Class type",c_teacher:"Teacher",c_subject:"Subject",c_day:"Day & date",c_date:"Date",c_from:"From",c_to:"To",c_reading:"Reading assigned (optional)",c_readPh:"e.g. Chapter 3, pages 20-35",c_pick:"— Choose —",c_post:"Post class notice",
+c_mine:"Posted classes",c_noneMine:"You have not posted any class yet.",
+c_errPick:"Choose teacher, subject, day/date and times.",c_errTime:"End time must be after start time.",c_posted:"Class notice posted.",c_postFail:"Could not post the class.",c_perm:"You are not allowed to post classes on this board.",c_delQ:"Delete this class?",c_delFail:"Could not delete the class."});
+let MODE="n",AM="n",clsTok=0;
+const bnd=s=>String(s).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d]);
+const MBN=["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"],MEN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const WBN=["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"],WEN=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const WBS=["রবি","সোম","মঙ্গল","বুধ","বৃহঃ","শুক্র","শনি"],WES=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const DORD=[6,0,1,2,3,4,5]; // শনি থেকে শুক্র
+// তারিখ শুধু "YYYY-MM-DD" লেখা হিসেবে চলে (UTC গণনা), তাই টাইম-জোনে দিন সরে যায় না
+const pd=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s||"");return m?{y:+m[1],m:+m[2],d:+m[3],u:Date.UTC(+m[1],+m[2]-1,+m[3])}:null};
+const wdOf=s=>{const p=pd(s);return p?new Date(p.u).getUTCDay():-1};
+const dFmt=s=>{const p=pd(s);if(!p)return String(s||"");return lang==="bn"?bnd(p.d)+" "+MBN[p.m-1]+" "+bnd(p.y):p.d+" "+MEN[p.m-1]+" "+p.y};
+const wFull=s=>(lang==="bn"?WBN:WEN)[wdOf(s)]||"";
+const addDays=(s,n)=>new Date(pd(s).u+n*864e5).toISOString().slice(0,10);
+const todayS=()=>{try{const f=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Dhaka",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date()),g=k=>f.find(x=>x.type===k).value;return g("year")+"-"+g("month")+"-"+g("day")}catch(x){const n=new Date();return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0")}};
+const TIMES=(()=>{const a=[];for(let m=420;m<=1140;m+=15)a.push(String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0"));return a})();
+const tparts=s=>{const [h,m]=String(s).slice(0,5).split(":").map(Number),n=(h%12||12)+":"+String(m).padStart(2,"0");return{n:lang==="bn"?bnd(n):n,p:lang==="bn"?(h<5?"রাত":h<12?"সকাল":h<16?"দুপুর":h<18?"বিকাল":h<20?"সন্ধ্যা":"রাত"):(h<12?"AM":"PM")}};
+const fmtT=s=>{const x=tparts(s);return lang==="bn"?x.p+" "+x.n:x.n+" "+x.p};
+const rangeHTML=(a,b)=>{const A=tparts(a),B=tparts(b);return `<b>${A.n} – ${B.n}</b><small>${A.p===B.p?A.p:A.p+" – "+B.p}</small>`};
+const allOf=k=>CLS[k].concat(...Object.values(CLS.byBoard).map(o=>o[k]||[]));
+const lab=(k,v)=>{const r=allOf(k).find(x=>x[0]===v);return r?r[lang==="bn"?1:2]:v};
+const noTbl=e=>/PGRST205|42P01/.test(e.code||"")||/schema cache|does not exist|could not find the table/i.test(e.message||"");
+const netErr=e=>/fetch|load failed|network/i.test(e.message||"");
+function classRow(c){
+  const tp=CLS.types.find(x=>x[0]===c.class_type),tl=tp?tp[lang==="bn"?3:4]:c.class_type;
+  return `<tbody><tr><td class="ct">${rangeHTML(c.start_time,c.end_time)}</td><td class="cs"><b>${esc(lab("subjects",c.subject))}</b><span class="cty ${c.class_type==="practical"?"p":"g"}">${esc(tl)}</span><div class="ctc">${ic("user")} ${esc(lab("teachers",c.teacher))}</div></td></tr>${c.reading?`<tr><td class="cr" colspan="2"><div class="crd"><small>${t("c_read")}</small>${esc(c.reading)}</div></td></tr>`:""}</tbody>`;
+}
+function classHTML(rows){
+  const g=new Map(),td=pd(todayS()).u;
+  rows.forEach(r=>{if(!g.has(r.class_date))g.set(r.class_date,[]);g.get(r.class_date).push(r)});
+  return [...g].map(([d,a])=>{
+    const df=Math.round((pd(d).u-td)/864e5),bd=df===0?t("c_today"):df===1?t("c_tom"):df===-1?t("c_yest"):"";
+    a.sort((x,y)=>String(x.start_time).localeCompare(String(y.start_time)));
+    return `<article class="cday${df===0?" today":""}"><header class="cdh"><span class="cdw">${esc(wFull(d))}</span><span class="cdd">${esc(dFmt(d))}</span>${bd?`<span class="cdb">${bd}</span>`:""}</header><table class="ctab"><thead><tr><th scope="col">${t("c_thT")}</th><th scope="col">${t("c_thC")}</th></tr></thead>${a.map(classRow).join("")}</table></article>`;
+  }).join("");
+}
+async function loadClasses(){
+  const tok=++clsTok,box=$("clist"),b=NB;
+  box.innerHTML='<div class="sk"></div><div class="sk"></div>';
+  let r;try{r=await sb.from("class_notices").select("id,board,class_type,subject,teacher,class_date,start_time,end_time,reading").eq("board",b).order("class_date",{ascending:false}).order("start_time",{ascending:true}).limit(150)}catch(x){r={error:x}}
+  if(tok!==clsTok||MODE!=="c")return;
+  if(r.error){box.innerHTML=`<p class="mute">${esc(noTbl(r.error)?t("c_setup"):netErr(r.error)?t("errNet"):t("c_loadFail"))}</p>`;return}
+  const rows=(r.data||[]).filter(x=>pd(x.class_date));
+  box.innerHTML=rows.length?classHTML(rows):`<p class="mute">${t("c_none")}</p>`;
+}
+const clsReload=()=>{if(MODE==="c")loadClasses()};
+function setMode(m){
+  MODE=m;document.querySelectorAll("#modeSeg button").forEach(x=>x.classList.toggle("on",x.dataset.m===m));
+  $("nlist").hidden=m==="c";$("clist").hidden=m!=="c";
+  if(m==="c")loadClasses();else clsTok++;
+}
+$("modeSeg").onclick=e=>{const b=e.target.closest("button");if(b)setMode(b.dataset.m)};
+function setAdm(m){
+  AM=m;document.querySelectorAll("#admSeg button").forEach(x=>x.classList.toggle("on",x.dataset.am===m));
+  $("admN").hidden=m==="c";$("admC").hidden=m!=="c";
+}
+$("admSeg").onclick=e=>{const b=e.target.closest("button");if(b)setAdm(b.dataset.am)};
+// ---- অ্যাডমিনের ক্লাস যোগ করার ফর্ম (শুধু সিলেক্ট) ----
+function fillSel(id,list,ph){
+  const s=$(id),v=s.value;
+  s.innerHTML=(ph?`<option value="">${t("c_pick")}</option>`:"")+list.map(x=>`<option value="${x[0]}">${esc(x[lang==="bn"?1:2])}</option>`).join("");
+  if(v&&list.some(x=>x[0]===v))s.value=v;
+}
+function fillClassForm(){
+  const bs=postable(),sb_=$("cBoard"),bv=sb_.value;
+  sb_.innerHTML=bs.map(k=>`<option value="${k}">${esc(t("b_"+k))}</option>`).join("");
+  if(bv&&bs.includes(bv))sb_.value=bv;
+  const o=CLS.byBoard[sb_.value]||{};
+  fillSel("cType",CLS.types,false);
+  fillSel("cTeacher",o.teachers||CLS.teachers,true);
+  fillSel("cSubject",o.subjects||CLS.subjects,true);
+  const tl=TIMES.map(x=>[x,fmtT(x),fmtT(x)]);
+  fillSel("cFrom",tl,true);fillSel("cTo",tl,true);
+  if(!$("cDate").value)$("cDate").value=todayS();
+  drawDays();
+}
+function drawDays(){
+  const d=$("cDate").value,cur=wdOf(d);
+  $("cDays").innerHTML=DORD.map(w=>`<button type="button" data-w="${w}" class="${w===cur?"on":""}" aria-pressed="${w===cur}">${(lang==="bn"?WBS:WES)[w]}</button>`).join("");
+  $("cDayShow").textContent=cur>=0?wFull(d)+", "+dFmt(d):"";
+}
+$("cDays").onclick=e=>{
+  const b=e.target.closest("button");if(!b)return;
+  const d=pd($("cDate").value)?$("cDate").value:todayS();
+  $("cDate").value=addDays(d,(+b.dataset.w+1)%7-(wdOf(d)+1)%7);drawDays();
+};
+$("cDate").oninput=drawDays;$("cDate").onchange=drawDays;
+$("cBoard").onchange=fillClassForm;
+$("cFrom").onchange=()=>{
+  const f=$("cFrom").value,to=$("cTo");if(!f)return;
+  if(!to.value||to.value<=f){const i=TIMES.indexOf(f)+4;if(i<TIMES.length)to.value=TIMES[i]}
+};
+async function loadClassAdmin(){
+  const box=$("admCList");
+  let r;try{r=await sb.from("class_notices").select("id,board,class_type,subject,teacher,class_date,start_time,end_time").order("created_at",{ascending:false}).limit(30)}catch(x){r={error:x}}
+  if(r.error){box.innerHTML=`<p class="mute">${esc(noTbl(r.error)?t("c_setup"):t("c_loadFail"))}</p>`;return}
+  const ok=postable(),rows=(r.data||[]).filter(x=>ok.includes(x.board));
+  box.innerHTML=rows.length?rows.map(c=>`<div class="note"><button class="del" data-id="${esc(c.id)}">${t("del")}</button><b>${esc(lab("subjects",c.subject))} · ${esc(lab("teachers",c.teacher))}</b><br><small>${esc(t("b_"+c.board))} · ${esc(wFull(c.class_date))}, ${esc(dFmt(c.class_date))} · ${fmtT(c.start_time)} – ${fmtT(c.end_time)}</small></div>`).join(""):`<p class="mute">${t("c_noneMine")}</p>`;
+}
+function clsApply(){
+  if(!ME||ME.role==="student")return;
+  $("cHint").textContent=t(ME.role==="super_admin"?"c_hintS":"c_hintC");
+  fillClassForm();loadClassAdmin();
+}
+$("clsForm").onsubmit=async e=>{
+  e.preventDefault();
+  const v=id=>$(id).value,row={board:v("cBoard"),class_type:v("cType"),teacher:v("cTeacher"),subject:v("cSubject"),class_date:v("cDate"),start_time:v("cFrom"),end_time:v("cTo"),reading:v("cRead").trim()||null};
+  if(!postable().includes(row.board)){msg("cMsg","c_perm",0);return}
+  if(!row.class_type||!row.teacher||!row.subject||!pd(row.class_date)||!row.start_time||!row.end_time){msg("cMsg","c_errPick",0);return}
+  if(row.end_time<=row.start_time){msg("cMsg","c_errTime",0);return}
+  msg("cMsg","wait",1);
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){msg("cMsg","c_perm",0);return}
+  row.created_by=session.user.id;
+  let r;try{r=await sb.from("class_notices").insert(row)}catch(x){r={error:x}}
+  if(r.error){const er=r.error;
+    if(noTbl(er))msg("cMsg","c_setup",0);
+    else if(/row-level|42501|permission/i.test((er.code||"")+" "+(er.message||"")))msg("cMsg","c_perm",0);
+    else if(netErr(er))msg("cMsg","errNet",0);
+    else msg("cMsg","c_postFail",0,er.message);
+    return}
+  ["cTeacher","cSubject","cFrom","cTo","cRead"].forEach(id=>$(id).value="");
+  msg("cMsg","c_posted",1);loadClassAdmin();clsReload();
+};
+$("admCList").onclick=async e=>{
+  const b=e.target.closest(".del");if(!b||!confirm(t("c_delQ")))return;
+  const {data,error}=await sb.from("class_notices").delete().eq("id",b.dataset.id).select("id");
+  if(error||!data||!data.length){alert(t("c_delFail"));return}
+  loadClassAdmin();clsReload();
+};
+// ===================== ক্লাস নোটিশ শেষ =====================
 (function(){const h=document.querySelector(".hero");for(let i=0;i<9;i++){const b=document.createElement("span");b.className="bub";const z=14+Math.random()*50;b.style.cssText=`width:${z}px;height:${z}px;left:${Math.random()*92}%;top:${Math.random()*92}%;animation-delay:${Math.random()*5}s;animation-duration:${5+Math.random()*6}s`;h.appendChild(b)}})();
-document.addEventListener("pointerdown",e=>{const b=e.target.closest(".go,.ghost,.tabs button,#bar button,.ib,.tile,#lang,.lnk");if(!b)return;const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height),x=document.createElement("span");x.className="rip";x.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;b.appendChild(x);setTimeout(()=>x.remove(),650)});
+document.addEventListener("pointerdown",e=>{const b=e.target.closest(".go,.ghost,.tabs button,.seg button,.wd button,#bar button,.ib,.tile,#lang,.lnk");if(!b)return;const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height),x=document.createElement("span");x.className="rip";x.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;b.appendChild(x);setTimeout(()=>x.remove(),650)});
 refresh("home");
 </script>
 </body>
