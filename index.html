@@ -334,6 +334,38 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 .hero h1{font-size:clamp(20px,5.6vw,28px);line-height:1.5}
 .capb.cb-dental_radio{background-image:linear-gradient(120deg,#1e3a8a,#2563eb,#dc2626,#f97316,#1e3a8a)}
 .ncard.b-dental_radio{border-top-color:#2563eb}
+
+.tile[data-sub]{cursor:pointer}
+.subhd{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.subhd h2{margin:0}
+.back{border:0;background:var(--tint);color:var(--teal);border-radius:999px;padding:6px 14px;font:600 15px "Hind Siliguri",sans-serif;cursor:pointer}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;perspective:1000px}
+@media(max-width:360px){.tgrid{grid-template-columns:1fr}}
+.tcard{position:relative;text-align:center;padding:18px 10px 14px;border-radius:22px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden;cursor:pointer;opacity:0;transform:translateY(28px) scale(.94);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.9,.3,1.2),box-shadow .25s;--h:180;will-change:transform}
+.tcard.in{opacity:1;transform:translateY(0) scale(1)}
+.tcard::before{content:"";position:absolute;inset:0 0 auto 0;height:70px;background:linear-gradient(120deg,hsl(var(--h) 70% 45%),hsl(calc(var(--h) + 60) 75% 55%),hsl(calc(var(--h) + 120) 70% 50%));background-size:250% 250%;animation:flow 8s ease infinite;opacity:.9}
+.tcard::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:tshine 5s ease-in-out infinite;animation-delay:var(--d,0s);pointer-events:none}
+@keyframes tshine{0%,60%{left:-60%}100%{left:130%}}
+.tph{position:relative;z-index:1;width:84px;height:84px;margin:14px auto 10px;border-radius:50%;padding:3px;background:conic-gradient(from 0deg,#14a89f,#7c3aed,#db2777,#f59e0b,#14a89f);animation:tspin 6s linear infinite}
+@keyframes tspin{to{transform:rotate(360deg)}}
+.tph .in{position:absolute;inset:3px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,hsl(var(--h) 65% 38%),hsl(calc(var(--h) + 70) 70% 48%));display:flex;align-items:center;justify-content:center;color:#fff;font:800 32px "Baloo Da 2",sans-serif;animation:tspin 6s linear infinite reverse}
+.tph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tcard:hover .tph{animation-duration:2s}
+.tcard b{position:relative;z-index:1;display:block;font-size:17px;color:var(--ink);line-height:1.3}
+.tcard .ty{position:relative;z-index:1;display:inline-block;margin-top:6px;padding:1px 12px;border-radius:999px;background:var(--tint);color:var(--teal);font-size:14px;font-weight:600}
+.tcard .more{position:relative;z-index:1;max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .35s ease,margin .35s;color:var(--mute);font-size:14px}
+.tcard.open .more{max-height:120px;opacity:1;margin-top:10px}
+.tcard .more div{padding:3px 0}
+.tcard .tap{position:relative;z-index:1;display:block;margin-top:8px;font-size:12px;color:var(--mute);animation:floaty 2.4s ease-in-out infinite}
+.tcard.open .tap{display:none}
+.tcard:active{box-shadow:0 4px 12px rgba(15,42,67,.2)}
+@media(prefers-reduced-motion:reduce){.tcard,.tcard::before,.tcard::after,.tph,.tph .in,.tcard .tap{animation:none!important;transition:none!important}.tcard{opacity:1;transform:none}}
+.sgrp{margin-bottom:18px}
+.sgrp h3{margin:0 0 8px;font-size:18px;color:var(--teal)}
+.sitem{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;margin-bottom:8px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.sitem span{font-weight:500;flex:1 1 140px}
+.sitem .lnk{padding:6px 14px;font-size:14px}
+.sitem .lnk.dl{background:linear-gradient(135deg,#d97706,#db2777)}
 </style>
 </head>
 <body>
@@ -378,11 +410,13 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 <section id="res" hidden>
 <div class="card" id="gate" hidden><h2 data-i="needReg"></h2><p class="mute" data-i="needRegT"></p><button class="go" data-go="reg" data-i="regBtn"></button><button class="link" data-go="login" data-i="haveAcc"></button></div>
 <div class="soon" id="tiles" hidden>
-<div class="tile"><i data-ic="calendar"></i><b data-i="t_routine"></b><span data-i="soon"></span></div>
-<div class="tile"><i data-ic="book"></i><b data-i="t_books"></b><span data-i="soon"></span></div>
+<div class="tile" data-sub="tp"><i data-ic="user"></i><b data-i="t_teach"></b></div>
+<div class="tile" data-sub="sl"><i data-ic="book"></i><b data-i="t_slides"></b></div>
 <div class="tile"><i data-ic="file"></i><b data-i="t_sol"></b><span data-i="soon"></span></div>
 <div class="tile"><i data-ic="chat"></i><b data-i="t_comm"></b><span data-i="soon"></span></div>
 </div>
+<div class="card" id="tp" hidden><div class="subhd"><button class="back" type="button" data-back data-i="back"></button><h2 data-i="t_teach"></h2></div><div class="tgrid" id="tpList"></div></div>
+<div class="card" id="sl" hidden><div class="subhd"><button class="back" type="button" data-back data-i="back"></button><h2 data-i="t_slides"></h2></div><p class="mute" data-i="slideNote" style="margin-bottom:14px"></p><div id="slList"></div></div>
 </section>
 
 <section class="card about" id="about" hidden>
@@ -483,7 +517,7 @@ latest:"সর্বশেষ নোটিশ",allN:"সব নোটিশ দ�
 b_gallery:"গ্যালারি",tb_gallery:"গ্যালারি",tb_dental:"ডেন্টাল",tb_radiotherapy:"রেডিওথেরাপি",b_dental:"ডেন্টাল",b_radiotherapy:"রেডিওথেরাপি",tb_dental_radio:"ডেন্টাল ও রেডিও",tb_physio:"ফিজিও",b_dental_radio:"ডেন্টাল ও রেডিওথেরাপি",b_physio:"ফিজিওথেরাপি",
 nav_home:"হোম",nav_notice:"নোটিশ",nav_res:"বই-নোট",nav_about:"পরিচিতি",nav_login:"লগইন",nav_me:"আমার পেজ",
 needReg:"রেজিস্ট্রেশন দরকার",needRegT:"ফ্রি বই, শীট ও কমিউনিটি ব্যবহার করতে রেজিস্ট্রেশন করে লগইন করুন। নোটিশ সবাই বিনা লগইনে দেখতে পারবে।",
-t_routine:"দৈনিক রুটিন",t_books:"বই ও শীট",t_sol:"প্রশ্নের সমাধান",t_comm:"কমিউনিটি",soon:"শীঘ্রই",
+t_routine:"দৈনিক রুটিন",t_teach:"টিচার প্রোফাইল",tDeg:"ডিগ্রি",tSoon:"শীঘ্রই যোগ হবে",tTap:"ট্যাপ করে বিস্তারিত দেখুন",t_slides:"স্যারদের স্লাইড",back:"← ফিরে যাও",view:"দেখুন",dl:"ডাউনলোড",slideNote:"সব স্লাইড গুগল ড্রাইভে আছে। যে কেউ এখান থেকে দেখতে বা ডাউনলোড করতে পারবে।",noSlide:"এই বিষয়ের স্লাইড শীঘ্রই আসছে",t_books:"বই ও শীট",t_sol:"প্রশ্নের সমাধান",t_comm:"কমিউনিটি",soon:"শীঘ্রই",
 about:"আমাদের সম্পর্কে",aboutT:"বি গ্যালারি – ইনস্টিটিউট অব হেলথ টেকনোলজি, রাজশাহীর শিক্ষার্থীদের নিজস্ব সাইট।",madeBy:"ওয়েবসাইট তৈরি করেছেন",hist:"আমাদের ইতিহাস",deptH:"বিভাগসমূহ",webBtn:"অফিসিয়াল ওয়েবসাইট",fbBtn:"ফেসবুক পেজ",est:"প্রতিষ্ঠা",aff:"অধিভুক্ত",addr:"ঠিকানা",phone:"ফোন",email:"ইমেইল",web:"ওয়েবসাইট",role:"পরিচয়",nav_acct:"অ্যাকাউন্ট",nav_sadm:"সুপার অ্যাডমিন",nav_cadm:"ক্যাপ্টেন",
 regBtn:"রেজিস্ট্রেশন করুন",regT:"আইডি কার্ডের মোবাইল নম্বর, কোড (নম্বরের শেষ ২ অঙ্ক) ও পাসওয়ার্ড দিন। এই নম্বর ও পাসওয়ার্ড দিয়েই লগইন করবেন।",
 roll:"ভর্তির রোল নম্বর",code:"কোড (মোবাইল নম্বরের শেষ ২ অঙ্ক)",mobile:"মোবাইল নম্বর",pass:"পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)",you:"আপনি",pick:"বেছে নিন",male:"ছাত্র",female:"ছাত্রী",dist:"কোন জেলা থেকে এসেছেন",
@@ -498,7 +532,7 @@ latest:"Latest notices",allN:"See all notices",notices:"Notice board",none:"No n
 b_gallery:"Gallery",tb_gallery:"Gallery",tb_dental:"Dental",tb_radiotherapy:"Radiotherapy",b_dental:"Dental",b_radiotherapy:"Radiotherapy",tb_dental_radio:"Dental & Radio",tb_physio:"Physio",b_dental_radio:"Dental & Radiotherapy",b_physio:"Physiotherapy",
 nav_home:"Home",nav_notice:"Notices",nav_res:"Books",nav_about:"About",nav_login:"Login",nav_me:"My page",
 needReg:"Registration required",needRegT:"Register and log in to use free books, sheets and the community. Notices are open to everyone without login.",
-t_routine:"Daily routine",t_books:"Books & sheets",t_sol:"Question solutions",t_comm:"Community",soon:"Coming soon",
+t_routine:"Daily routine",t_teach:"Teacher profiles",tDeg:"Degree",tSoon:"Coming soon",tTap:"Tap for details",t_slides:"Sir's slides",back:"← Back",view:"View",dl:"Download",slideNote:"All slides are stored on Google Drive. Anyone can view or download them from here.",noSlide:"Slides for this subject are coming soon",t_books:"Books & sheets",t_sol:"Question solutions",t_comm:"Community",soon:"Coming soon",
 about:"About us",aboutT:"B Gallery – the students' own site of the Institute of Health Technology, Rajshahi.",madeBy:"Website made by",hist:"Our history",deptH:"Departments",webBtn:"Official website",fbBtn:"Facebook page",est:"Established",aff:"Affiliated with",addr:"Address",phone:"Phone",email:"Email",web:"Website",role:"Role",nav_acct:"Account",nav_sadm:"Super admin",nav_cadm:"Captain",
 regBtn:"Register",regT:"Enter your ID-card mobile number, the code (last 2 digits of the number) and a password. You will log in with the same number and password.",
 roll:"Admission roll number",code:"Code (last 2 digits of your mobile number)",mobile:"Mobile number",pass:"Password (at least 6 characters)",you:"You are",pick:"Choose",male:"Male student",female:"Female student",dist:"Home district",
@@ -598,8 +632,67 @@ function buildBar(){
   hi();
 }
 function hi(){const m={reg:"acct",login:"acct",me:"acct"}[CUR]||CUR;document.querySelectorAll("#bar button").forEach(b=>b.classList.toggle("on",b.dataset.v===m))}
+
+/* ====== টিচার ও স্লাইড ডাটা — এখানে এডিট করুন ======
+   photo: প্রোফাইল ছবির লিঙ্ক (ড্রাইভের পাবলিক লিঙ্ক বা ছবির URL), খালি থাকলে নামের অক্ষর দেখাবে।
+   links: গুগল ড্রাইভের পাবলিক শেয়ার লিঙ্ক। খালি রাখলে "শীঘ্রই আসছে" দেখাবে। */
+const TEACHERS=[
+ {bn:"তুলি ম্যাডাম",en:"Tuli Madam",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:""},
+ {bn:"আরিফুল কবির স্যার",en:"Ariful Kabir Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
+ {bn:"আফরোজ মাহমুদ",en:"Afroz Mahmud",type:"শিক্ষক",typeEn:"Teacher",deg:"",photo:""},
+ {bn:"মাহমুদুল স্যার",en:"Mahmudul Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
+ {bn:"মিলন স্যার",en:"Milon Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
+ {bn:"শারমিন সুলতানা",en:"Sharmin Sultana",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:""},
+ {bn:"রিয়া ম্যাডাম",en:"Riya Madam",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:""},
+ {bn:"আখতারুজ্জামান স্যার",en:"Akhtaruzzaman Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
+ {bn:"মুনজুর রহমান",en:"Munzur Rahman",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
+ {bn:"আসাদুজ্জামান",en:"Asaduzzaman",type:"স্যার",typeEn:"Sir",deg:"",photo:""}
+];
+/* deg = ডিগ্রি (যেমন "ডিপিটি, এমপিএইচ"); photo = ছবির লিঙ্ক। খালি থাকলে নামের অক্ষর দেখাবে */
+const SLIDES=[
+ {subject:"বিষয় ১",items:[{title:"স্লাইডের নাম",link:""}]},
+ {subject:"বিষয় ২",items:[{title:"স্লাইডের নাম",link:""}]},
+ {subject:"বিষয় ৩",items:[{title:"স্লাইডের নাম",link:""}]}
+];
+const driveId=u=>{const m=String(u).match(/\/d\/([\w-]+)|[?&]id=([\w-]+)/);return m?(m[1]||m[2]):""};
+const viewUrl=u=>{const i=driveId(u);return i?`https://drive.google.com/file/d/${i}/view`:u};
+const dlUrl=u=>{const i=driveId(u);return i?`https://drive.google.com/uc?export=download&id=${i}`:u};
+const photoUrl=u=>{const i=driveId(u);return i&&/drive\.google/.test(u)?`https://drive.google.com/thumbnail?id=${i}&sz=w300`:u};
+let tObs=null;
+function drawTeachers(){
+  const bn=lang==="bn";
+  $("tpList").innerHTML=TEACHERS.map((p,i)=>{
+    const nm=bn?p.bn:p.en,ty=bn?"শিক্ষক":"Sir";
+    return `<div class="tcard" style="--h:${(i*37+170)%360};--d:${(i*0.45).toFixed(2)}s;transition-delay:${(i*70)}ms" tabindex="0" role="button" aria-expanded="false"><div class="tph"><div class="in"><span>${esc(Array.from(nm)[0]||"")}</span>${p.photo?`<img src="${esc(photoUrl(p.photo))}" alt="" loading="lazy" onerror="this.remove()">`:""}</div></div><b>${esc(nm)}</b><span class="ty">${esc(ty)}</span><div class="more"><div>${ic("book")} ${esc(t("tDeg"))}: ${esc(p.deg||t("tSoon"))}</div><div>${ic("user")} ${esc(ty)}</div></div><span class="tap">${t("tTap")}</span></div>`}).join("");
+  const cards=[...document.querySelectorAll("#tpList .tcard")];
+  if(tObs)tObs.disconnect();
+  if("IntersectionObserver" in window){
+    tObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");tObs.unobserve(e.target)}}),{threshold:.15});
+    cards.forEach(c=>tObs.observe(c));
+  }else cards.forEach(c=>c.classList.add("in"));
+  const fine=window.matchMedia("(hover:hover) and (pointer:fine)").matches&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  cards.forEach(c=>{
+    const tg=()=>{const o=c.classList.toggle("open");c.setAttribute("aria-expanded",o);cards.forEach(x=>{if(x!==c){x.classList.remove("open");x.setAttribute("aria-expanded","false")}})};
+    c.onclick=tg;c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tg()}};
+    if(fine){
+      c.onpointermove=e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transition="none";c.style.transform=`rotateY(${x*14}deg) rotateX(${-y*14}deg) translateY(-4px)`};
+      c.onpointerleave=()=>{c.style.transition="";c.style.transform=""};
+    }
+  });
+}
+function drawSlides(){
+  $("slList").innerHTML=SLIDES.map(g=>`<div class="sgrp"><h3>${esc(g.subject)}</h3>${g.items.map(x=>x.link?`<div class="sitem"><span>${esc(x.title)}</span><a class="lnk" href="${esc(viewUrl(x.link))}" target="_blank" rel="noopener">${t("view")}</a><a class="lnk dl" href="${esc(dlUrl(x.link))}" target="_blank" rel="noopener">${t("dl")}</a></div>`:`<div class="sitem"><span>${esc(x.title)}</span><em class="mute">${t("noSlide")}</em></div>`).join("")}</div>`).join("");
+}
+function resSub(v){
+  $("tiles").hidden=!!v||!LOGGED;$("tp").hidden=v!=="tp";$("sl").hidden=v!=="sl";
+  if(v==="tp")drawTeachers();if(v==="sl")drawSlides();window.scrollTo(0,0);
+}
+document.addEventListener("click",e=>{
+  const o=e.target.closest("[data-sub]");if(o&&LOGGED){resSub(o.dataset.sub);return}
+  if(e.target.closest("[data-back]"))resSub("");
+});
 function show(v){
-  if(v==="res"){$("gate").hidden=LOGGED;$("tiles").hidden=!LOGGED}
+  if(v==="res"){$("gate").hidden=LOGGED;$("tiles").hidden=!LOGGED;$("tp").hidden=true;$("sl").hidden=true}
   CUR=v;["home","notice","res","about","dev","reg","login","me","adm"].forEach(x=>$(x).hidden=x!==v);hi();window.scrollTo(0,0);
 }
 function applyLang(){
@@ -612,6 +705,7 @@ function applyLang(){
   $("rGender").innerHTML=`<option value="">${t("pick")}</option><option value="male">${t("male")}</option><option value="female">${t("female")}</option>`;
   buildBar();loadNotices();drawMe();if(ME&&ME.role!=="student"){setBoards();loadAdmin()}
   clsApply();
+  if(!$("tp").hidden)drawTeachers();if(!$("sl").hidden)drawSlides();
 }
 $("lang").onclick=()=>{lang=lang==="bn"?"en":"bn";localStorage.setItem("bg_lang",lang);applyLang()};
 document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)show(g.dataset.go==="acct"?(LOGGED?"me":"login"):g.dataset.go)});
