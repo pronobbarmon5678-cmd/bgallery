@@ -322,6 +322,13 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 .cdp{margin:8px 0 0;font-weight:600;color:var(--teal)}
 .cdp:empty{display:none}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ===== v16: লোগো স্থির, প্রতিষ্ঠানের নাম সবচেয়ে বড়, ডেন্টাল+রেডিওথেরাপি এক বোর্ড ===== */
+.hero img.hlogo{animation:none!important;transform:none!important;transition:none!important}
+.hero .inst{font-size:clamp(24px,7vw,34px);line-height:1.4;font-weight:700;max-width:100%}
+.hero h1{font-size:clamp(20px,5.6vw,28px);line-height:1.5}
+.capb.cb-dental_radio{background-image:linear-gradient(120deg,#1e3a8a,#2563eb,#dc2626,#f97316,#1e3a8a)}
+.ncard.b-dental_radio{border-top-color:#2563eb}
 </style>
 </head>
 <body>
@@ -504,33 +511,51 @@ const en=s=>s.replace(/[০-৯]/g,d=>"০১২৩৪৫৬৭৮৯".indexOf(d
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const msg=(id,k,ok,raw)=>{const e=$(id);e.textContent=k?t(k):"";if(raw){e.appendChild(document.createElement("br"));const m=document.createElement("small");m.textContent="("+raw+")";e.appendChild(m)}e.className="msg "+(ok?"ok":"bad")};
 const errKey=(er,c)=>{const m=(er.message||"").toLowerCase();return /fetch|load failed|network/.test(m)?"errNet":m.includes("already")?"errDup":m.includes("database error")?"errDb":(c==="log"&&m.includes("invalid login"))?"errCred":c==="log"?"logFail":"regFail"};
-const ALLB=["gallery","dental","radiotherapy","physio"];
-const visB=()=>{if(!ME)return["gallery"];if(ME.role==="super_admin")return ALLB;const own=(ME.captain_of&&ME.captain_of!=="gallery"&&ALLB.includes(ME.captain_of))?ME.captain_of:boardOf(ME.department);return own?(ME.role==="captain"&&(own==="dental"||own==="radiotherapy")?["gallery","dental","radiotherapy"]:["gallery",own]):["gallery"]};
-const boardOf=d=>{d=(d||"").toLowerCase();return d==="physiotherapy"?"physio":d==="dental"?"dental":d==="radiotherapy"?"radiotherapy":null};
+// ডেন্টাল ও রেডিওথেরাপি এখন একটাই বোর্ড ("dental_radio")। ডাটাবেসে পুরোনো নোটিশ "dental"/"radiotherapy" নামে আছে, দুটোই একসাথে পড়া হয়।
+const DR=["dental","radiotherapy"];
+const grp=b=>b==="dental_radio"?DR:[b];
+const bk=b=>DR.includes(b)?"dental_radio":b;
+const ALLB=["gallery","dental_radio","physio"];
+const prefDR=()=>{const c=ME&&ME.captain_of;if(DR.includes(c))return c;const d=((ME&&ME.department)||"").toLowerCase();return DR.includes(d)?d:"dental"};
+async function insB(table,row){
+  if(row.board!=="dental_radio")return sb.from(table).insert(row);
+  const p=prefDR(),q=DR.find(x=>x!==p);
+  let r=await sb.from(table).insert({...row,board:p});
+  if(r.error&&/row-level|42501|permission|violates/i.test((r.error.code||"")+" "+(r.error.message||""))){const r2=await sb.from(table).insert({...row,board:q});if(!r2.error)return r2}
+  return r;
+}
+const visB=()=>{if(!ME)return["gallery"];if(ME.role==="super_admin")return ALLB;const c=ME.captain_of?bk(ME.captain_of):null,own=(c&&c!=="gallery"&&ALLB.includes(c))?c:boardOf(ME.department);return own?["gallery",own]:["gallery"]};
+const boardOf=d=>{d=(d||"").toLowerCase();return d==="physiotherapy"?"physio":(d==="dental"||d==="radiotherapy")?"dental_radio":null};
 const SID="bg_sid";let ME=null,LOGGED=false,CUR="home",NB="gallery";
 const dateS=d=>new Date(d).toLocaleDateString(lang==="bn"?"bn-BD":"en-GB");
 const mail=m=>m+"@bgallery.com";
 const mobOk=m=>/^01[3-9]\d{8}$/.test(m);
 const cleanMob=s=>en(s).replace(/[\s-]/g,"");
-const noteHTML=n=>`<div class="ncard b-${n.board}${n.is_emergency?" urgent":""}"><span class="bchip">${t("b_"+n.board)}</span>${n.is_emergency?` <span class="tag">${t("urgTag")}</span>`:""}<h3>${esc(n.title)}</h3>${n.body?`<p>${esc(n.body)}</p>`:""}${n.image_url?`<img src="${esc(n.image_url)}" alt="" loading="lazy">`:""}<div class="meta">${ic("calendar")} ${dateS(n.created_at)}</div></div>`;
+const noteHTML=n=>`<div class="ncard b-${bk(n.board)}${n.is_emergency?" urgent":""}"><span class="bchip">${t("b_"+bk(n.board))}</span>${n.is_emergency?` <span class="tag">${t("urgTag")}</span>`:""}<h3>${esc(n.title)}</h3>${n.body?`<p>${esc(n.body)}</p>`:""}${n.image_url?`<img src="${esc(n.image_url)}" alt="" loading="lazy">`:""}<div class="meta">${ic("calendar")} ${dateS(n.created_at)}</div></div>`;
 async function board(b,box,lim){
   $(box).innerHTML='<div class="sk"></div><div class="sk"></div>';
-  const {data,error}=await sb.from("notices").select("title,body,board,image_url,is_emergency,created_at").eq("board",b).order("created_at",{ascending:false}).limit(lim);
-  $(box).innerHTML=(error||!data||!data.length)?`<p class="mute">${t("none")}</p>`:data.map(noteHTML).join("");
+  const {data,error}=await sb.from("notices").select("title,body,board,image_url,is_emergency,created_at").in("board",grp(b)).order("created_at",{ascending:false}).limit(lim);
+  $(box).innerHTML=error?`<p class="mute">${t("n_loadFail")}</p>`:(!data||!data.length)?`<p class="mute">${t("none")}</p>`:data.map(noteHTML).join("");
+}
+// হোমের "সর্বশেষ নোটিশ": আগে শুধু গ্যালারি বোর্ড দেখাতো, তাই অন্য বোর্ডের নোটিশ এখানে আসতো না। এখন সব বোর্ডের সর্বশেষ নোটিশ আসে।
+async function homeNotices(){
+  const box=$("hn");box.innerHTML='<div class="sk"></div><div class="sk"></div>';
+  const {data,error}=await sb.from("notices").select("title,body,board,image_url,is_emergency,created_at").order("created_at",{ascending:false}).limit(5);
+  box.innerHTML=error?`<p class="mute">${t("n_loadFail")}</p>`:(!data||!data.length)?`<p class="mute">${t("none")}</p>`:data.map(noteHTML).join("");
 }
 function drawTabs(){const v=visB();if(!v.includes(NB))NB=v[0];$("tabs").innerHTML=v.map(b=>`<button data-b="${b}" class="${b===NB?"on":""}">${t("tb_"+b)}</button>`).join("")}
 $("tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;NB=b.dataset.b;drawTabs();board(NB,"nlist",30);capShow(NB);clsReload()};
-const loadNotices=()=>{board("gallery","hn",3);drawTabs();board(NB,"nlist",30);capShow(NB);clsReload()};
+const loadNotices=()=>{homeNotices();drawTabs();board(NB,"nlist",30);capShow(NB);clsReload()};
 const CAPL={bn:{cap:"ক্যাপ্টেন",adm:"গ্যালারি অ্যাডমিন",roll:"রোল",none:"এখনো কোনো ক্যাপ্টেন ঠিক করা হয়নি",hd:"ক্যাপ্টেন"},en:{cap:"Captain",adm:"Gallery admin",roll:"Roll",none:"No captain has been set yet",hd:"Captains"}};
 let capTok=0;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const gseg=s=>typeof Intl!=="undefined"&&Intl.Segmenter?[...new Intl.Segmenter(lang,{granularity:"grapheme"}).segment(s)].map(x=>x.segment):[...s];
 async function capShow(b){
   const tok=++capTok,box=$("capb");
-  let r;try{r=await sb.rpc("board_captains",{b})}catch(x){r={error:x}}
+  let rs;try{rs=await Promise.all(grp(b).map(x=>sb.rpc("board_captains",{b:x})))}catch(x){rs=[{error:x}]}
   if(tok!==capTok)return;
-  if(r.error){box.hidden=true;return}
-  const data=r.data||[],C=CAPL[lang];
+  if(rs.every(r=>r.error)){box.hidden=true;return}
+  const seen=new Set(),data=[].concat(...rs.map(r=>r.data||[])).filter(p=>{const k=(p.full_name||"")+"|"+(p.roll||"");if(seen.has(k))return false;seen.add(k);return true}),C=CAPL[lang];
   box.hidden=false;box.className="capb cb-"+b;
   if(!data.length){box.innerHTML=`<div class="caphd">${esc(t("b_"+b))}</div><p class="capnone">${C.none}</p>`;return}
   const dn=p=>{const k="d_"+(p.department||""),d=t(k);return d===k?(p.department||""):d};
@@ -594,7 +619,7 @@ function drawMe(){admHint();
   $("toAdm").hidden=ME.role==="student";
 }
 function admHint(){const h=$("admHint");if(!h||!ME)return;h.textContent=ME.role==="super_admin"?"সুপার অ্যাডমিন: সব বোর্ডে নোটিশ দিতে ও মুছতে পারবেন, নিচে ব্যবহারকারী ঠিক করতে পারবেন।":"ক্যাপ্টেন: শুধু আপনার নির্ধারিত বোর্ডে নোটিশ দিতে ও আপনার বোর্ডের নোটিশ মুছতে পারবেন।"}
-const postable=()=>{if(!ME)return[];if(ME.role==="super_admin")return ALLB;const o=ME.captain_of||boardOf(ME.department);if(o==="dental"||o==="radiotherapy")return["dental","radiotherapy"];return[o].filter(b=>b&&b!=="gallery"&&ALLB.includes(b))};
+const postable=()=>{if(!ME)return[];if(ME.role==="super_admin")return ALLB;const o=bk(ME.captain_of||boardOf(ME.department));return[o].filter(b=>b&&b!=="gallery"&&ALLB.includes(b))};
 const setBoards=()=>{const v=$("aBoard").value;$("aBoard").innerHTML=postable().map(k=>`<option value="${k}">${t("b_"+k)}</option>`).join("");if(v)$("aBoard").value=v};
 async function shrink(f){
   const m=await createImageBitmap(f),r=Math.min(1,1600/Math.max(m.width,m.height));
@@ -638,7 +663,7 @@ $("logForm").onsubmit=async e=>{
 $("out2").onclick=async()=>{await sb.auth.signOut();localStorage.removeItem(SID);await refresh("home")};
 async function loadAdmin(){
   const {data}=await sb.from("notices").select("id,title,board,is_emergency,created_at").order("created_at",{ascending:false}).limit(20);
-  $("admList").innerHTML=(data&&data.length)?data.map(n=>`<div class="note${n.is_emergency?" urgent":""}"><button class="del" data-id="${n.id}">${t("del")}</button><b>${esc(n.title)}</b><br><small>${esc(t("b_"+n.board))} · ${dateS(n.created_at)}</small></div>`).join(""):`<p class="mute">${t("noneMine")}</p>`;
+  $("admList").innerHTML=(data&&data.length)?data.map(n=>`<div class="note${n.is_emergency?" urgent":""}"><button class="del" data-id="${n.id}">${t("del")}</button><b>${esc(n.title)}</b><br><small>${esc(t("b_"+bk(n.board)))} · ${dateS(n.created_at)}</small></div>`).join(""):`<p class="mute">${t("noneMine")}</p>`;
 }
 $("admForm").onsubmit=async e=>{
   e.preventDefault();msg("admMsg","wait",1);
@@ -653,7 +678,7 @@ $("admForm").onsubmit=async e=>{
     if(up.error){msg("admMsg","imgFail",0);return}
     url=sb.storage.from("uploads").getPublicUrl(p).data.publicUrl;
   }
-  const {error}=await sb.from("notices").insert({title:$("aTitle").value.trim(),body:$("aBody").value.trim(),board:$("aBoard").value,image_url:url,is_emergency:$("aUrg").checked,created_by:session.user.id});
+  const {error}=await insB("notices",{title:$("aTitle").value.trim(),body:$("aBody").value.trim(),board:$("aBoard").value,image_url:url,is_emergency:$("aUrg").checked,created_by:session.user.id});
   if(error){msg("admMsg","postFail",0);return}
   $("admForm").reset();msg("admMsg","postOk",1);loadAdmin();loadNotices();
 };
@@ -668,20 +693,20 @@ $("admList").onclick=async e=>{
 // প্রতিটি সারি: ["কী (ইংরেজি, ডাটাবেসে সেভ হয়)", "বাংলা নাম", "English name"]
 const CLS={
   types:[["gallery","গ্যালারি ক্লাস","Gallery class","গ্যালারি","Gallery"],["practical","প্র্যাকটিক্যাল ক্লাস","Practical class","প্র্যাকটিক্যাল","Practical"]],
-  subjects:[["anatomy","অ্যানাটমি","Anatomy"],["physiology","ফিজিওলজি","Physiology"],["computer","কম্পিউটার","Computer"],["community","কমিউনিটি মেডিসিন","Community Medicine"],["english","ইংলিশ","English"]],
+  subjects:[["anatomy","অ্যানাটমি","Anatomy"],["physiology","ফিজিওলজি","Physiology"],["computer","কম্পিউটার","Computer"],["community","কমিউনিটি মেডিসিন","Community Medicine"],["english","ইংরেজি","English"]],
   teachers:[["tuli","তুলি ম্যাডাম","Tuli Madam"],["arifulkabir","আরিফুল কবির স্যার","Ariful Kabir Sir"],["afrozmahmud","আফরোজ মাহমুদ","Afroz Mahmud"],["mahmudul","মাহমুদুল স্যার","Mahmudul Sir"],["milon","মিলন স্যার","Milon Sir"],["sharmin","শারমিন সুলতানা","Sharmin Sultana"],["riya","রিয়া ম্যাডাম","Riya Madam"],["akhtaruzzaman","আখতারুজ্জামান স্যার","Akhtaruzzaman Sir"]],
   // কোনো বোর্ডের জন্য আলাদা তালিকা লাগলে এখানে দিন, যেমন: physio:{subjects:[["kinesio","কাইনেসিওলজি","Kinesiology"]],teachers:[...]}
   byBoard:{}
 };
 // ▲▲ তালিকা শেষ ▲▲
-Object.assign(L.bn,{c_tabN:"নোটিশ",c_tabC:"ক্লাস",a_note:"নোটিশ দিন",a_class:"ক্লাস যোগ করুন",
+Object.assign(L.bn,{n_loadFail:"নোটিশ লোড করা যায়নি।",c_tabN:"নোটিশ",c_tabC:"ক্লাস",a_note:"নোটিশ দিন",a_class:"ক্লাস যোগ করুন",
 c_none:"এখনো কোনো ক্লাস দেওয়া হয়নি।",c_setup:"ক্লাস নোটিশ এখনো চালু হয়নি (ডাটাবেসের সেটআপ বাকি আছে)।",c_loadFail:"ক্লাসের তালিকা লোড করা যায়নি।",
 c_thT:"সময়",c_thC:"বিষয়, শিক্ষক ও পড়া",c_read:"পড়া:",c_today:"আজ",c_tom:"আগামীকাল",c_yest:"গতকাল",
 c_postH:"ক্লাস নোটিশ দিন",c_hintC:"ক্যাপ্টেন: শুধু আপনার নিজের ডিপার্টমেন্টের বোর্ডে ক্লাস দিতে ও মুছতে পারবেন।",c_hintS:"সুপার অ্যাডমিন: সব বোর্ডে ক্লাস দিতে ও মুছতে পারবেন।",
 c_board:"কোন বোর্ডে",c_type:"ক্লাসের ধরন",c_teacher:"শিক্ষক",c_subject:"বিষয়",c_day:"বার ও তারিখ",c_date:"তারিখ",c_from:"কয়টা থেকে",c_to:"কয়টা পর্যন্ত",c_reading:"কী পড়া দিয়েছে (ঐচ্ছিক)",c_readPh:"যেমন: অধ্যায় ৩, পৃষ্ঠা ২০-৩৫",c_pick:"— বেছে নিন —",c_post:"ক্লাস নোটিশ দিন",
 c_mine:"দেওয়া ক্লাস",c_noneMine:"এখনো কোনো ক্লাস দেননি।",
 c_errPick:"শিক্ষক, বিষয়, বার/তারিখ ও সময় সব বেছে নিন।",c_errTime:"শেষের সময় শুরুর সময়ের পরে হতে হবে।",c_posted:"ক্লাস নোটিশ দেওয়া হয়েছে।",c_postFail:"ক্লাস দেওয়া যায়নি।",c_perm:"এই বোর্ডে ক্লাস দেওয়ার অনুমতি নেই।",c_delQ:"এই ক্লাস মুছে ফেলবেন?",c_delFail:"ক্লাস মোছা যায়নি।"});
-Object.assign(L.en,{c_tabN:"Notices",c_tabC:"Classes",a_note:"Post notice",a_class:"Add class",
+Object.assign(L.en,{n_loadFail:"Could not load the notices.",c_tabN:"Notices",c_tabC:"Classes",a_note:"Post notice",a_class:"Add class",
 c_none:"No classes have been posted yet.",c_setup:"Class notices are not switched on yet (database setup is pending).",c_loadFail:"Could not load the class list.",
 c_thT:"Time",c_thC:"Subject, teacher & reading",c_read:"Reading:",c_today:"Today",c_tom:"Tomorrow",c_yest:"Yesterday",
 c_postH:"Post a class notice",c_hintC:"Captain: you can post and delete classes only on your own department's board.",c_hintS:"Super admin: you can post and delete classes on every board.",
@@ -725,7 +750,7 @@ function classHTML(rows){
 async function loadClasses(){
   const tok=++clsTok,box=$("clist"),b=NB;
   box.innerHTML='<div class="sk"></div><div class="sk"></div>';
-  let r;try{r=await sb.from("class_notices").select("id,board,class_type,subject,teacher,class_date,start_time,end_time,reading").eq("board",b).order("class_date",{ascending:false}).order("start_time",{ascending:true}).limit(150)}catch(x){r={error:x}}
+  let r;try{r=await sb.from("class_notices").select("id,board,class_type,subject,teacher,class_date,start_time,end_time,reading").in("board",grp(b)).order("class_date",{ascending:false}).order("start_time",{ascending:true}).limit(150)}catch(x){r={error:x}}
   if(tok!==clsTok||MODE!=="c")return;
   if(r.error){box.innerHTML=`<p class="mute">${esc(noTbl(r.error)?t("c_setup"):netErr(r.error)?t("errNet"):t("c_loadFail"))}</p>`;return}
   const rows=(r.data||[]).filter(x=>pd(x.class_date));
@@ -782,8 +807,8 @@ async function loadClassAdmin(){
   const box=$("admCList");
   let r;try{r=await sb.from("class_notices").select("id,board,class_type,subject,teacher,class_date,start_time,end_time").order("created_at",{ascending:false}).limit(30)}catch(x){r={error:x}}
   if(r.error){box.innerHTML=`<p class="mute">${esc(noTbl(r.error)?t("c_setup"):t("c_loadFail"))}</p>`;return}
-  const ok=postable(),rows=(r.data||[]).filter(x=>ok.includes(x.board));
-  box.innerHTML=rows.length?rows.map(c=>`<div class="note"><button class="del" data-id="${esc(c.id)}">${t("del")}</button><b>${esc(lab("subjects",c.subject))} · ${esc(lab("teachers",c.teacher))}</b><br><small>${esc(t("b_"+c.board))} · ${esc(wFull(c.class_date))}, ${esc(dFmt(c.class_date))} · ${fmtT(c.start_time)} – ${fmtT(c.end_time)}</small></div>`).join(""):`<p class="mute">${t("c_noneMine")}</p>`;
+  const ok=postable(),rows=(r.data||[]).filter(x=>ok.includes(bk(x.board)));
+  box.innerHTML=rows.length?rows.map(c=>`<div class="note"><button class="del" data-id="${esc(c.id)}">${t("del")}</button><b>${esc(lab("subjects",c.subject))} · ${esc(lab("teachers",c.teacher))}</b><br><small>${esc(t("b_"+bk(c.board)))} · ${esc(wFull(c.class_date))}, ${esc(dFmt(c.class_date))} · ${fmtT(c.start_time)} – ${fmtT(c.end_time)}</small></div>`).join(""):`<p class="mute">${t("c_noneMine")}</p>`;
 }
 function clsApply(){
   if(!ME||ME.role==="student")return;
@@ -800,7 +825,7 @@ $("clsForm").onsubmit=async e=>{
   const {data:{session}}=await sb.auth.getSession();
   if(!session){msg("cMsg","c_perm",0);return}
   row.created_by=session.user.id;
-  let r;try{r=await sb.from("class_notices").insert(row)}catch(x){r={error:x}}
+  let r;try{r=await insB("class_notices",row)}catch(x){r={error:x}}
   if(r.error){const er=r.error;
     if(noTbl(er))msg("cMsg","c_setup",0);
     else if(/row-level|42501|permission/i.test((er.code||"")+" "+(er.message||"")))msg("cMsg","c_perm",0);
