@@ -446,7 +446,7 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 const msg=(id,k,ok,raw)=>{const e=$(id);e.textContent=k?t(k):"";if(raw){e.appendChild(document.createElement("br"));const m=document.createElement("small");m.textContent="("+raw+")";e.appendChild(m)}e.className="msg "+(ok?"ok":"bad")};
 const errKey=(er,c)=>{const m=(er.message||"").toLowerCase();return /fetch|load failed|network/.test(m)?"errNet":m.includes("already")?"errDup":m.includes("database error")?"errDb":(c==="log"&&m.includes("invalid login"))?"errCred":c==="log"?"logFail":"regFail"};
 const ALLB=["gallery","dental","radiotherapy","physio"];
-const visB=()=>{if(!ME)return["gallery"];if(ME.role==="super_admin")return ALLB;const own=(ME.captain_of&&ME.captain_of!=="gallery"&&ALLB.includes(ME.captain_of))?ME.captain_of:boardOf(ME.department);return own?["gallery",own]:["gallery"]};
+const visB=()=>{if(!ME)return["gallery"];if(ME.role==="super_admin")return ALLB;const own=(ME.captain_of&&ME.captain_of!=="gallery"&&ALLB.includes(ME.captain_of))?ME.captain_of:boardOf(ME.department);return own?(ME.role==="captain"&&(own==="dental"||own==="radiotherapy")?["gallery","dental","radiotherapy"]:["gallery",own]):["gallery"]};
 const boardOf=d=>{d=(d||"").toLowerCase();return d==="physiotherapy"?"physio":d==="dental"?"dental":d==="radiotherapy"?"radiotherapy":null};
 const SID="bg_sid";let ME=null,LOGGED=false,CUR="home",NB="gallery";
 const dateS=d=>new Date(d).toLocaleDateString(lang==="bn"?"bn-BD":"en-GB");
@@ -475,7 +475,7 @@ async function capShow(b){
   box.hidden=false;box.className="capb cb-"+b;
   if(!data.length){box.innerHTML=`<div class="caphd">${esc(t("b_"+b))}</div><p class="capnone">${C.none}</p>`;return}
   const dn=p=>{const k="d_"+(p.department||""),d=t(k);return d===k?(p.department||""):d};
-  const lines=p=>[(b==="gallery"?C.adm:C.cap)+" · "+dn(p),p.roll?C.roll+": "+p.roll:""];
+  const lines=p=>[C.cap+(dn(p)?" · "+dn(p):""),p.roll?C.roll+": "+p.roll:""];
   const gi=g=>g==="female"?"female":g==="male"?"male":"user";
   const draw=p=>`<div class="capc ${p.gender==="female"?"f":""}"><span class="capav">${ic(gi(p.gender))}</span><div class="capx"><b class="capn">${esc(p.full_name)}</b><span class="capd"><span class="l1"></span><span class="l2"></span></span></div></div>`;
   box.innerHTML=`<div class="caphd">${esc(t("b_"+b))} · ${C.hd}</div><div class="capst"></div><div class="capdots">${data.map(()=>"<i></i>").join("")}</div>`;
@@ -534,7 +534,7 @@ function drawMe(){admHint();
   $("toAdm").hidden=ME.role==="student";
 }
 function admHint(){const h=$("admHint");if(!h||!ME)return;h.textContent=ME.role==="super_admin"?"সুপার অ্যাডমিন: সব বোর্ডে নোটিশ দিতে ও মুছতে পারবেন, নিচে ব্যবহারকারী ঠিক করতে পারবেন।":"ক্যাপ্টেন: শুধু আপনার নির্ধারিত বোর্ডে নোটিশ দিতে ও আপনার বোর্ডের নোটিশ মুছতে পারবেন।"}
-const postable=()=>!ME?[]:ME.role==="super_admin"?ALLB:[ME.captain_of||boardOf(ME.department)].filter(b=>b&&b!=="gallery"&&ALLB.includes(b));
+const postable=()=>{if(!ME)return[];if(ME.role==="super_admin")return ALLB;const o=ME.captain_of||boardOf(ME.department);if(o==="dental"||o==="radiotherapy")return["dental","radiotherapy"];return[o].filter(b=>b&&b!=="gallery"&&ALLB.includes(b))};
 const setBoards=()=>{const v=$("aBoard").value;$("aBoard").innerHTML=postable().map(k=>`<option value="${k}">${t("b_"+k)}</option>`).join("");if(v)$("aBoard").value=v};
 async function shrink(f){
   const m=await createImageBitmap(f),r=Math.min(1,1600/Math.max(m.width,m.height));
