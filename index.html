@@ -366,10 +366,35 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 .sitem span{font-weight:500;flex:1 1 140px}
 .sitem .lnk{padding:6px 14px;font-size:14px}
 .sitem .lnk.dl{background:linear-gradient(135deg,#d97706,#db2777)}
+/* ===== v16: calm teacher cards + richer cards ===== */
+@keyframes glow{0%,100%{box-shadow:0 8px 18px var(--g)}50%{box-shadow:0 8px 30px var(--g)}}
+@keyframes csweep{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.tcard .tap{animation:none!important;display:flex;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:600;color:var(--teal);margin-top:10px}
+.tcard .tap .ic{width:15px;height:15px}
+.tph,.tph .in{animation:none!important}
+.tph{box-shadow:0 6px 18px rgba(124,58,237,.35)}
+.tcard .ty{background:linear-gradient(135deg,#14a89f,#7c3aed);color:#fff}
+.tcard .more{border-top:1px dashed var(--line);margin-top:0}
+.tcard.open .more{padding-top:6px}
+.card{position:relative;overflow:hidden}
+.card::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 42%,rgba(255,255,255,.08) 50%,transparent 58%);transform:translateX(-120%);animation:csweep 7s ease-in-out infinite;pointer-events:none}
+.ncard{position:relative;overflow:hidden;background:linear-gradient(145deg,var(--card) 55%,var(--tint2,rgba(20,168,159,.12)))}
+.ncard::before{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:var(--tint2,rgba(20,168,159,.12))}
+.ncard>*{position:relative}
+.ncard.b-gallery{--tint2:rgba(147,51,234,.16)}.ncard.b-dental_radio,.ncard.b-dental{--tint2:rgba(37,99,235,.16)}.ncard.b-radiotherapy{--tint2:rgba(220,38,38,.14)}.ncard.b-physio{--tint2:rgba(217,119,6,.18)}.ncard.urgent{--tint2:rgba(220,38,38,.16)}
+.tile{border:1px solid var(--line);box-shadow:0 8px 22px rgba(15,42,67,.12);background:linear-gradient(160deg,var(--card) 50%,var(--tint2))!important}
+.tile:nth-child(1){--a:#14a89f;--b:#0a6f78;--g:rgba(20,168,159,.45);--tint2:rgba(20,168,159,.18)}
+.tile:nth-child(2){--a:#8b5cf6;--b:#6d28d9;--g:rgba(139,92,246,.45);--tint2:rgba(139,92,246,.18)}
+.tile:nth-child(3){--a:#f472b6;--b:#db2777;--g:rgba(244,114,182,.45);--tint2:rgba(244,114,182,.18)}
+.tile:nth-child(4){--a:#fbbf24;--b:#d97706;--g:rgba(251,191,36,.45);--tint2:rgba(251,191,36,.2)}
+.tile i{width:62px;height:62px;margin:2px auto 8px;border-radius:20px;display:grid!important;place-items:center;background:linear-gradient(135deg,var(--a),var(--b));color:#fff!important;font-size:30px!important;animation:glow 3.2s ease-in-out infinite!important}
+.tile:hover{transform:translateY(-4px)!important}
+@media(prefers-reduced-motion:reduce){.card::after,.tile i{animation:none!important}}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
 <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
 <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
 <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
@@ -639,14 +664,15 @@ function hi(){const m={reg:"acct",login:"acct",me:"acct"}[CUR]||CUR;document.que
 const TEACHERS=[
  {bn:"তুলি ম্যাডাম",en:"Tuli Madam",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:""},
  {bn:"আরিফুল কবির স্যার",en:"Ariful Kabir Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"আফরোজ মাহমুদ",en:"Afroz Mahmud",type:"শিক্ষক",typeEn:"Teacher",deg:"",photo:""},
+ {bn:"আফরোজ স্যার",en:"Afroz Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
  {bn:"মাহমুদুল স্যার",en:"Mahmudul Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"মিলন স্যার",en:"Milon Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"শারমিন সুলতানা",en:"Sharmin Sultana",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:""},
+ {bn:"মিলন স্যার (G)",en:"Milon Sir (G)",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
+ {bn:"মিলন স্যার (O)",en:"Milon Sir (O)",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
+ {bn:"শারমিন সুলতানা ম্যাডাম",en:"Sharmin Sultana Madam",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:""},
  {bn:"রিয়া ম্যাডাম",en:"Riya Madam",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:""},
  {bn:"আখতারুজ্জামান স্যার",en:"Akhtaruzzaman Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"মুনজুর রহমান",en:"Munzur Rahman",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"আসাদুজ্জামান",en:"Asaduzzaman",type:"স্যার",typeEn:"Sir",deg:"",photo:""}
+ {bn:"মুনজুর রহমান স্যার",en:"Munzur Rahman Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
+ {bn:"আসাদুজ্জামান স্যার",en:"Asaduzzaman Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""}
 ];
 /* deg = ডিগ্রি (যেমন "ডিপিটি, এমপিএইচ"); photo = ছবির লিঙ্ক। খালি থাকলে নামের অক্ষর দেখাবে */
 const SLIDES=[
@@ -662,8 +688,8 @@ let tObs=null;
 function drawTeachers(){
   const bn=lang==="bn";
   $("tpList").innerHTML=TEACHERS.map((p,i)=>{
-    const nm=bn?p.bn:p.en,ty=bn?"শিক্ষক":"Sir";
-    return `<div class="tcard" style="--h:${(i*37+170)%360};--d:${(i*0.45).toFixed(2)}s;transition-delay:${(i*70)}ms" tabindex="0" role="button" aria-expanded="false"><div class="tph"><div class="in"><span>${esc(Array.from(nm)[0]||"")}</span>${p.photo?`<img src="${esc(photoUrl(p.photo))}" alt="" loading="lazy" onerror="this.remove()">`:""}</div></div><b>${esc(nm)}</b><span class="ty">${esc(ty)}</span><div class="more"><div>${ic("book")} ${esc(t("tDeg"))}: ${esc(p.deg||t("tSoon"))}</div><div>${ic("user")} ${esc(ty)}</div></div><span class="tap">${t("tTap")}</span></div>`}).join("");
+    const nm=bn?p.bn:p.en,ty=bn?p.type:p.typeEn;
+    return `<div class="tcard" style="--h:${(i*37+170)%360};--d:${(i*0.45).toFixed(2)}s;transition-delay:${(i*70)}ms" tabindex="0" role="button" aria-expanded="false"><div class="tph"><div class="in"><span>${esc(Array.from(nm)[0]||"")}</span>${p.photo?`<img src="${esc(photoUrl(p.photo))}" alt="" loading="lazy" onerror="this.remove()">`:""}</div></div><b>${nh(nm)}</b><span class="ty">${esc(ty)}</span><div class="more"><div>${ic("book")} ${esc(t("tDeg"))}: ${esc(p.deg||t("tSoon"))}</div><div>${ic("user")} ${esc(ty)}</div></div><span class="tap">${t("tTap")} ${ic("chev")}</span></div>`}).join("");
   const cards=[...document.querySelectorAll("#tpList .tcard")];
   if(tObs)tObs.disconnect();
   if("IntersectionObserver" in window){
@@ -674,7 +700,7 @@ function drawTeachers(){
   cards.forEach(c=>{
     const tg=()=>{const o=c.classList.toggle("open");c.setAttribute("aria-expanded",o);cards.forEach(x=>{if(x!==c){x.classList.remove("open");x.setAttribute("aria-expanded","false")}})};
     c.onclick=tg;c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tg()}};
-    if(fine){
+    if(false){
       c.onpointermove=e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transition="none";c.style.transform=`rotateY(${x*14}deg) rotateX(${-y*14}deg) translateY(-4px)`};
       c.onpointerleave=()=>{c.style.transition="";c.style.transform=""};
     }
@@ -793,7 +819,7 @@ $("admList").onclick=async e=>{
 const CLS={
   types:[["gallery","গ্যালারি ক্লাস","Gallery class","গ্যালারি","Gallery"],["practical","প্র্যাকটিক্যাল ক্লাস","Practical class","প্র্যাকটিক্যাল","Practical"]],
   subjects:[["anatomy","অ্যানাটমি","Anatomy"],["physiology","ফিজিওলজি","Physiology"],["computer","কম্পিউটার","Computer"],["community","কমিউনিটি মেডিসিন","Community Medicine"],["english","ইংরেজি","English"]],
-  teachers:[["tuli","তুলি ম্যাডাম","Tuli Madam"],["arifulkabir","আরিফুল কবির স্যার","Ariful Kabir Sir"],["afrozmahmud","আফরোজ মাহমুদ","Afroz Mahmud"],["mahmudul","মাহমুদুল স্যার","Mahmudul Sir"],["milon","মিলন স্যার","Milon Sir"],["sharmin","শারমিন সুলতানা","Sharmin Sultana"],["riya","রিয়া ম্যাডাম","Riya Madam"],["akhtaruzzaman","আখতারুজ্জামান স্যার","Akhtaruzzaman Sir"]],
+  teachers:[["tuli","তুলি ম্যাডাম","Tuli Madam"],["arifulkabir","আরিফুল কবির স্যার","Ariful Kabir Sir"],["afrozmahmud","আফরোজ স্যার","Afroz Sir"],["mahmudul","মাহমুদুল স্যার","Mahmudul Sir"],["milon_g","মিলন স্যার (G)","Milon Sir (G)"],["milon_u","মিলন স্যার (O)","Milon Sir (O)"],["sharmin","শারমিন সুলতানা ম্যাডাম","Sharmin Sultana Madam"],["riya","রিয়া ম্যাডাম","Riya Madam"],["akhtaruzzaman","আখতারুজ্জামান স্যার","Akhtaruzzaman Sir"]],
   // কোনো বোর্ডের জন্য আলাদা তালিকা লাগলে এখানে দিন, যেমন: physio:{subjects:[["kinesio","কাইনেসিওলজি","Kinesiology"]],teachers:[...]}
   byBoard:{}
 };
@@ -830,12 +856,14 @@ const tparts=s=>{const [h,m]=String(s).slice(0,5).split(":").map(Number),n=(h%12
 const fmtT=s=>{const x=tparts(s);return lang==="bn"?x.p+" "+x.n:x.n+" "+x.p};
 const rangeHTML=(a,b)=>{const A=tparts(a),B=tparts(b);return `<b>${A.n} – ${B.n}</b><small>${A.p===B.p?A.p:A.p+" – "+B.p}</small>`};
 const allOf=k=>CLS[k].concat(...Object.values(CLS.byBoard).map(o=>o[k]||[]));
-const lab=(k,v)=>{const r=allOf(k).find(x=>x[0]===v);return r?r[lang==="bn"?1:2]:v};
+const nh=x=>esc(x).replace(/\((G|O)\)/g,'<span translate="no" class="notranslate">($1)</span>');
+const OLDT={milon:["মিলন স্যার","Milon Sir"]};
+const lab=(k,v)=>{const r=allOf(k).find(x=>x[0]===v);return r?r[lang==="bn"?1:2]:(k==="teachers"&&OLDT[v])?OLDT[v][lang==="bn"?0:1]:v};
 const noTbl=e=>/PGRST205|42P01/.test(e.code||"")||/schema cache|does not exist|could not find the table/i.test(e.message||"");
 const netErr=e=>/fetch|load failed|network/i.test(e.message||"");
 function classRow(c){
   const tp=CLS.types.find(x=>x[0]===c.class_type),tl=tp?tp[lang==="bn"?3:4]:c.class_type;
-  return `<tbody><tr><td class="ct">${rangeHTML(c.start_time,c.end_time)}</td><td class="cs"><b>${esc(lab("subjects",c.subject))}</b><span class="cty ${c.class_type==="practical"?"p":"g"}">${esc(tl)}</span><div class="ctc">${ic("user")} ${esc(lab("teachers",c.teacher))}</div></td></tr>${c.reading?`<tr><td class="cr" colspan="2"><div class="crd"><small>${t("c_read")}</small>${esc(c.reading)}</div></td></tr>`:""}</tbody>`;
+  return `<tbody><tr><td class="ct">${rangeHTML(c.start_time,c.end_time)}</td><td class="cs"><b>${esc(lab("subjects",c.subject))}</b><span class="cty ${c.class_type==="practical"?"p":"g"}">${esc(tl)}</span><div class="ctc">${ic("user")} ${nh(lab("teachers",c.teacher))}</div></td></tr>${c.reading?`<tr><td class="cr" colspan="2"><div class="crd"><small>${t("c_read")}</small>${esc(c.reading)}</div></td></tr>`:""}</tbody>`;
 }
 function classHTML(rows){
   const g=new Map(),td=pd(todayS()).u;
@@ -907,7 +935,7 @@ async function loadClassAdmin(){
   let r;try{r=await sb.from("class_notices").select("id,board,class_type,subject,teacher,class_date,start_time,end_time").order("created_at",{ascending:false}).limit(30)}catch(x){r={error:x}}
   if(r.error){box.innerHTML=`<p class="mute">${esc(noTbl(r.error)?t("c_setup"):t("c_loadFail"))}</p>`;return}
   const ok=postable(),rows=(r.data||[]).filter(x=>ok.includes(bk(x.board)));
-  box.innerHTML=rows.length?rows.map(c=>`<div class="note"><button class="del" data-id="${esc(c.id)}">${t("del")}</button><b>${esc(lab("subjects",c.subject))} · ${esc(lab("teachers",c.teacher))}</b><br><small>${esc(t("b_"+bk(c.board)))} · ${esc(wFull(c.class_date))}, ${esc(dFmt(c.class_date))} · ${fmtT(c.start_time)} – ${fmtT(c.end_time)}</small></div>`).join(""):`<p class="mute">${t("c_noneMine")}</p>`;
+  box.innerHTML=rows.length?rows.map(c=>`<div class="note"><button class="del" data-id="${esc(c.id)}">${t("del")}</button><b>${esc(lab("subjects",c.subject))} · ${nh(lab("teachers",c.teacher))}</b><br><small>${esc(t("b_"+bk(c.board)))} · ${esc(wFull(c.class_date))}, ${esc(dFmt(c.class_date))} · ${fmtT(c.start_time)} – ${fmtT(c.end_time)}</small></div>`).join(""):`<p class="mute">${t("c_noneMine")}</p>`;
 }
 function clsApply(){
   if(!ME||ME.role==="student")return;
