@@ -406,6 +406,11 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 .scard.open .sbody{display:block;animation:rise .4s both}
 .sbody iframe{display:block;width:100%;height:380px;border:0;border-radius:14px;background:#fff;margin-bottom:12px}
 .sbody .lnk{display:flex;justify-content:center}
+#sol .sst svg{transform:rotate(-90deg)}
+#sol .scard .shd{padding-top:16px;padding-bottom:16px}
+#sol iframe{display:block;width:100%;height:420px;border:0;border-radius:14px;background:#fff;margin-bottom:12px}
+#sol .lnk{display:flex;justify-content:center}
+.solsoon{padding:22px 16px;text-align:center;border-radius:16px;background:var(--tint);color:var(--teal);font-weight:600}
 </style>
 </head>
 <body>
@@ -455,11 +460,12 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 <div class="soon" id="tiles" hidden>
 <div class="tile" data-sub="tp"><i data-ic="user"></i><b data-i="t_teach"></b></div>
 <div class="tile" data-sub="sl"><i data-ic="book"></i><b data-i="t_slides"></b></div>
-<div class="tile"><i data-ic="file"></i><b data-i="t_sol"></b><span data-i="soon"></span></div>
+<div class="tile" data-sub="sol"><i data-ic="file"></i><b data-i="t_sol"></b></div>
 <div class="tile"><i data-ic="chat"></i><b data-i="t_comm"></b><span data-i="soon"></span></div>
 </div>
 <div class="card" id="tp" hidden><div class="subhd"><button class="back" type="button" data-back data-i="back"></button><h2 data-i="t_teach"></h2></div><div class="tgrid" id="tpList"></div></div>
 <div class="card" id="sl" hidden><div class="subhd"><button class="back" type="button" data-back data-i="back"></button><h2 data-i="t_slides"></h2></div><p class="mute" data-i="slideNote" style="margin-bottom:14px"></p><div id="slList"></div></div>
+<div class="card" id="sol" hidden><div class="subhd"><button class="back" type="button" id="solBack" data-i="back"></button><h2 id="solT"></h2></div><div id="solList"></div></div>
 </section>
 
 <section class="card about" id="about" hidden>
@@ -560,7 +566,7 @@ latest:"সর্বশেষ নোটিশ",allN:"সব নোটিশ দ�
 b_gallery:"গ্যালারি",tb_gallery:"গ্যালারি",tb_dental:"ডেন্টাল",tb_radiotherapy:"রেডিওথেরাপি",b_dental:"ডেন্টাল",b_radiotherapy:"রেডিওথেরাপি",tb_dental_radio:"ডেন্টাল ও রেডিও",tb_physio:"ফিজিও",b_dental_radio:"ডেন্টাল ও রেডিওথেরাপি",b_physio:"ফিজিওথেরাপি",
 nav_home:"হোম",nav_notice:"নোটিশ",nav_res:"বই-নোট",nav_about:"পরিচিতি",nav_login:"লগইন",nav_me:"আমার পেজ",
 needReg:"রেজিস্ট্রেশন দরকার",needRegT:"ফ্রি বই, শীট ও কমিউনিটি ব্যবহার করতে রেজিস্ট্রেশন করে লগইন করুন। নোটিশ সবাই বিনা লগইনে দেখতে পারবে।",
-t_routine:"দৈনিক রুটিন",t_teach:"টিচার প্রোফাইল",tDeg:"ডিগ্রি",tSoon:"শীঘ্রই যোগ হবে",tTap:"ট্যাপ করে বিস্তারিত দেখুন",t_slides:"স্যারদের স্লাইড",back:"← ফিরে যাও",view:"দেখুন",dl:"ডাউনলোড",slideNote:"স্যারের কার্ডে চাপ দিন, তাঁর ড্রাইভ ফোল্ডারের সব স্লাইড দেখা যাবে। সবাই শুধু দেখতে পারবে, বদলাতে পারবে না।",openDrive:"গুগল ড্রাইভে খুলুন",noSlide:"এই বিষয়ের স্লাইড শীঘ্রই আসছে",t_books:"বই ও শীট",t_sol:"প্রশ্নের সমাধান",t_comm:"কমিউনিটি",soon:"শীঘ্রই",
+t_routine:"দৈনিক রুটিন",t_teach:"টিচার প্রোফাইল",tDeg:"ডিগ্রি",tSoon:"শীঘ্রই যোগ হবে",tTap:"ট্যাপ করে বিস্তারিত দেখুন",t_slides:"স্যারদের স্লাইড",back:"← ফিরে যাও",view:"দেখুন",dl:"ডাউনলোড",slideNote:"স্যারের কার্ডে চাপ দিন, তাঁর ড্রাইভ ফোল্ডারের সব স্লাইড দেখা যাবে। সবাই শুধু দেখতে পারবে, বদলাতে পারবে না।",openDrive:"গুগল ড্রাইভে খুলুন",noSlide:"এই বিষয়ের স্লাইড শীঘ্রই আসছে",t_books:"বই ও শীট",t_sol:"প্রশ্নের সমাধান",t_comm:"কমিউনিটি",soon:"শীঘ্রই",t_solQ:"৫ বছরের প্রশ্ন",t_solA:"৫ বছরের প্রশ্নের উত্তর",solSoon:"এখানকার ছবি/ফাইল শীঘ্রই যোগ হবে",
 about:"আমাদের সম্পর্কে",aboutT:"বি গ্যালারি – ইনস্টিটিউট অব হেলথ টেকনোলজি, রাজশাহীর শিক্ষার্থীদের নিজস্ব সাইট।",madeBy:"ওয়েবসাইট তৈরি করেছেন",hist:"আমাদের ইতিহাস",deptH:"বিভাগসমূহ",webBtn:"অফিসিয়াল ওয়েবসাইট",fbBtn:"ফেসবুক পেজ",est:"প্রতিষ্ঠা",aff:"অধিভুক্ত",addr:"ঠিকানা",phone:"ফোন",email:"ইমেইল",web:"ওয়েবসাইট",role:"পরিচয়",nav_acct:"অ্যাকাউন্ট",nav_sadm:"সুপার অ্যাডমিন",nav_cadm:"ক্যাপ্টেন",
 regBtn:"রেজিস্ট্রেশন করুন",regT:"আইডি কার্ডের মোবাইল নম্বর, কোড (নম্বরের শেষ ২ অঙ্ক) ও পাসওয়ার্ড দিন। এই নম্বর ও পাসওয়ার্ড দিয়েই লগইন করবেন।",
 roll:"ভর্তির রোল নম্বর",code:"কোড (মোবাইল নম্বরের শেষ ২ অঙ্ক)",mobile:"মোবাইল নম্বর",pass:"পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)",you:"আপনি",pick:"বেছে নিন",male:"ছাত্র",female:"ছাত্রী",dist:"কোন জেলা থেকে এসেছেন",
@@ -575,7 +581,7 @@ latest:"Latest notices",allN:"See all notices",notices:"Notice board",none:"No n
 b_gallery:"Gallery",tb_gallery:"Gallery",tb_dental:"Dental",tb_radiotherapy:"Radiotherapy",b_dental:"Dental",b_radiotherapy:"Radiotherapy",tb_dental_radio:"Dental & Radio",tb_physio:"Physio",b_dental_radio:"Dental & Radiotherapy",b_physio:"Physiotherapy",
 nav_home:"Home",nav_notice:"Notices",nav_res:"Books",nav_about:"About",nav_login:"Login",nav_me:"My page",
 needReg:"Registration required",needRegT:"Register and log in to use free books, sheets and the community. Notices are open to everyone without login.",
-t_routine:"Daily routine",t_teach:"Teacher profiles",tDeg:"Degree",tSoon:"Coming soon",tTap:"Tap for details",t_slides:"Sir's slides",back:"← Back",view:"View",dl:"Download",slideNote:"Tap a teacher card to see all the slides in their Drive folder. Everyone can view, nobody can edit.",openDrive:"Open in Google Drive",noSlide:"Slides for this subject are coming soon",t_books:"Books & sheets",t_sol:"Question solutions",t_comm:"Community",soon:"Coming soon",
+t_routine:"Daily routine",t_teach:"Teacher profiles",tDeg:"Degree",tSoon:"Coming soon",tTap:"Tap for details",t_slides:"Sir's slides",back:"← Back",view:"View",dl:"Download",slideNote:"Tap a teacher card to see all the slides in their Drive folder. Everyone can view, nobody can edit.",openDrive:"Open in Google Drive",noSlide:"Slides for this subject are coming soon",t_books:"Books & sheets",t_sol:"Question solutions",t_comm:"Community",soon:"Coming soon",t_solQ:"Last 5 years' questions",t_solA:"Last 5 years' answers",solSoon:"Images/files will be added here soon",
 about:"About us",aboutT:"B Gallery – the students' own site of the Institute of Health Technology, Rajshahi.",madeBy:"Website made by",hist:"Our history",deptH:"Departments",webBtn:"Official website",fbBtn:"Facebook page",est:"Established",aff:"Affiliated with",addr:"Address",phone:"Phone",email:"Email",web:"Website",role:"Role",nav_acct:"Account",nav_sadm:"Super admin",nav_cadm:"Captain",
 regBtn:"Register",regT:"Enter your ID-card mobile number, the code (last 2 digits of the number) and a password. You will log in with the same number and password.",
 roll:"Admission roll number",code:"Code (last 2 digits of your mobile number)",mobile:"Mobile number",pass:"Password (at least 6 characters)",you:"You are",pick:"Choose",male:"Male student",female:"Female student",dist:"Home district",
@@ -740,8 +746,42 @@ function drawSlides(){
     };
   });
 }
+
+/* ===== প্রশ্নের সমাধান ===== */
+const SOL_SUBJ=[{id:"anatomy",bn:"অ্যানাটমি",en:"Anatomy"},{id:"physiology",bn:"ফিজিওলজি",en:"Physiology"},{id:"community",bn:"কমিউনিটি মেডিসিন",en:"Community Medicine"},{id:"english",bn:"ইংলিশ",en:"English"},{id:"computer",bn:"কম্পিউটার",en:"Computer"}];
+const SOL_YEARS=[21,22,23,24,25];
+const SOL_BNL=["এ","বি","সি","ডি","ই","এফ","জি","এইচ","আই","জে"];
+/* ড্রাইভ লিঙ্ক এখানে বসাবেন। চাবি: q-বিষয়-সাল  অথবা  a-বিষয়-নম্বর(১ থেকে ১০)
+   উদাহরণ:  "q-anatomy-21":"https://drive.google.com/drive/folders/XXXXXXXX",
+            "a-anatomy-1":"https://drive.google.com/drive/folders/YYYYYYYY"  */
+const SOL_LINKS={};
+let SOLP=[];
+const solYear=y=>lang==="bn"?String(y).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d])+" সাল":"20"+y;
+const solSys=n=>lang==="bn"?SOL_BNL[n-1]+" সিস্টেম":String.fromCharCode(64+n)+" System";
+function solName(path){
+  const k=path[path.length-1],lv=path.length;
+  if(lv===1)return t(k==="q"?"t_solQ":"t_solA");
+  if(lv===2){const x=SOL_SUBJ.find(a=>a.id===k);return lang==="bn"?x.bn:x.en}
+  return path[0]==="q"?solYear(k):solSys(+k);
+}
+function drawSol(){
+  const box=$("solList"),p=SOLP;
+  $("solT").textContent=p.length?solName(p):t("t_sol");
+  let items=[];
+  if(p.length===0)items=[["q",t("t_solQ")],["a",t("t_solA")]];
+  else if(p.length===1)items=SOL_SUBJ.map(x=>[x.id,lang==="bn"?x.bn:x.en]);
+  else if(p.length===2)items=p[0]==="q"?SOL_YEARS.map(y=>[String(y),solYear(y)]):Array.from({length:10},(_,i)=>[String(i+1),solSys(i+1)]);
+  if(p.length===3){
+    const link=SOL_LINKS[p.join("-")],has=!!folderId(link);
+    box.innerHTML=has?`<iframe src="${esc(folderEmbed(link))}" title="" loading="lazy" referrerpolicy="no-referrer"></iframe><a class="lnk" href="${esc(folderOpen(link))}" target="_blank" rel="noopener">${ic("ext")} ${esc(t("openDrive"))}</a>`:`<div class="solsoon">${esc(t("solSoon"))}</div>`;
+  }else{
+    box.innerHTML='<div class="sgrid">'+items.map((it,i)=>`<div class="scard" style="--h:${(i*47+170)%360};animation-delay:${i*50}ms"><button type="button" class="shd" data-sp="${esc(it[0])}"><span class="sic">${ic("folder")}</span><span class="snm"><b>${esc(it[1])}</b></span><span class="sst">${ic("chev")}</span></button></div>`).join("")+"</div>";
+  }
+}
+$("solList").addEventListener("click",e=>{const b=e.target.closest("[data-sp]");if(!b)return;SOLP.push(b.dataset.sp);drawSol();window.scrollTo(0,0)});
+$("solBack").addEventListener("click",()=>{if(SOLP.length){SOLP.pop();drawSol()}else resSub("");window.scrollTo(0,0)});
 function resSub(v){
-  $("tiles").hidden=!!v||!LOGGED;$("tp").hidden=v!=="tp";$("sl").hidden=v!=="sl";
+  $("tiles").hidden=!!v||!LOGGED;$("tp").hidden=v!=="tp";$("sl").hidden=v!=="sl";$("sol").hidden=v!=="sol";if(v==="sol"){SOLP=[];drawSol()}
   if(v==="tp")drawTeachers();if(v==="sl")drawSlides();window.scrollTo(0,0);
 }
 document.addEventListener("click",e=>{
@@ -749,7 +789,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-back]"))resSub("");
 });
 function show(v){
-  if(v==="res"){$("gate").hidden=LOGGED;$("tiles").hidden=!LOGGED;$("tp").hidden=true;$("sl").hidden=true}
+  if(v==="res"){$("gate").hidden=LOGGED;$("tiles").hidden=!LOGGED;$("tp").hidden=true;$("sl").hidden=true;$("sol").hidden=true}
   CUR=v;["home","notice","res","about","dev","reg","login","me","adm"].forEach(x=>$(x).hidden=x!==v);hi();window.scrollTo(0,0);
 }
 function applyLang(){
@@ -762,7 +802,7 @@ function applyLang(){
   $("rGender").innerHTML=`<option value="">${t("pick")}</option><option value="male">${t("male")}</option><option value="female">${t("female")}</option>`;
   buildBar();loadNotices();drawMe();if(ME&&ME.role!=="student"){setBoards();loadAdmin()}
   clsApply();
-  if(!$("tp").hidden)drawTeachers();if(!$("sl").hidden)drawSlides();
+  if(!$("tp").hidden)drawTeachers();if(!$("sl").hidden)drawSlides();if(!$("sol").hidden)drawSol();
 }
 $("lang").onclick=()=>{lang=lang==="bn"?"en":"bn";localStorage.setItem("bg_lang",lang);applyLang()};
 document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)show(g.dataset.go==="acct"?(LOGGED?"me":"login"):g.dataset.go)});
