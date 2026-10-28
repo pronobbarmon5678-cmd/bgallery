@@ -390,10 +390,28 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 .tile i{width:62px;height:62px;margin:2px auto 8px;border-radius:20px;display:grid!important;place-items:center;background:linear-gradient(135deg,var(--a),var(--b));color:#fff!important;font-size:30px!important;animation:glow 3.2s ease-in-out infinite!important}
 .tile:hover{transform:translateY(-4px)!important}
 @media(prefers-reduced-motion:reduce){.card::after,.tile i{animation:none!important}}
+/* ===== v17: teacher slide folders ===== */
+.sgrid{display:grid;gap:12px}
+.scard{position:relative;border-radius:20px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden;animation:rise .6s both}
+.scard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(180deg,hsl(var(--h) 70% 45%),hsl(calc(var(--h) + 70) 75% 55%))}
+.shd{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:12px;padding:14px 16px 14px 20px;cursor:pointer;font-family:"Hind Siliguri",sans-serif;color:var(--ink)}
+.sic{flex:none;width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;font-size:24px;background:linear-gradient(135deg,hsl(var(--h) 65% 42%),hsl(calc(var(--h) + 70) 70% 52%));box-shadow:0 6px 14px hsl(var(--h) 65% 40% / .35)}
+.snm{flex:1;min-width:0;display:grid;line-height:1.35}
+.snm b{font-size:17px}.snm small{color:var(--mute);font-size:13px}
+.sst{flex:none;display:grid;place-items:center;color:var(--teal);font-size:20px;transition:transform .3s}
+.scard.off .sst{font-size:12px;font-weight:600;color:var(--mute)}
+.scard.off .shd{cursor:default;opacity:.75}
+.scard.open .sst{transform:rotate(180deg)}
+.sbody{display:none;padding:0 14px 16px 20px}
+.scard.open .sbody{display:block;animation:rise .4s both}
+.sbody iframe{display:block;width:100%;height:380px;border:0;border-radius:14px;background:#fff;margin-bottom:12px}
+.sbody .lnk{display:flex;justify-content:center}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
 <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
 <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
 <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
@@ -542,7 +560,7 @@ latest:"সর্বশেষ নোটিশ",allN:"সব নোটিশ দ�
 b_gallery:"গ্যালারি",tb_gallery:"গ্যালারি",tb_dental:"ডেন্টাল",tb_radiotherapy:"রেডিওথেরাপি",b_dental:"ডেন্টাল",b_radiotherapy:"রেডিওথেরাপি",tb_dental_radio:"ডেন্টাল ও রেডিও",tb_physio:"ফিজিও",b_dental_radio:"ডেন্টাল ও রেডিওথেরাপি",b_physio:"ফিজিওথেরাপি",
 nav_home:"হোম",nav_notice:"নোটিশ",nav_res:"বই-নোট",nav_about:"পরিচিতি",nav_login:"লগইন",nav_me:"আমার পেজ",
 needReg:"রেজিস্ট্রেশন দরকার",needRegT:"ফ্রি বই, শীট ও কমিউনিটি ব্যবহার করতে রেজিস্ট্রেশন করে লগইন করুন। নোটিশ সবাই বিনা লগইনে দেখতে পারবে।",
-t_routine:"দৈনিক রুটিন",t_teach:"টিচার প্রোফাইল",tDeg:"ডিগ্রি",tSoon:"শীঘ্রই যোগ হবে",tTap:"ট্যাপ করে বিস্তারিত দেখুন",t_slides:"স্যারদের স্লাইড",back:"← ফিরে যাও",view:"দেখুন",dl:"ডাউনলোড",slideNote:"সব স্লাইড গুগল ড্রাইভে আছে। যে কেউ এখান থেকে দেখতে বা ডাউনলোড করতে পারবে।",noSlide:"এই বিষয়ের স্লাইড শীঘ্রই আসছে",t_books:"বই ও শীট",t_sol:"প্রশ্নের সমাধান",t_comm:"কমিউনিটি",soon:"শীঘ্রই",
+t_routine:"দৈনিক রুটিন",t_teach:"টিচার প্রোফাইল",tDeg:"ডিগ্রি",tSoon:"শীঘ্রই যোগ হবে",tTap:"ট্যাপ করে বিস্তারিত দেখুন",t_slides:"স্যারদের স্লাইড",back:"← ফিরে যাও",view:"দেখুন",dl:"ডাউনলোড",slideNote:"স্যারের কার্ডে চাপ দিন, তাঁর ড্রাইভ ফোল্ডারের সব স্লাইড দেখা যাবে। সবাই শুধু দেখতে পারবে, বদলাতে পারবে না।",openDrive:"গুগল ড্রাইভে খুলুন",noSlide:"এই বিষয়ের স্লাইড শীঘ্রই আসছে",t_books:"বই ও শীট",t_sol:"প্রশ্নের সমাধান",t_comm:"কমিউনিটি",soon:"শীঘ্রই",
 about:"আমাদের সম্পর্কে",aboutT:"বি গ্যালারি – ইনস্টিটিউট অব হেলথ টেকনোলজি, রাজশাহীর শিক্ষার্থীদের নিজস্ব সাইট।",madeBy:"ওয়েবসাইট তৈরি করেছেন",hist:"আমাদের ইতিহাস",deptH:"বিভাগসমূহ",webBtn:"অফিসিয়াল ওয়েবসাইট",fbBtn:"ফেসবুক পেজ",est:"প্রতিষ্ঠা",aff:"অধিভুক্ত",addr:"ঠিকানা",phone:"ফোন",email:"ইমেইল",web:"ওয়েবসাইট",role:"পরিচয়",nav_acct:"অ্যাকাউন্ট",nav_sadm:"সুপার অ্যাডমিন",nav_cadm:"ক্যাপ্টেন",
 regBtn:"রেজিস্ট্রেশন করুন",regT:"আইডি কার্ডের মোবাইল নম্বর, কোড (নম্বরের শেষ ২ অঙ্ক) ও পাসওয়ার্ড দিন। এই নম্বর ও পাসওয়ার্ড দিয়েই লগইন করবেন।",
 roll:"ভর্তির রোল নম্বর",code:"কোড (মোবাইল নম্বরের শেষ ২ অঙ্ক)",mobile:"মোবাইল নম্বর",pass:"পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)",you:"আপনি",pick:"বেছে নিন",male:"ছাত্র",female:"ছাত্রী",dist:"কোন জেলা থেকে এসেছেন",
@@ -557,7 +575,7 @@ latest:"Latest notices",allN:"See all notices",notices:"Notice board",none:"No n
 b_gallery:"Gallery",tb_gallery:"Gallery",tb_dental:"Dental",tb_radiotherapy:"Radiotherapy",b_dental:"Dental",b_radiotherapy:"Radiotherapy",tb_dental_radio:"Dental & Radio",tb_physio:"Physio",b_dental_radio:"Dental & Radiotherapy",b_physio:"Physiotherapy",
 nav_home:"Home",nav_notice:"Notices",nav_res:"Books",nav_about:"About",nav_login:"Login",nav_me:"My page",
 needReg:"Registration required",needRegT:"Register and log in to use free books, sheets and the community. Notices are open to everyone without login.",
-t_routine:"Daily routine",t_teach:"Teacher profiles",tDeg:"Degree",tSoon:"Coming soon",tTap:"Tap for details",t_slides:"Sir's slides",back:"← Back",view:"View",dl:"Download",slideNote:"All slides are stored on Google Drive. Anyone can view or download them from here.",noSlide:"Slides for this subject are coming soon",t_books:"Books & sheets",t_sol:"Question solutions",t_comm:"Community",soon:"Coming soon",
+t_routine:"Daily routine",t_teach:"Teacher profiles",tDeg:"Degree",tSoon:"Coming soon",tTap:"Tap for details",t_slides:"Sir's slides",back:"← Back",view:"View",dl:"Download",slideNote:"Tap a teacher card to see all the slides in their Drive folder. Everyone can view, nobody can edit.",openDrive:"Open in Google Drive",noSlide:"Slides for this subject are coming soon",t_books:"Books & sheets",t_sol:"Question solutions",t_comm:"Community",soon:"Coming soon",
 about:"About us",aboutT:"B Gallery – the students' own site of the Institute of Health Technology, Rajshahi.",madeBy:"Website made by",hist:"Our history",deptH:"Departments",webBtn:"Official website",fbBtn:"Facebook page",est:"Established",aff:"Affiliated with",addr:"Address",phone:"Phone",email:"Email",web:"Website",role:"Role",nav_acct:"Account",nav_sadm:"Super admin",nav_cadm:"Captain",
 regBtn:"Register",regT:"Enter your ID-card mobile number, the code (last 2 digits of the number) and a password. You will log in with the same number and password.",
 roll:"Admission roll number",code:"Code (last 2 digits of your mobile number)",mobile:"Mobile number",pass:"Password (at least 6 characters)",you:"You are",pick:"Choose",male:"Male student",female:"Female student",dist:"Home district",
@@ -662,24 +680,20 @@ function hi(){const m={reg:"acct",login:"acct",me:"acct"}[CUR]||CUR;document.que
    photo: প্রোফাইল ছবির লিঙ্ক (ড্রাইভের পাবলিক লিঙ্ক বা ছবির URL), খালি থাকলে নামের অক্ষর দেখাবে।
    links: গুগল ড্রাইভের পাবলিক শেয়ার লিঙ্ক। খালি রাখলে "শীঘ্রই আসছে" দেখাবে। */
 const TEACHERS=[
- {bn:"তুলি ম্যাডাম",en:"Tuli Madam",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:""},
- {bn:"আরিফুল কবির স্যার",en:"Ariful Kabir Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"আফরোজ স্যার",en:"Afroz Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"মাহমুদুল স্যার",en:"Mahmudul Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"মিলন স্যার (G)",en:"Milon Sir (G)",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"মিলন স্যার (O)",en:"Milon Sir (O)",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"শারমিন সুলতানা ম্যাডাম",en:"Sharmin Sultana Madam",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:""},
- {bn:"রিয়া ম্যাডাম",en:"Riya Madam",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:""},
- {bn:"আখতারুজ্জামান স্যার",en:"Akhtaruzzaman Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"মুনজুর রহমান স্যার",en:"Munzur Rahman Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""},
- {bn:"আসাদুজ্জামান স্যার",en:"Asaduzzaman Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:""}
+ {bn:"তুলি ম্যাডাম",en:"Tuli Madam",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:"",folder:""},
+ {bn:"আরিফুল কবির স্যার",en:"Ariful Kabir Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:"",folder:""},
+ {bn:"আফরোজ স্যার",en:"Afroz Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:"",folder:""},
+ {bn:"মাহমুদুল স্যার",en:"Mahmudul Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:"",folder:""},
+ {bn:"মিলন স্যার (G)",en:"Milon Sir (G)",type:"স্যার",typeEn:"Sir",deg:"",photo:"",folder:""},
+ {bn:"মিলন স্যার (O)",en:"Milon Sir (O)",type:"স্যার",typeEn:"Sir",deg:"",photo:"",folder:""},
+ {bn:"শারমিন সুলতানা ম্যাডাম",en:"Sharmin Sultana Madam",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:"",folder:""},
+ {bn:"রিয়া ম্যাডাম",en:"Riya Madam",type:"ম্যাডাম",typeEn:"Madam",deg:"",photo:"",folder:""},
+ {bn:"আখতারুজ্জামান স্যার",en:"Akhtaruzzaman Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:"",folder:""},
+ {bn:"মুনজুর রহমান স্যার",en:"Munzur Rahman Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:"",folder:""},
+ {bn:"আসাদুজ্জামান স্যার",en:"Asaduzzaman Sir",type:"স্যার",typeEn:"Sir",deg:"",photo:"",folder:""}
 ];
+/* folder = ওই স্যারের গুগল ড্রাইভ ফোল্ডারের শেয়ার লিঙ্ক (খালি থাকলে "শীঘ্রই যোগ হবে" দেখাবে) */
 /* deg = ডিগ্রি (যেমন "ডিপিটি, এমপিএইচ"); photo = ছবির লিঙ্ক। খালি থাকলে নামের অক্ষর দেখাবে */
-const SLIDES=[
- {subject:"বিষয় ১",items:[{title:"স্লাইডের নাম",link:""}]},
- {subject:"বিষয় ২",items:[{title:"স্লাইডের নাম",link:""}]},
- {subject:"বিষয় ৩",items:[{title:"স্লাইডের নাম",link:""}]}
-];
 const driveId=u=>{const m=String(u).match(/\/d\/([\w-]+)|[?&]id=([\w-]+)/);return m?(m[1]||m[2]):""};
 const viewUrl=u=>{const i=driveId(u);return i?`https://drive.google.com/file/d/${i}/view`:u};
 const dlUrl=u=>{const i=driveId(u);return i?`https://drive.google.com/uc?export=download&id=${i}`:u};
@@ -706,8 +720,25 @@ function drawTeachers(){
     }
   });
 }
+const folderId=u=>{const m=String(u||"").match(/\/folders\/([\w-]+)|[?&]id=([\w-]+)/);return m?(m[1]||m[2]):""};
+const folderOpen=u=>`https://drive.google.com/drive/folders/${folderId(u)}`;
+const folderEmbed=u=>`https://drive.google.com/embeddedfolderview?id=${folderId(u)}#list`;
 function drawSlides(){
-  $("slList").innerHTML=SLIDES.map(g=>`<div class="sgrp"><h3>${esc(g.subject)}</h3>${g.items.map(x=>x.link?`<div class="sitem"><span>${esc(x.title)}</span><a class="lnk" href="${esc(viewUrl(x.link))}" target="_blank" rel="noopener">${t("view")}</a><a class="lnk dl" href="${esc(dlUrl(x.link))}" target="_blank" rel="noopener">${t("dl")}</a></div>`:`<div class="sitem"><span>${esc(x.title)}</span><em class="mute">${t("noSlide")}</em></div>`).join("")}</div>`).join("");
+  const bn=lang==="bn";
+  $("slList").innerHTML='<div class="sgrid">'+TEACHERS.map((p,i)=>{
+    const nm=bn?p.bn:p.en,ty=bn?p.type:p.typeEn,has=!!folderId(p.folder);
+    return `<div class="scard${has?"":" off"}" data-k="${i}" style="--h:${(i*37+170)%360};animation-delay:${(i*60)}ms"><button type="button" class="shd" aria-expanded="false"><span class="sic">${ic("folder")}</span><span class="snm"><b>${nh(nm)}</b><small>${esc(ty)}</small></span><span class="sst">${has?ic("chev"):esc(t("tSoon"))}</span></button><div class="sbody"></div></div>`}).join("")+"</div>";
+  const all=[...document.querySelectorAll("#slList .scard")];
+  all.forEach(c=>{
+    const p=TEACHERS[c.dataset.k],box=c.querySelector(".sbody"),b=c.querySelector(".shd");
+    b.onclick=()=>{
+      if(c.classList.contains("off"))return;
+      const open=!c.classList.contains("open");
+      all.forEach(x=>{x.classList.remove("open");x.querySelector(".shd").setAttribute("aria-expanded","false");x.querySelector(".sbody").innerHTML=""});
+      if(open){c.classList.add("open");b.setAttribute("aria-expanded","true");
+        box.innerHTML=`<iframe src="${esc(folderEmbed(p.folder))}" title="" loading="lazy" referrerpolicy="no-referrer"></iframe><a class="lnk" href="${esc(folderOpen(p.folder))}" target="_blank" rel="noopener">${ic("ext")} ${esc(t("openDrive"))}</a>`;}
+    };
+  });
 }
 function resSub(v){
   $("tiles").hidden=!!v||!LOGGED;$("tp").hidden=v!=="tp";$("sl").hidden=v!=="sl";
