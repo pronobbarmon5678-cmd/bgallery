@@ -410,6 +410,13 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 #sol .scard .shd{padding-top:16px;padding-bottom:16px}
 #sol iframe{display:block;width:100%;height:420px;border:0;border-radius:14px;background:#fff;margin-bottom:12px}
 #sol .lnk{display:flex;justify-content:center}
+.tile:nth-child(5){grid-column:1/-1;--a:#34d399;--b:#047857;--g:rgba(52,211,153,.45);--tint2:rgba(52,211,153,.18)}
+.exinfo{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.exinfo span{padding:4px 12px;border-radius:999px;background:var(--tint);color:var(--teal);font-weight:600;font-size:14px}
+.exbar{height:8px;border-radius:99px;background:var(--tint);overflow:hidden;margin-bottom:14px}.exbar i{display:block;height:100%;background:linear-gradient(90deg,#14a89f,#0a6f78);transition:width .3s}
+.exq{font-weight:700;font-size:18px;line-height:1.6;margin-bottom:12px}
+.exopt{display:block;width:100%;text-align:left;margin-bottom:10px;padding:13px 15px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:500 16px "Hind Siliguri",sans-serif;cursor:pointer}
+.exopt.ok{border-color:#16a34a;background:rgba(22,163,74,.14)}.exopt.bad{border-color:#dc2626;background:rgba(220,38,38,.12)}
+.exres{text-align:center;padding:10px 0}.exres .big{font-size:44px;font-weight:800;color:var(--teal)}.exres .pf{display:inline-block;margin:8px 0 14px;padding:6px 20px;border-radius:999px;font-weight:800;font-size:20px}.exres .pf.p{background:rgba(22,163,74,.16);color:#15803d}.exres .pf.f{background:rgba(220,38,38,.14);color:#b91c1c}
 .solsoon{padding:22px 16px;text-align:center;border-radius:16px;background:var(--tint);color:var(--teal);font-weight:600}
 </style>
 </head>
@@ -462,10 +469,12 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 <div class="tile" data-sub="sl"><i data-ic="book"></i><b data-i="t_slides"></b></div>
 <div class="tile" data-sub="sol"><i data-ic="file"></i><b data-i="t_sol"></b></div>
 <div class="tile"><i data-ic="chat"></i><b data-i="t_comm"></b><span data-i="soon"></span></div>
+<div class="tile" data-sub="ex"><i data-ic="cap"></i><b data-i="t_exam"></b></div>
 </div>
 <div class="card" id="tp" hidden><div class="subhd"><button class="back" type="button" data-back data-i="back"></button><h2 data-i="t_teach"></h2></div><div class="tgrid" id="tpList"></div></div>
 <div class="card" id="sl" hidden><div class="subhd"><button class="back" type="button" data-back data-i="back"></button><h2 data-i="t_slides"></h2></div><p class="mute" data-i="slideNote" style="margin-bottom:14px"></p><div id="slList"></div></div>
 <div class="card" id="sol" hidden><div class="subhd"><button class="back" type="button" id="solBack" data-i="back"></button><h2 id="solT"></h2></div><div id="solList"></div></div>
+<div class="card" id="ex" hidden><div class="subhd"><button class="back" type="button" id="exBack" data-i="back"></button><h2 id="exT"></h2></div><div id="exList"></div></div>
 </section>
 
 <section class="card about" id="about" hidden>
@@ -566,7 +575,7 @@ latest:"সর্বশেষ নোটিশ",allN:"সব নোটিশ দ�
 b_gallery:"গ্যালারি",tb_gallery:"গ্যালারি",tb_dental:"ডেন্টাল",tb_radiotherapy:"রেডিওথেরাপি",b_dental:"ডেন্টাল",b_radiotherapy:"রেডিওথেরাপি",tb_dental_radio:"ডেন্টাল ও রেডিও",tb_physio:"ফিজিও",b_dental_radio:"ডেন্টাল ও রেডিওথেরাপি",b_physio:"ফিজিওথেরাপি",
 nav_home:"হোম",nav_notice:"নোটিশ",nav_res:"বই-নোট",nav_about:"পরিচিতি",nav_login:"লগইন",nav_me:"আমার পেজ",
 needReg:"রেজিস্ট্রেশন দরকার",needRegT:"ফ্রি বই, শীট ও কমিউনিটি ব্যবহার করতে রেজিস্ট্রেশন করে লগইন করুন। নোটিশ সবাই বিনা লগইনে দেখতে পারবে।",
-t_routine:"দৈনিক রুটিন",t_teach:"টিচার প্রোফাইল",tDeg:"ডিগ্রি",tSoon:"শীঘ্রই যোগ হবে",tTap:"ট্যাপ করে বিস্তারিত দেখুন",t_slides:"স্যারদের স্লাইড",back:"← ফিরে যাও",view:"দেখুন",dl:"ডাউনলোড",slideNote:"স্যারের কার্ডে চাপ দিন, তাঁর ড্রাইভ ফোল্ডারের সব স্লাইড দেখা যাবে। সবাই শুধু দেখতে পারবে, বদলাতে পারবে না।",openDrive:"গুগল ড্রাইভে খুলুন",noSlide:"এই বিষয়ের স্লাইড শীঘ্রই আসছে",t_books:"বই ও শীট",t_sol:"প্রশ্নের সমাধান",t_comm:"কমিউনিটি",soon:"শীঘ্রই",t_solQ:"৫ বছরের প্রশ্ন",t_solA:"৫ বছরের প্রশ্নের উত্তর",solSoon:"এখানকার ছবি/ফাইল শীঘ্রই যোগ হবে",
+t_routine:"দৈনিক রুটিন",t_teach:"টিচার প্রোফাইল",tDeg:"ডিগ্রি",tSoon:"শীঘ্রই যোগ হবে",tTap:"ট্যাপ করে বিস্তারিত দেখুন",t_slides:"স্যারদের স্লাইড",back:"← ফিরে যাও",view:"দেখুন",dl:"ডাউনলোড",slideNote:"স্যারের কার্ডে চাপ দিন, তাঁর ড্রাইভ ফোল্ডারের সব স্লাইড দেখা যাবে। সবাই শুধু দেখতে পারবে, বদলাতে পারবে না।",openDrive:"গুগল ড্রাইভে খুলুন",noSlide:"এই বিষয়ের স্লাইড শীঘ্রই আসছে",t_books:"বই ও শীট",t_sol:"প্রশ্নের সমাধান",t_comm:"কমিউনিটি",soon:"শীঘ্রই",t_exam:"পরীক্ষা",t_solQ:"৫ বছরের প্রশ্ন",t_solA:"৫ বছরের প্রশ্নের উত্তর",solSoon:"এখানকার ছবি/ফাইল শীঘ্রই যোগ হবে",
 about:"আমাদের সম্পর্কে",aboutT:"বি গ্যালারি – ইনস্টিটিউট অব হেলথ টেকনোলজি, রাজশাহীর শিক্ষার্থীদের নিজস্ব সাইট।",madeBy:"ওয়েবসাইট তৈরি করেছেন",hist:"আমাদের ইতিহাস",deptH:"বিভাগসমূহ",webBtn:"অফিসিয়াল ওয়েবসাইট",fbBtn:"ফেসবুক পেজ",est:"প্রতিষ্ঠা",aff:"অধিভুক্ত",addr:"ঠিকানা",phone:"ফোন",email:"ইমেইল",web:"ওয়েবসাইট",role:"পরিচয়",nav_acct:"অ্যাকাউন্ট",nav_sadm:"সুপার অ্যাডমিন",nav_cadm:"ক্যাপ্টেন",
 regBtn:"রেজিস্ট্রেশন করুন",regT:"আইডি কার্ডের মোবাইল নম্বর, কোড (নম্বরের শেষ ২ অঙ্ক) ও পাসওয়ার্ড দিন। এই নম্বর ও পাসওয়ার্ড দিয়েই লগইন করবেন।",
 roll:"ভর্তির রোল নম্বর",code:"কোড (মোবাইল নম্বরের শেষ ২ অঙ্ক)",mobile:"মোবাইল নম্বর",pass:"পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)",you:"আপনি",pick:"বেছে নিন",male:"ছাত্র",female:"ছাত্রী",dist:"কোন জেলা থেকে এসেছেন",
@@ -581,7 +590,7 @@ latest:"Latest notices",allN:"See all notices",notices:"Notice board",none:"No n
 b_gallery:"Gallery",tb_gallery:"Gallery",tb_dental:"Dental",tb_radiotherapy:"Radiotherapy",b_dental:"Dental",b_radiotherapy:"Radiotherapy",tb_dental_radio:"Dental & Radio",tb_physio:"Physio",b_dental_radio:"Dental & Radiotherapy",b_physio:"Physiotherapy",
 nav_home:"Home",nav_notice:"Notices",nav_res:"Books",nav_about:"About",nav_login:"Login",nav_me:"My page",
 needReg:"Registration required",needRegT:"Register and log in to use free books, sheets and the community. Notices are open to everyone without login.",
-t_routine:"Daily routine",t_teach:"Teacher profiles",tDeg:"Degree",tSoon:"Coming soon",tTap:"Tap for details",t_slides:"Sir's slides",back:"← Back",view:"View",dl:"Download",slideNote:"Tap a teacher card to see all the slides in their Drive folder. Everyone can view, nobody can edit.",openDrive:"Open in Google Drive",noSlide:"Slides for this subject are coming soon",t_books:"Books & sheets",t_sol:"Question solutions",t_comm:"Community",soon:"Coming soon",t_solQ:"Last 5 years' questions",t_solA:"Last 5 years' answers",solSoon:"Images/files will be added here soon",
+t_routine:"Daily routine",t_teach:"Teacher profiles",tDeg:"Degree",tSoon:"Coming soon",tTap:"Tap for details",t_slides:"Sir's slides",back:"← Back",view:"View",dl:"Download",slideNote:"Tap a teacher card to see all the slides in their Drive folder. Everyone can view, nobody can edit.",openDrive:"Open in Google Drive",noSlide:"Slides for this subject are coming soon",t_books:"Books & sheets",t_sol:"Question solutions",t_comm:"Community",soon:"Coming soon",t_exam:"Exam",t_solQ:"Last 5 years' questions",t_solA:"Last 5 years' answers",solSoon:"Images/files will be added here soon",
 about:"About us",aboutT:"B Gallery – the students' own site of the Institute of Health Technology, Rajshahi.",madeBy:"Website made by",hist:"Our history",deptH:"Departments",webBtn:"Official website",fbBtn:"Facebook page",est:"Established",aff:"Affiliated with",addr:"Address",phone:"Phone",email:"Email",web:"Website",role:"Role",nav_acct:"Account",nav_sadm:"Super admin",nav_cadm:"Captain",
 regBtn:"Register",regT:"Enter your ID-card mobile number, the code (last 2 digits of the number) and a password. You will log in with the same number and password.",
 roll:"Admission roll number",code:"Code (last 2 digits of your mobile number)",mobile:"Mobile number",pass:"Password (at least 6 characters)",you:"You are",pick:"Choose",male:"Male student",female:"Female student",dist:"Home district",
@@ -780,8 +789,48 @@ function drawSol(){
 }
 $("solList").addEventListener("click",e=>{const b=e.target.closest("[data-sp]");if(!b)return;SOLP.push(b.dataset.sp);drawSol();window.scrollTo(0,0)});
 $("solBack").addEventListener("click",()=>{if(SOLP.length){SOLP.pop();drawSol()}else resSub("");window.scrollTo(0,0)});
+
+/* ===== পরীক্ষা (এমসিকিউ) ===== */
+const EX_SUBJ=[{id:"anatomy",bn:"অ্যানাটমি",en:"Anatomy"},{id:"physiology",bn:"ফিজিওলজি",en:"Physiology"},{id:"community",bn:"কমিউনিটি মেডিসিন",en:"Community Medicine"}];
+const EX_N=10,EX_PASS=7;
+/* প্রশ্ন এখানে বসবে। প্রতিটি প্রশ্নের ধরন:
+   {q:"প্রশ্ন", o:["অপশন ১","অপশন ২"], a:0}   (a = সঠিক অপশনের নম্বর, ০ থেকে শুরু)
+   ট্রু/ফলস হলে o:["সত্য","মিথ্যা"] */
+const EX_Q={anatomy:[],physiology:[],community:[]};
+let EXS={s:null,run:null};
+function exShuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function drawEx(){
+  const box=$("exList"),bn=lang==="bn",s=EXS.s,r=EXS.run;
+  $("exT").textContent=s?(bn?s.bn:s.en):t("t_exam");
+  if(!s){
+    box.innerHTML='<div class="sgrid">'+EX_SUBJ.map((x,i)=>`<div class="scard" style="--h:${(i*60+150)%360};animation-delay:${i*60}ms"><button type="button" class="shd" data-es="${x.id}"><span class="sic">${ic("cap")}</span><span class="snm"><b>${esc(bn?x.bn:x.en)}</b><small>${bn?"১০টি এমসিকিউ":"10 MCQs"}</small></span><span class="sst">${ic("chev")}</span></button></div>`).join("")+"</div>";
+    return;
+  }
+  const bank=EX_Q[s.id]||[];
+  if(!r){
+    const n=Math.min(EX_N,bank.length),pass=n>=EX_N?EX_PASS:Math.ceil(n*0.7);
+    box.innerHTML=`<div class="exinfo"><span>${bn?EX_N+"টি এমসিকিউ":EX_N+" MCQs"}</span><span>${bn?"পাস মার্ক "+EX_PASS+"/"+EX_N:"Pass mark "+EX_PASS+"/"+EX_N}</span></div>`+(bank.length?`<button class="go" type="button" data-exstart>${bn?"পরীক্ষা শুরু করুন":"Start exam"}</button>`:`<div class="solsoon">${bn?"এই বিষয়ের প্রশ্ন শীঘ্রই যোগ হবে":"Questions for this subject are coming soon"}</div>`);
+    return;
+  }
+  if(r.i>=r.list.length){
+    const n=r.list.length,pass=n>=EX_N?EX_PASS:Math.ceil(n*0.7),ok=r.score>=pass;
+    box.innerHTML=`<div class="exres"><div class="big">${r.score} / ${n}</div><div class="pf ${ok?"p":"f"}">${ok?(bn?"পাস":"Pass"):(bn?"ফেল":"Fail")}</div><div><button class="go" type="button" data-exstart>${bn?"আবার পরীক্ষা দিন":"Try again"}</button></div></div>`;
+    return;
+  }
+  const q=r.list[r.i],n=r.list.length;
+  box.innerHTML=`<div class="exbar"><i style="width:${(r.i/n)*100}%"></i></div><p class="mute" style="margin-bottom:6px">${bn?"প্রশ্ন":"Question"} ${r.i+1} / ${n}</p><div class="exq">${esc(q.q)}</div>`+q.o.map((o,k)=>{let c="exopt";if(r.pick!==null){if(k===q.a)c+=" ok";else if(k===r.pick)c+=" bad"}return `<button type="button" class="${c}" data-eo="${k}"${r.pick!==null?" disabled":""}>${esc(o)}</button>`}).join("")+(r.pick!==null?`<button class="go" type="button" data-exnext>${r.i+1>=n?(bn?"ফলাফল দেখুন":"See result"):(bn?"পরের প্রশ্ন":"Next")}</button>`:"");
+}
+$("exList").addEventListener("click",e=>{
+  const es=e.target.closest("[data-es]");
+  if(es){EXS={s:EX_SUBJ.find(x=>x.id===es.dataset.es),run:null};drawEx();window.scrollTo(0,0);return}
+  if(e.target.closest("[data-exstart]")){const bank=EX_Q[EXS.s.id]||[];EXS.run={list:exShuffle(bank).slice(0,EX_N),i:0,score:0,pick:null};drawEx();window.scrollTo(0,0);return}
+  const eo=e.target.closest("[data-eo]");
+  if(eo&&EXS.run&&EXS.run.pick===null){const k=+eo.dataset.eo;EXS.run.pick=k;if(k===EXS.run.list[EXS.run.i].a)EXS.run.score++;drawEx();return}
+  if(e.target.closest("[data-exnext]")){EXS.run.i++;EXS.run.pick=null;drawEx();window.scrollTo(0,0)}
+});
+$("exBack").addEventListener("click",()=>{if(EXS.run)EXS.run=null;else if(EXS.s)EXS.s=null;else{resSub("");return}drawEx();window.scrollTo(0,0)});
 function resSub(v){
-  $("tiles").hidden=!!v||!LOGGED;$("tp").hidden=v!=="tp";$("sl").hidden=v!=="sl";$("sol").hidden=v!=="sol";if(v==="sol"){SOLP=[];drawSol()}
+  $("tiles").hidden=!!v||!LOGGED;$("tp").hidden=v!=="tp";$("sl").hidden=v!=="sl";$("sol").hidden=v!=="sol";$("ex").hidden=v!=="ex";if(v==="sol"){SOLP=[];drawSol()}if(v==="ex"){EXS={s:null,run:null};drawEx()}
   if(v==="tp")drawTeachers();if(v==="sl")drawSlides();window.scrollTo(0,0);
 }
 document.addEventListener("click",e=>{
@@ -789,7 +838,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-back]"))resSub("");
 });
 function show(v){
-  if(v==="res"){$("gate").hidden=LOGGED;$("tiles").hidden=!LOGGED;$("tp").hidden=true;$("sl").hidden=true;$("sol").hidden=true}
+  if(v==="res"){$("gate").hidden=LOGGED;$("tiles").hidden=!LOGGED;$("tp").hidden=true;$("sl").hidden=true;$("sol").hidden=true;$("ex").hidden=true}
   CUR=v;["home","notice","res","about","dev","reg","login","me","adm"].forEach(x=>$(x).hidden=x!==v);hi();window.scrollTo(0,0);
 }
 function applyLang(){
@@ -802,7 +851,7 @@ function applyLang(){
   $("rGender").innerHTML=`<option value="">${t("pick")}</option><option value="male">${t("male")}</option><option value="female">${t("female")}</option>`;
   buildBar();loadNotices();drawMe();if(ME&&ME.role!=="student"){setBoards();loadAdmin()}
   clsApply();
-  if(!$("tp").hidden)drawTeachers();if(!$("sl").hidden)drawSlides();if(!$("sol").hidden)drawSol();
+  if(!$("tp").hidden)drawTeachers();if(!$("sl").hidden)drawSlides();if(!$("sol").hidden)drawSol();if(!$("ex").hidden)drawEx();
 }
 $("lang").onclick=()=>{lang=lang==="bn"?"en":"bn";localStorage.setItem("bg_lang",lang);applyLang()};
 document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)show(g.dataset.go==="acct"?(LOGGED?"me":"login"):g.dataset.go)});
@@ -890,7 +939,7 @@ $("admList").onclick=async e=>{
 const CLS={
   types:[["gallery","গ্যালারি ক্লাস","Gallery class","গ্যালারি","Gallery"],["practical","প্র্যাকটিক্যাল ক্লাস","Practical class","প্র্যাকটিক্যাল","Practical"]],
   subjects:[["anatomy","অ্যানাটমি","Anatomy"],["physiology","ফিজিওলজি","Physiology"],["computer","কম্পিউটার","Computer"],["community","কমিউনিটি মেডিসিন","Community Medicine"],["english","ইংরেজি","English"]],
-  teachers:[["tuli","তুলি ম্যাডাম","Tuli Madam"],["arifulkabir","আরিফুল কবির স্যার","Ariful Kabir Sir"],["afrozmahmud","আফরোজ স্যার","Afroz Sir"],["mahmudul","মাহমুদুল স্যার","Mahmudul Sir"],["milon_g","মিলন স্যার (G)","Milon Sir (G)"],["milon_u","মিলন স্যার (O)","Milon Sir (O)"],["sharmin","শারমিন সুলতানা ম্যাডাম","Sharmin Sultana Madam"],["riya","রিয়া ম্যাডাম","Riya Madam"],["akhtaruzzaman","আখতারুজ্জামান স্যার","Akhtaruzzaman Sir"]],
+  teachers:[["tuli","তুলি ম্যাডাম","Tuli Madam"],["arifulkabir","আরিফুল কবির স্যার","Ariful Kabir Sir"],["afrozmahmud","আফরোজ স্যার","Afroz Sir"],["mahmudul","মাহমুদুল স্যার","Mahmudul Sir"],["milon_g","মিলন স্যার (G)","Milon Sir (G)"],["milon_u","মিলন স্যার (O)","Milon Sir (O)"],["sharmin","শারমিন সুলতানা ম্যাডাম","Sharmin Sultana Madam"],["riya","রিয়া ম্যাডাম","Riya Madam"],["akhtaruzzaman","আখতারুজ্জামান স্যার","Akhtaruzzaman Sir"],["munzur","মুনজুর রহমান স্যার","Munzur Rahman Sir"],["asaduzzaman","আসাদুজ্জামান স্যার","Asaduzzaman Sir"]],
   // কোনো বোর্ডের জন্য আলাদা তালিকা লাগলে এখানে দিন, যেমন: physio:{subjects:[["kinesio","কাইনেসিওলজি","Kinesiology"]],teachers:[...]}
   byBoard:{}
 };
