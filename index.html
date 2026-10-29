@@ -823,8 +823,15 @@ function drawSol(){
     box.innerHTML='<div class="sgrid">'+items.map((it,i)=>`<div class="scard" style="--h:${(i*47+170)%360};animation-delay:${i*50}ms"><button type="button" class="shd" data-sp="${esc(it[0])}"><span class="sic">${ic("folder")}</span><span class="snm"><b>${esc(it[1])}</b></span><span class="sst">${ic("chev")}</span></button></div>`).join("")+"</div>";
   }
 }
-$("solList").addEventListener("click",e=>{const b=e.target.closest("[data-sp]");if(!b)return;SOLP.push(b.dataset.sp);drawSol();window.scrollTo(0,0)});
-$("solBack").addEventListener("click",()=>{if(SOLP.length){SOLP.pop();drawSol()}else resSub("");window.scrollTo(0,0)});
+/* বই-নোটের ভেতরে এক ধাপ এগোলে/পিছোলে পেজের একদম উপরে না গিয়ে ওই অংশের শুরুতে যাবে */
+function scrollWork(){
+  let el=null;
+  for(const id of ["tp","sl","sol","ex"]){const x=$(id);if(x&&!x.hidden){el=x;break}}
+  if(!el){window.scrollTo(0,0);return}
+  window.scrollTo(0,Math.max(0,el.getBoundingClientRect().top+window.scrollY-10));
+}
+$("solList").addEventListener("click",e=>{const b=e.target.closest("[data-sp]");if(!b)return;SOLP.push(b.dataset.sp);drawSol();scrollWork()});
+$("solBack").addEventListener("click",()=>{if(SOLP.length){SOLP.pop();drawSol()}else resSub("");scrollWork()});
 
 /* ===== পরীক্ষা (সত্য/মিথ্যা) — প্রশ্ন Supabase থেকে আসে, উত্তর সার্ভারে যাচাই হয় ===== */
 const EX_SUBJ=[{id:"anatomy",bn:"অ্যানাটমি",en:"Anatomy"},{id:"physiology",bn:"ফিজিওলজি",en:"Physiology"},{id:"community",bn:"কমিউনিটি মেডিসিন",en:"Community Medicine"}];
@@ -842,14 +849,14 @@ async function exStart(n){
   let r;try{r=await sb.rpc("get_exam_set",{p_subject:EXS.s.id,p_set:n})}catch(x){r={error:x}}
   EXS.busy=false;
   if(r.error||!r.data||!r.data.length){EXS.err="x";drawEx();return}
-  EXS.set=n;EXS.err="";EXS.run={list:r.data,i:0,ans:{},res:null};drawEx();window.scrollTo(0,0);
+  EXS.set=n;EXS.err="";EXS.run={list:r.data,i:0,ans:{},res:null};drawEx();scrollWork();
 }
 async function exSubmit(){
   const run=EXS.run;EXS.busy=true;drawEx();
   let r;try{r=await sb.rpc("submit_exam",{p_subject:EXS.s.id,p_set:EXS.set,p_answers:run.ans})}catch(x){r={error:x}}
   EXS.busy=false;
   if(r.error||!r.data){EXS.err="x";drawEx();return}
-  EXS.err="";run.res=r.data;drawEx();window.scrollTo(0,0);
+  EXS.err="";run.res=r.data;drawEx();scrollWork();
 }
 function drawEx(){
   const box=$("exList"),bn=lang==="bn",s=EXS.s,r=EXS.run;
@@ -884,28 +891,28 @@ function drawEx(){
 $("exList").addEventListener("click",e=>{
   if(EXS.busy)return;
   const es=e.target.closest("[data-es]");
-  if(es){EXS={s:EX_SUBJ.find(x=>x.id===es.dataset.es),sets:null,set:null,run:null,busy:false,err:""};exLoadSets();window.scrollTo(0,0);return}
+  if(es){EXS={s:EX_SUBJ.find(x=>x.id===es.dataset.es),sets:null,set:null,run:null,busy:false,err:""};exLoadSets();scrollWork();return}
   const st=e.target.closest("[data-eset]");
   if(st){exStart(+st.dataset.eset);return}
   const r=EXS.run;
   if(!r)return;
   const tf=e.target.closest("[data-etf]");
   if(tf&&!r.res){const p=tf.dataset.etf.split("|"),q=r.list[r.i];(r.ans[q.n]=r.ans[q.n]||{})[p[0]]=p[1]==="1";drawEx();return}
-  if(e.target.closest("[data-exprev]")){r.i--;drawEx();window.scrollTo(0,0);return}
-  if(e.target.closest("[data-exnext]")){if(r.i+1>=r.list.length)exSubmit();else{r.i++;drawEx();window.scrollTo(0,0)}return}
+  if(e.target.closest("[data-exprev]")){r.i--;drawEx();scrollWork();return}
+  if(e.target.closest("[data-exnext]")){if(r.i+1>=r.list.length)exSubmit();else{r.i++;drawEx();scrollWork()}return}
   if(e.target.closest("[data-exagain]")){exStart(EXS.set);return}
-  if(e.target.closest("[data-exsets]")){EXS.run=null;EXS.set=null;drawEx();window.scrollTo(0,0)}
+  if(e.target.closest("[data-exsets]")){EXS.run=null;EXS.set=null;drawEx();scrollWork()}
 });
 $("exBack").addEventListener("click",()=>{
   if(EXS.busy)return;
   if(EXS.run){if(!EXS.run.res&&!confirm(lang==="bn"?"পরীক্ষা বন্ধ করলে উত্তর মুছে যাবে। বন্ধ করবেন?":"Leaving will lose your answers. Leave?"))return;EXS.run=null;EXS.set=null}
   else if(EXS.s)EXS={s:null,sets:null,set:null,run:null,busy:false,err:""};
   else{resSub("");return}
-  drawEx();window.scrollTo(0,0)
+  drawEx();scrollWork()
 });
 function resSub(v){
   $("tiles").hidden=!!v||!LOGGED;$("tp").hidden=v!=="tp";$("sl").hidden=v!=="sl";$("sol").hidden=v!=="sol";$("ex").hidden=v!=="ex";if(v==="sol"){SOLP=[];drawSol()}if(v==="ex"){EXS={s:null,run:null};drawEx()}
-  if(v==="tp")drawTeachers();if(v==="sl")drawSlides();window.scrollTo(0,0);
+  if(v==="tp")drawTeachers();if(v==="sl")drawSlides();scrollWork();
 }
 document.addEventListener("click",e=>{
   const o=e.target.closest("[data-sub]");if(o&&LOGGED){resSub(o.dataset.sub);return}
