@@ -616,6 +616,31 @@ const $=id=>document.getElementById(id);
 const ic=n=>`<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 const en=s=>s.replace(/[০-৯]/g,d=>"০১২৩৪৫৬৭৮৯".indexOf(d)).trim();
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+/* ===== কোনো কাজ করলে পেজ উপরে চলে না যাওয়ার ব্যবস্থা (সব জায়গায়) ===== */
+let KEEP=null;
+function keepOff(){KEEP=null;document.body.style.minHeight=""}
+function keepScroll(){
+  const y=window.scrollY;if(y<200){keepOff();return}
+  KEEP={y:y,until:Date.now()+5000};
+  document.body.style.minHeight=document.documentElement.scrollHeight+"px";
+  setTimeout(()=>{if(KEEP&&Date.now()>=KEEP.until)keepOff()},5200);
+}
+window.addEventListener("scroll",()=>{
+  if(!KEEP)return;
+  if(Date.now()>KEEP.until){keepOff();return}
+  if(window.scrollY<50)window.scrollTo(0,KEEP.y);
+},{passive:true});
+/* নতুন পেজে যাওয়ার বাটন — এগুলোতে পেজ উপরেই যাবে */
+const KEEP_NAV="#bar button,[data-go],[data-sub],[data-back],[data-sp],[data-es],[data-eset],[data-exnext],[data-exprev],[data-exagain],[data-exsets],#exBack,#solBack,#out2,.back";
+document.addEventListener("submit",e=>{
+  const id=e.target&&e.target.id;
+  if(id==="regForm"||id==="logForm")keepOff();else keepScroll();
+},true);
+document.addEventListener("click",e=>{
+  const el=e.target.closest&&e.target.closest("button,a,input[type=submit],input[type=checkbox],select,label");
+  if(!el)return;
+  if(el.matches(KEEP_NAV)||el.closest(KEEP_NAV)||(el.tagName==="A"&&el.target==="_blank"))keepOff();else keepScroll();
+},true);
 const msg=(id,k,ok,raw)=>{const e=$(id);e.textContent=k?t(k):"";if(raw){e.appendChild(document.createElement("br"));const m=document.createElement("small");m.textContent="("+raw+")";e.appendChild(m)}e.className="msg "+(ok?"ok":"bad")};
 const errKey=(er,c)=>{const m=(er.message||"").toLowerCase();return /fetch|load failed|network/.test(m)?"errNet":m.includes("already")?"errDup":m.includes("database error")?"errDb":(c==="log"&&m.includes("invalid login"))?"errCred":c==="log"?"logFail":"regFail"};
 // ডেন্টাল ও রেডিওথেরাপি এখন একটাই বোর্ড ("dental_radio")। ডাটাবেসে পুরোনো নোটিশ "dental"/"radiotherapy" নামে আছে, দুটোই একসাথে পড়া হয়।
