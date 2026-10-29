@@ -417,6 +417,15 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 .exq{font-weight:700;font-size:18px;line-height:1.6;margin-bottom:12px}
 .exopt{display:block;width:100%;text-align:left;margin-bottom:10px;padding:13px 15px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:500 16px "Hind Siliguri",sans-serif;cursor:pointer}
 .exopt.ok{border-color:#16a34a;background:rgba(22,163,74,.14)}.exopt.bad{border-color:#dc2626;background:rgba(220,38,38,.12)}
+.exrow{display:flex;flex-direction:column;gap:8px;padding:12px 14px;margin-bottom:10px;border-radius:14px;border:1.5px solid var(--line);background:var(--card)}
+.exrow .extx{font-size:16px;line-height:1.5}.exrow small{color:var(--mute)}
+.exrow.ok{border-color:#16a34a;background:rgba(22,163,74,.12)}.exrow.bad{border-color:#dc2626;background:rgba(220,38,38,.12)}.exrow.skip{border-color:#d9a400;background:rgba(217,164,0,.12)}
+.extf{display:flex;gap:8px}
+.tf{flex:1;padding:10px 0;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font:600 15px "Hind Siliguri",sans-serif;cursor:pointer}
+.tf.on.t{background:#0a8f5a;border-color:#0a8f5a;color:#fff}.tf.on.f{background:#d33a4a;border-color:#d33a4a;color:#fff}
+.exnav{display:flex;gap:10px;align-items:center;margin-top:14px}.exnav .go{flex:1;margin-top:0}
+.exrev{margin-bottom:18px}.exrev .exq small{color:var(--mute);font-weight:500}
+.exres .go{margin-top:10px}
 .exres{text-align:center;padding:10px 0}.exres .big{font-size:44px;font-weight:800;color:var(--teal)}.exres .pf{display:inline-block;margin:8px 0 14px;padding:6px 20px;border-radius:999px;font-weight:800;font-size:20px}.exres .pf.p{background:rgba(22,163,74,.16);color:#15803d}.exres .pf.f{background:rgba(220,38,38,.14);color:#b91c1c}
 .solsoon{padding:22px 16px;text-align:center;border-radius:16px;background:var(--tint);color:var(--teal);font-weight:600}
 </style>
@@ -792,45 +801,83 @@ function drawSol(){
 $("solList").addEventListener("click",e=>{const b=e.target.closest("[data-sp]");if(!b)return;SOLP.push(b.dataset.sp);drawSol();window.scrollTo(0,0)});
 $("solBack").addEventListener("click",()=>{if(SOLP.length){SOLP.pop();drawSol()}else resSub("");window.scrollTo(0,0)});
 
-/* ===== পরীক্ষা (এমসিকিউ) ===== */
+/* ===== পরীক্ষা (সত্য/মিথ্যা) — প্রশ্ন Supabase থেকে আসে, উত্তর সার্ভারে যাচাই হয় ===== */
 const EX_SUBJ=[{id:"anatomy",bn:"অ্যানাটমি",en:"Anatomy"},{id:"physiology",bn:"ফিজিওলজি",en:"Physiology"},{id:"community",bn:"কমিউনিটি মেডিসিন",en:"Community Medicine"}];
-const EX_N=10,EX_PASS=7;
-/* প্রশ্ন এখানে বসবে। প্রতিটি প্রশ্নের ধরন:
-   {q:"প্রশ্ন", o:["অপশন ১","অপশন ২"], a:0}   (a = সঠিক অপশনের নম্বর, ০ থেকে শুরু)
-   ট্রু/ফলস হলে o:["সত্য","মিথ্যা"] */
-const EX_Q={anatomy:[],physiology:[],community:[]};
-let EXS={s:null,run:null};
-function exShuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+let EXS={s:null,sets:null,set:null,run:null,busy:false,err:""};
+const exFmt=v=>{const n=+(+v).toFixed(1);return lang==="bn"?String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d]):String(n)};
+async function exLoadSets(){
+  const s=EXS.s;EXS.sets=null;EXS.err="";drawEx();
+  let r;try{r=await sb.rpc("list_exam_sets",{p_subject:s.id})}catch(x){r={error:x}}
+  if(EXS.s!==s)return;
+  if(r.error){EXS.err="x";EXS.sets=[]}else EXS.sets=r.data||[];
+  drawEx();
+}
+async function exStart(n){
+  EXS.busy=true;drawEx();
+  let r;try{r=await sb.rpc("get_exam_set",{p_subject:EXS.s.id,p_set:n})}catch(x){r={error:x}}
+  EXS.busy=false;
+  if(r.error||!r.data||!r.data.length){EXS.err="x";drawEx();return}
+  EXS.set=n;EXS.err="";EXS.run={list:r.data,i:0,ans:{},res:null};drawEx();window.scrollTo(0,0);
+}
+async function exSubmit(){
+  const run=EXS.run;EXS.busy=true;drawEx();
+  let r;try{r=await sb.rpc("submit_exam",{p_subject:EXS.s.id,p_set:EXS.set,p_answers:run.ans})}catch(x){r={error:x}}
+  EXS.busy=false;
+  if(r.error||!r.data){EXS.err="x";drawEx();return}
+  EXS.err="";run.res=r.data;drawEx();window.scrollTo(0,0);
+}
 function drawEx(){
   const box=$("exList"),bn=lang==="bn",s=EXS.s,r=EXS.run;
   $("exT").textContent=s?(bn?s.bn:s.en):t("t_exam");
+  const errH=EXS.err?`<div class="solsoon">${bn?"কিছু একটা সমস্যা হয়েছে, আবার চেষ্টা করুন":"Something went wrong, please try again"}</div>`:"";
+  if(EXS.busy){box.innerHTML=`<div class="solsoon">${bn?"অপেক্ষা করুন...":"Please wait..."}</div>`;return}
   if(!s){
-    box.innerHTML='<div class="sgrid">'+EX_SUBJ.map((x,i)=>`<div class="scard" style="--h:${(i*60+150)%360};animation-delay:${i*60}ms"><button type="button" class="shd" data-es="${x.id}"><span class="sic">${ic("cap")}</span><span class="snm"><b>${esc(bn?x.bn:x.en)}</b><small>${bn?"১০টি এমসিকিউ":"10 MCQs"}</small></span><span class="sst">${ic("chev")}</span></button></div>`).join("")+"</div>";
+    box.innerHTML='<div class="sgrid">'+EX_SUBJ.map((x,i)=>`<div class="scard" style="--h:${(i*60+150)%360};animation-delay:${i*60}ms"><button type="button" class="shd" data-es="${x.id}"><span class="sic">${ic("cap")}</span><span class="snm"><b>${esc(bn?x.bn:x.en)}</b><small>${bn?"সত্য/মিথ্যা পরীক্ষা":"True/False exam"}</small></span><span class="sst">${ic("chev")}</span></button></div>`).join("")+"</div>";
     return;
   }
-  const bank=EX_Q[s.id]||[];
   if(!r){
-    const n=Math.min(EX_N,bank.length),pass=n>=EX_N?EX_PASS:Math.ceil(n*0.7);
-    box.innerHTML=`<div class="exinfo"><span>${bn?EX_N+"টি এমসিকিউ":EX_N+" MCQs"}</span><span>${bn?"পাস মার্ক "+EX_PASS+"/"+EX_N:"Pass mark "+EX_PASS+"/"+EX_N}</span></div>`+(bank.length?`<button class="go" type="button" data-exstart>${bn?"পরীক্ষা শুরু করুন":"Start exam"}</button>`:`<div class="solsoon">${bn?"এই বিষয়ের প্রশ্ন শীঘ্রই যোগ হবে":"Questions for this subject are coming soon"}</div>`);
+    if(EXS.sets===null){box.innerHTML=`<div class="solsoon">${bn?"অপেক্ষা করুন...":"Please wait..."}</div>`;return}
+    if(!EXS.sets.length){box.innerHTML=errH||`<div class="solsoon">${bn?"এই বিষয়ের প্রশ্ন শীঘ্রই যোগ হবে":"Questions for this subject are coming soon"}</div>`;return}
+    box.innerHTML=errH+`<div class="exinfo"><span>${bn?"১০টি প্রশ্ন, ৫টি করে বিবৃতি":"10 questions, 5 statements each"}</span><span>${bn?"প্রতিটি ০.২ নম্বর":"0.2 mark each"}</span><span>${bn?"পাস মার্ক ৭/১০":"Pass mark 7/10"}</span></div><div class="sgrid">`+EXS.sets.map((x,i)=>`<div class="scard" style="--h:${(i*30+150)%360};animation-delay:${i*40}ms"><button type="button" class="shd" data-eset="${x.sno}"><span class="sic">${ic("cap")}</span><span class="snm"><b>${bn?"সেট":"Set"} ${exFmt(x.sno)}</b><small>${exFmt(x.cnt)} ${bn?"টি প্রশ্ন":"questions"}</small></span><span class="sst">${ic("chev")}</span></button></div>`).join("")+"</div>";
     return;
   }
-  if(r.i>=r.list.length){
-    const n=r.list.length,pass=n>=EX_N?EX_PASS:Math.ceil(n*0.7),ok=r.score>=pass;
-    box.innerHTML=`<div class="exres"><div class="big">${r.score} / ${n}</div><div class="pf ${ok?"p":"f"}">${ok?(bn?"পাস":"Pass"):(bn?"ফেল":"Fail")}</div><div><button class="go" type="button" data-exstart>${bn?"আবার পরীক্ষা দিন":"Try again"}</button></div></div>`;
+  if(r.res){
+    const res=r.res,ok=!!res.pass;
+    box.innerHTML=`<div class="exres"><div class="big">${exFmt(res.score)} / ${exFmt(res.total)}</div><div class="pf ${ok?"p":"f"}">${ok?(bn?"পাস":"Pass"):(bn?"ফেল":"Fail")}</div><div><button class="go" type="button" data-exagain>${bn?"আবার পরীক্ষা দিন":"Try again"}</button><button class="go" type="button" data-exsets>${bn?"অন্য সেট বেছে নিন":"Choose another set"}</button></div></div><h3 style="margin:18px 0 10px">${bn?"উত্তর দেখুন":"Review answers"}</h3>`+res.details.map(d=>`<div class="exrev"><div class="exq">${exFmt(d.n)}. ${esc(d.stem)} <small>(${exFmt(d.score)}/${exFmt(d.max)})</small></div>`+d.options.map(o=>{
+      const sk=o.chosen===null||o.chosen===undefined,good=!sk&&o.chosen===o.is_true,c=sk?"skip":(good?"ok":"bad");
+      const my=sk?(bn?"উত্তর দেননি":"Not answered"):(o.chosen?(bn?"সত্য":"True"):(bn?"মিথ্যা":"False")),rt=o.is_true?(bn?"সত্য":"True"):(bn?"মিথ্যা":"False");
+      return `<div class="exrow ${c}"><div class="extx"><b>${esc(o.label)})</b> ${esc(o.text)}</div><small>${bn?"আপনার উত্তর":"Your answer"}: ${my} · ${bn?"সঠিক":"Correct"}: ${rt}</small></div>`}).join("")+"</div>").join("");
     return;
   }
-  const q=r.list[r.i],n=r.list.length;
-  box.innerHTML=`<div class="exbar"><i style="width:${(r.i/n)*100}%"></i></div><p class="mute" style="margin-bottom:6px">${bn?"প্রশ্ন":"Question"} ${r.i+1} / ${n}</p><div class="exq">${esc(q.q)}</div>`+q.o.map((o,k)=>{let c="exopt";if(r.pick!==null){if(k===q.a)c+=" ok";else if(k===r.pick)c+=" bad"}return `<button type="button" class="${c}" data-eo="${k}"${r.pick!==null?" disabled":""}>${esc(o)}</button>`}).join("")+(r.pick!==null?`<button class="go" type="button" data-exnext>${r.i+1>=n?(bn?"ফলাফল দেখুন":"See result"):(bn?"পরের প্রশ্ন":"Next")}</button>`:"");
+  const q=r.list[r.i],n=r.list.length,a=r.ans[q.n]||{},last=r.i+1>=n;
+  const done=Object.values(r.ans).reduce((t0,o)=>t0+Object.keys(o).length,0),all=r.list.reduce((t0,x)=>t0+x.options.length,0);
+  box.innerHTML=errH+`<div class="exbar"><i style="width:${(r.i/n)*100}%"></i></div><p class="mute" style="margin-bottom:6px">${bn?"প্রশ্ন":"Question"} ${exFmt(r.i+1)} / ${exFmt(n)}</p><div class="exq">${esc(q.stem)}</div>`
+   +q.options.map(o=>{const v=a[o.label];return `<div class="exrow"><div class="extx"><b>${esc(o.label)})</b> ${esc(o.text)}</div><div class="extf"><button type="button" class="tf${v===true?" on t":""}" data-etf="${esc(o.label)}|1">${bn?"সত্য":"True"}</button><button type="button" class="tf${v===false?" on f":""}" data-etf="${esc(o.label)}|0">${bn?"মিথ্যা":"False"}</button></div></div>`}).join("")
+   +(last?`<p class="mute" style="margin-top:10px">${bn?exFmt(all)+"টির মধ্যে "+exFmt(done)+"টির উত্তর দিয়েছেন। উত্তর না দিলে ওই অংশে নম্বর পাবেন না।":"Answered "+done+" of "+all+". Unanswered statements get no marks."}</p>`:"")
+   +`<div class="exnav">${r.i>0?`<button class="back" type="button" data-exprev>${bn?"← আগে":"← Prev"}</button>`:""}<button class="go" type="button" data-exnext>${last?(bn?"জমা দিন":"Submit"):(bn?"পরের প্রশ্ন":"Next")}</button></div>`;
 }
 $("exList").addEventListener("click",e=>{
+  if(EXS.busy)return;
   const es=e.target.closest("[data-es]");
-  if(es){EXS={s:EX_SUBJ.find(x=>x.id===es.dataset.es),run:null};drawEx();window.scrollTo(0,0);return}
-  if(e.target.closest("[data-exstart]")){const bank=EX_Q[EXS.s.id]||[];EXS.run={list:exShuffle(bank).slice(0,EX_N),i:0,score:0,pick:null};drawEx();window.scrollTo(0,0);return}
-  const eo=e.target.closest("[data-eo]");
-  if(eo&&EXS.run&&EXS.run.pick===null){const k=+eo.dataset.eo;EXS.run.pick=k;if(k===EXS.run.list[EXS.run.i].a)EXS.run.score++;drawEx();return}
-  if(e.target.closest("[data-exnext]")){EXS.run.i++;EXS.run.pick=null;drawEx();window.scrollTo(0,0)}
+  if(es){EXS={s:EX_SUBJ.find(x=>x.id===es.dataset.es),sets:null,set:null,run:null,busy:false,err:""};exLoadSets();window.scrollTo(0,0);return}
+  const st=e.target.closest("[data-eset]");
+  if(st){exStart(+st.dataset.eset);return}
+  const r=EXS.run;
+  if(!r)return;
+  const tf=e.target.closest("[data-etf]");
+  if(tf&&!r.res){const p=tf.dataset.etf.split("|"),q=r.list[r.i];(r.ans[q.n]=r.ans[q.n]||{})[p[0]]=p[1]==="1";drawEx();return}
+  if(e.target.closest("[data-exprev]")){r.i--;drawEx();window.scrollTo(0,0);return}
+  if(e.target.closest("[data-exnext]")){if(r.i+1>=r.list.length)exSubmit();else{r.i++;drawEx();window.scrollTo(0,0)}return}
+  if(e.target.closest("[data-exagain]")){exStart(EXS.set);return}
+  if(e.target.closest("[data-exsets]")){EXS.run=null;EXS.set=null;drawEx();window.scrollTo(0,0)}
 });
-$("exBack").addEventListener("click",()=>{if(EXS.run)EXS.run=null;else if(EXS.s)EXS.s=null;else{resSub("");return}drawEx();window.scrollTo(0,0)});
+$("exBack").addEventListener("click",()=>{
+  if(EXS.busy)return;
+  if(EXS.run){if(!EXS.run.res&&!confirm(lang==="bn"?"পরীক্ষা বন্ধ করলে উত্তর মুছে যাবে। বন্ধ করবেন?":"Leaving will lose your answers. Leave?"))return;EXS.run=null;EXS.set=null}
+  else if(EXS.s)EXS={s:null,sets:null,set:null,run:null,busy:false,err:""};
+  else{resSub("");return}
+  drawEx();window.scrollTo(0,0)
+});
 function resSub(v){
   $("tiles").hidden=!!v||!LOGGED;$("tp").hidden=v!=="tp";$("sl").hidden=v!=="sl";$("sol").hidden=v!=="sol";$("ex").hidden=v!=="ex";if(v==="sol"){SOLP=[];drawSol()}if(v==="ex"){EXS={s:null,run:null};drawEx()}
   if(v==="tp")drawTeachers();if(v==="sl")drawSlides();window.scrollTo(0,0);
