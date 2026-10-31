@@ -1713,14 +1713,25 @@ const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
 (function(){
   const b=$("nbtn");if(!b||!OS_APP_ID)return;
   /* স্ট্যাটাস বক্স (টেস্টের জন্য): ট্যাপ করলে বন্ধ হবে। কাজ হয়ে গেলে এই বক্স সরিয়ে দেব */
-  const L={};
-  const show=()=>{let d=document.getElementById("osdbg");if(!d){d=document.createElement("div");d.id="osdbg";d.style.cssText="position:fixed;left:8px;right:8px;bottom:96px;z-index:99999;background:#111827ee;color:#fff;padding:10px 12px;border-radius:12px;font:12px/1.5 monospace;word-break:break-word;border:1px solid #f59e0b";d.onclick=()=>d.remove();document.body.appendChild(d)}
-    d.textContent="PUSH STATUS (ট্যাপ করে বন্ধ)\n"+Object.keys(L).map(k=>k+": "+L[k]).join("\n");d.style.whiteSpace="pre-wrap"};
+  const L={},LOG=[];
+  const show=()=>{let d=document.getElementById("osdbg");if(!d){d=document.createElement("div");d.id="osdbg";d.style.cssText="position:fixed;left:6px;right:6px;top:56px;max-height:70vh;overflow:auto;z-index:99999;background:#111827f2;color:#fff;padding:8px 10px;border-radius:12px;font:11px/1.45 monospace;word-break:break-word;white-space:pre-wrap;border:1px solid #f59e0b";d.onclick=()=>d.remove();document.body.appendChild(d)}
+    d.textContent="PUSH STATUS v3 (ট্যাপ করে বন্ধ)\n"+Object.keys(L).map(k=>k+": "+L[k]).join("\n")+(LOG.length?"\n--- LOG ---\n"+LOG.slice(-10).join("\n"):"")};
   const set=(k,v)=>{L[k]=v;show()};
-  set("1.app-mode",(navigator.standalone===true||matchMedia("(display-mode: standalone)").matches)?"HOME-SCREEN (ঠিক)":"BROWSER (ভুল - হোম স্ক্রিন আইকন থেকে খুলুন)");
-  set("2.Notification-API","Notification" in window?"আছে":"নেই");
+  const lg=(t,a)=>{try{const m=Array.prototype.map.call(a,x=>typeof x==="string"?x:(x&&x.message)||JSON.stringify(x)).join(" ");if(/onesignal|service|worker|push|app|sync|error|fail|origin|url/i.test(m)){LOG.push(t+": "+m.slice(0,160));show()}}catch(e){}};
+  ["log","info","warn","error","debug"].forEach(t=>{const o=console[t];console[t]=function(){lg(t,arguments);return o.apply(console,arguments)}});
+  window.addEventListener("error",e=>{LOG.push("ERR: "+(e.message||"")+" "+(e.filename||"").slice(-40));show()});
+  window.addEventListener("unhandledrejection",e=>{LOG.push("REJECT: "+String(e.reason&&e.reason.message||e.reason).slice(0,160));show()});
+  set("1.app-mode",(navigator.standalone===true||matchMedia("(display-mode: standalone)").matches)?"HOME-SCREEN (ঠিক)":"BROWSER (ভুল)");
+  set("2.Notification-API","Notification" in window?"আছে ("+Notification.permission+")":"নেই");
   set("3.SDK","লোড হচ্ছে...");
   set("4.init","অপেক্ষা...");
+  set("5.origin",location.origin);
+  /* sw.js ঠিকমতো সার্ভ হচ্ছে কি না */
+  fetch("/sw.js",{cache:"no-store"}).then(async r=>{const t=await r.text();set("6.sw.js","HTTP "+r.status+" | "+(r.headers.get("content-type")||"?").slice(0,30)+" | "+t.slice(0,45).replace(/\n/g," "))}).catch(e=>set("6.sw.js","fetch ব্যর্থ: "+e.message));
+  if("serviceWorker" in navigator){
+    const rg=()=>navigator.serviceWorker.getRegistrations().then(r=>set("7.SW-registered",r.length?r.map(x=>x.scope+" ["+(x.active?"active":x.installing?"installing":x.waiting?"waiting":"?")+"]").join(", "):"কোনো SW নেই")).catch(e=>set("7.SW-registered","ত্রুটি: "+e.message));
+    rg();setTimeout(rg,5000);
+  }
   const sc=document.createElement("script");sc.src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";sc.defer=true;
   sc.onload=()=>set("3.SDK","লোড হয়েছে");
   sc.onerror=()=>set("3.SDK","লোড হয়নি (নেট/CSP)");
@@ -1729,16 +1740,17 @@ const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
   window.OneSignalDeferred=window.OneSignalDeferred||[];
   window.OneSignalDeferred.push(async function(OneSignal){
     try{
+      try{OneSignal.Debug.setLogLevel("trace")}catch(e){}
+      set("4.init","চলছে...");
       await OneSignal.init({appId:OS_APP_ID,serviceWorkerPath:"/sw.js",serviceWorkerParam:{scope:"/"},notifyButton:{enable:false}});
       set("4.init","সফল");
-      set("5.push-supported",String(OneSignal.Notifications.isPushSupported()));
-      set("6.permission",String(OneSignal.Notifications.permission)+" / "+(("Notification" in window)?Notification.permission:"-"));
-      const sync=()=>{b.hidden=!!OneSignal.Notifications.permission;set("7.bell",b.hidden?"লুকানো (Allow দেওয়া আছে)":"দেখানো হচ্ছে")};
+      set("8.push-supported",String(OneSignal.Notifications.isPushSupported()));
+      set("9.permission",String(OneSignal.Notifications.permission)+" / "+(("Notification" in window)?Notification.permission:"-"));
+      const sync=()=>{b.hidden=!!OneSignal.Notifications.permission;set("10.bell",b.hidden?"লুকানো (Allow দেওয়া আছে)":"দেখানো হচ্ছে")};
       sync();OneSignal.Notifications.addEventListener("permissionChange",sync);
       b.onclick=()=>OneSignal.Notifications.requestPermission();
     }catch(x){b.hidden=true;set("4.init","ব্যর্থ: "+(x&&x.message||x))}
   });
-  window.addEventListener("unhandledrejection",e=>set("error",String(e.reason&&e.reason.message||e.reason||"").slice(0,200)));
 })();
 refresh("home");
 if("serviceWorker" in navigator)window.addEventListener("load",()=>{try{navigator.serviceWorker.register("sw.js").catch(()=>{})}catch(x){}});
