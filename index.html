@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f2a43">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.onesignal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://hahuyaxhgzdgqgwzizti.supabase.co wss://hahuyaxhgzdgqgwzizti.supabase.co https://onesignal.com https://*.onesignal.com; frame-src https://drive.google.com https://docs.google.com https://onesignal.com https://*.onesignal.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.onesignal.com https://api.onesignal.com https://onesignal.com https://*.onesignal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://hahuyaxhgzdgqgwzizti.supabase.co wss://hahuyaxhgzdgqgwzizti.supabase.co https://onesignal.com https://*.onesignal.com; frame-src https://drive.google.com https://docs.google.com https://onesignal.com https://*.onesignal.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -1712,60 +1712,15 @@ homeNotices=async function(){
 const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
 (function(){
   const b=$("nbtn");if(!b||!OS_APP_ID)return;
-  /* স্ট্যাটাস বক্স (টেস্টের জন্য): ট্যাপ করলে বন্ধ হবে। কাজ হয়ে গেলে এই বক্স সরিয়ে দেব */
-  const L={},LOG=[];
-  const show=()=>{let d=document.getElementById("osdbg");if(!d){d=document.createElement("div");d.id="osdbg";d.style.cssText="position:fixed;left:6px;right:6px;top:56px;max-height:70vh;overflow:auto;z-index:99999;background:#111827f2;color:#fff;padding:8px 10px;border-radius:12px;font:11px/1.45 monospace;word-break:break-word;white-space:pre-wrap;border:1px solid #f59e0b";d.onclick=()=>d.remove();document.body.appendChild(d)}
-    d.textContent="PUSH STATUS v5 (ট্যাপ করে বন্ধ)\n"+Object.keys(L).map(k=>k+": "+L[k]).join("\n")+(LOG.length?"\n--- LOG ---\n"+LOG.slice(-14).join("\n"):"")};
-  const set=(k,v)=>{L[k]=v;show()};
-  const lg=(t,a)=>{try{const m=Array.prototype.map.call(a,x=>typeof x==="string"?x:(x&&x.message)||JSON.stringify(x)).join(" ");LOG.push(t+": "+m.slice(0,150));show()}catch(e){}};
-  ["log","info","warn","error","debug"].forEach(t=>{const o=console[t];console[t]=function(){lg(t,arguments);return o.apply(console,arguments)}});
-  window.addEventListener("error",e=>{LOG.push("ERR: "+(e.message||"")+" "+(e.filename||"").slice(-40));show()});
-  window.addEventListener("unhandledrejection",e=>{LOG.push("REJECT: "+String(e.reason&&e.reason.message||e.reason).slice(0,160));show()});
-  document.addEventListener("securitypolicyviolation",e=>{LOG.push("CSP-BLOCK: "+e.violatedDirective+" -> "+String(e.blockedURI).slice(0,90));show()});
-  const _f=window.fetch;window.fetch=function(u,o){const url=String(u&&u.url||u);const tr=/onesignal/i.test(url);const t0=Date.now();if(tr){LOG.push("FETCH> "+url.slice(0,100));show()}
-    return _f.apply(this,arguments).then(r=>{if(tr){LOG.push("FETCH< "+r.status+" "+(Date.now()-t0)+"ms "+url.slice(8,60));show()}return r}).catch(e=>{if(tr){LOG.push("FETCH! "+e.message+" "+url.slice(8,60));show()}throw e})};
-  const _x=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){if(/onesignal/i.test(String(u))){LOG.push("XHR "+m+" "+String(u).slice(8,80));show()}return _x.apply(this,arguments)};
-  let sec=0;const tk=setInterval(()=>{sec+=5;if(L["4.init"]==="চলছে..."||L["4.init"]==="অপেক্ষা..."){set("4.init","চলছে... "+sec+"s")}else clearInterval(tk)},5000);
-  set("1.app-mode",(navigator.standalone===true||matchMedia("(display-mode: standalone)").matches)?"HOME-SCREEN (ঠিক)":"BROWSER (ভুল)");
-  set("2.Notification-API","Notification" in window?"আছে ("+Notification.permission+")":"নেই");
-  set("3.SDK","লোড হচ্ছে...");
-  set("4.init","অপেক্ষা...");
-  set("5.origin",location.origin);
-  /* sw.js ঠিকমতো সার্ভ হচ্ছে কি না */
-  fetch("/sw.js",{cache:"no-store"}).then(async r=>{const t=await r.text();set("6.sw.js","HTTP "+r.status+" | "+(r.headers.get("content-type")||"?").slice(0,30)+" | "+t.slice(0,45).replace(/\n/g," "))}).catch(e=>set("6.sw.js","fetch ব্যর্থ: "+e.message));
-  if("serviceWorker" in navigator){
-    const rg=()=>navigator.serviceWorker.getRegistrations().then(r=>set("7.SW-registered",r.length?r.map(x=>x.scope+" ["+(x.active?"active":x.installing?"installing":x.waiting?"waiting":"?")+"]").join(", "):"কোনো SW নেই")).catch(e=>set("7.SW-registered","ত্রুটি: "+e.message));
-    rg();setTimeout(rg,5000);
-  }
-  fetch("https://api.onesignal.com/",{mode:"no-cors"}).then(()=>set("11.api.onesignal","পৌঁছানো যাচ্ছে")).catch(e=>set("11.api.onesignal","ব্লক/নেট সমস্যা: "+e.message));
-  const sc=document.createElement("script");sc.src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";sc.defer=true;
-  sc.onload=()=>set("3.SDK","লোড হয়েছে");
-  sc.onerror=()=>set("3.SDK","লোড হয়নি (নেট/CSP)");
-  document.head.appendChild(sc);
-  setTimeout(()=>{if(L["4.init"]==="অপেক্ষা...")set("4.init","৮ সেকেন্ডেও শেষ হয়নি")},8000);
+  const sc=document.createElement("script");sc.src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";sc.defer=true;document.head.appendChild(sc);
   window.OneSignalDeferred=window.OneSignalDeferred||[];
   window.OneSignalDeferred.push(async function(OneSignal){
     try{
-      try{OneSignal.Debug.setLogLevel("trace")}catch(e){}
-      set("4.init","চলছে...");
-      /* একবার পুরোনো সার্ভিস ওয়ার্কার মুছে নতুন করে বসানো */
-      try{
-        if("serviceWorker" in navigator&&localStorage.getItem("sw_reset_v4")!=="1"){
-          const rs=await navigator.serviceWorker.getRegistrations();
-          for(const r of rs){await r.unregister()}
-          if(window.caches){const ks=await caches.keys();for(const k of ks){await caches.delete(k)}}
-          localStorage.setItem("sw_reset_v4","1");
-          set("0.reset","পুরোনো SW মোছা হয়েছে: "+rs.length+"টি");
-        }else{set("0.reset","আগেই করা হয়েছে")}
-      }catch(e){set("0.reset","ত্রুটি: "+e.message)}
       await OneSignal.init({appId:OS_APP_ID,serviceWorkerPath:"/sw.js",serviceWorkerParam:{scope:"/"},notifyButton:{enable:false}});
-      set("4.init","সফল");
-      set("8.push-supported",String(OneSignal.Notifications.isPushSupported()));
-      set("9.permission",String(OneSignal.Notifications.permission)+" / "+(("Notification" in window)?Notification.permission:"-"));
-      const sync=()=>{b.hidden=!!OneSignal.Notifications.permission;set("10.bell",b.hidden?"লুকানো (Allow দেওয়া আছে)":"দেখানো হচ্ছে")};
+      const sync=()=>{b.hidden=!!OneSignal.Notifications.permission};
       sync();OneSignal.Notifications.addEventListener("permissionChange",sync);
       b.onclick=()=>OneSignal.Notifications.requestPermission();
-    }catch(x){b.hidden=true;set("4.init","ব্যর্থ: "+(x&&x.message||x))}
+    }catch(x){b.hidden=true}
   });
 })();
 refresh("home");
