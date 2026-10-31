@@ -441,10 +441,10 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 .sy-in{margin:0 0 8px;color:var(--mute);font-size:14px}
 .sy-ck,.sy-li,.sy-as{list-style:none;margin:0;padding:0;display:grid;gap:7px}
 .sy-ck li,.sy-li li,.sy-as li{position:relative;padding-left:24px;line-height:1.55;font-size:15px;word-break:break-word}
-.sy-ck li::before{content:"✔";position:absolute;left:0;top:0;color:var(--teal);font-weight:700}
+.sy-ck li::before{content:"";position:absolute;left:0;top:.45em;width:1em;height:1em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230e8f8a' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/contain no-repeat}
 .sy-li li::before{content:"";position:absolute;left:6px;top:.68em;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#0a6f78,#7c3aed)}
 .sy-li li.sub{padding-left:0;font-weight:700;color:var(--ink);margin-top:4px}.sy-li li.sub::before{display:none}
-.sy-as li::before{content:"★";position:absolute;left:0;top:0;color:#d97706}
+.sy-as li::before{content:"";position:absolute;left:0;top:.45em;width:1em;height:1em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d97706' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z' fill='%23d97706'/%3E%3C/svg%3E") center/contain no-repeat}
 .sy-div{display:flex;align-items:center;gap:10px;margin:6px 0 0;color:var(--mute);font-size:13px;font-weight:700;letter-spacing:.04em}
 .sy-div::before,.sy-div::after{content:"";flex:1;height:2px;background:var(--line);border-radius:2px}
 .sy-div span{text-align:center;max-width:78%}
@@ -608,10 +608,54 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 /* "সব নোটিশ" বাটন */
 .ghost.nall{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:16px;padding:13px 20px;border:0;border-radius:16px;color:#fff;font-weight:700;font-size:17px;background:linear-gradient(120deg,#0a6f78,#7c3aed,#db2777,#0a6f78);background-size:300% 300%;animation:flow 6s ease infinite,nallp 2.6s ease-in-out infinite}
 .ghost.nall::before{content:"";position:absolute;top:0;bottom:0;width:36%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);animation:hsweep 3s ease-in-out infinite}
-.ghost.nall::after{content:"→";display:inline-block;animation:nnudge 1.3s ease-in-out infinite}
+.ghost.nall::after{content:"";width:22px;height:22px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat;display:inline-block;animation:nnudge 1.3s ease-in-out infinite}
 @keyframes nnudge{0%,100%{transform:translateX(0)}50%{transform:translateX(7px)}}
 @keyframes nallp{0%,100%{box-shadow:0 6px 18px rgba(124,58,237,.35)}50%{box-shadow:0 0 26px 4px rgba(219,39,119,.55)}}
 @media(prefers-reduced-motion:reduce){.ho,.hcls,.lat,.hch::after,.lbell,.live,.nstage::before,.nstage.shake,.nprog i,.ghost.nall,.ghost.nall::before,.ghost.nall::after{animation:none!important}.nslide.in,.nslide.out{animation:none!important}}
+
+/* ===== v2: প্রোফাইল পেজ — অরোরা, কক্ষপথ, ভাসমান কার্ড ===== */
+.mehero{padding:44px 18px 54px;background-size:300% 300%}
+.mehero::before{content:"";position:absolute;z-index:-1;inset:-60%;background:conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,0) 0deg,rgba(255,255,255,.28) 70deg,rgba(255,255,255,0) 140deg,rgba(255,214,102,.26) 220deg,rgba(255,255,255,0) 300deg);filter:blur(34px);animation:spin 18s linear infinite}
+.mehero::after{content:"";position:absolute;z-index:-1;left:0;right:0;bottom:0;height:46%;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(8,20,32,.32))}
+.mglyph{position:absolute;z-index:-1;right:-8px;bottom:-22px;width:170px;height:170px;color:#fff;opacity:.17;transform:rotate(-12deg);animation:mgf 7s ease-in-out infinite;pointer-events:none}
+.mglyph svg{width:100%;height:100%;display:block}
+@keyframes mgf{0%,100%{transform:rotate(-12deg) translateY(0)}50%{transform:rotate(-8deg) translateY(-12px)}}
+.orb{position:absolute;inset:-16px;border-radius:50%;border:1px dashed rgba(255,255,255,.35);animation:spin 7s linear infinite;pointer-events:none}
+.orb::after{content:"";position:absolute;top:-5px;left:50%;margin-left:-5px;width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 14px 4px rgba(255,255,255,.9)}
+.orb.o2{inset:-32px;animation-duration:12s;animation-direction:reverse;border-color:rgba(255,255,255,.2)}
+.orb.o2::after{width:7px;height:7px;margin-left:-3.5px;top:-3.5px;background:#ffe9a8;box-shadow:0 0 12px 3px rgba(255,214,102,.9)}
+#me .who{font-size:32px;letter-spacing:.3px;background:linear-gradient(90deg,#fff,#ffeaa7,#fff);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:flow 5s linear infinite;filter:drop-shadow(0 3px 10px rgba(0,0,0,.3))}
+#me .who.typing::after{-webkit-text-fill-color:initial}
+.merole{padding:5px 20px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.mebody{position:relative;padding:28px 16px 26px;margin-top:-20px}
+.mechips{gap:16px 14px;padding:0 2px}
+#me.play .mc,#me:not(.play) .mc{animation:mcin .8s cubic-bezier(.2,.9,.3,1.2) var(--d) forwards,mfloat 6s ease-in-out calc(var(--d) + 1s) infinite}
+@keyframes mfloat{0%,100%{translate:0 0}50%{translate:0 -6px}}
+.mc{background:linear-gradient(145deg,var(--card),var(--tint));border-radius:22px;padding:16px 14px 16px 66px}
+.mc.c1{rotate:-1.6deg}.mc.c2{rotate:1.4deg}.mc.c3{rotate:-.5deg;margin:0 8px}
+.mc:hover{rotate:0deg}
+.mc::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-70%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);animation:hsweep 4.2s ease-in-out infinite;pointer-events:none}
+.mc.c2::after{animation-delay:1.2s}.mc.c3::after{animation-delay:2.4s}
+.mci{border-radius:16px;width:42px;height:42px;margin-top:-21px;animation:pfloat 3.4s ease-in-out infinite}
+.mc b{font-size:20px}
+.meact .ghost{border-radius:16px;padding:10px 24px;font-weight:700;transition:transform .2s,box-shadow .2s}
+.meact .ghost:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(14,143,138,.3)}
+
+/* ===== v2: সর্বশেষ নোটিশ ===== */
+.ncount{flex:none;padding:2px 12px;border-radius:999px;font-weight:700;font-size:14px;color:#fff;background:linear-gradient(135deg,#0a6f78,#7c3aed);font-variant-numeric:tabular-nums;box-shadow:0 4px 12px rgba(124,58,237,.35)}
+.ncount.pop{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+.lhd h2 small{display:block;font:500 13px/1.3 "Hind Siliguri",sans-serif;color:var(--mute);-webkit-text-fill-color:var(--mute)}
+.nslide.in .ncard>*{animation:rise .6s cubic-bezier(.2,.9,.3,1) .38s both}
+.nslide.in .ncard>h3{animation-delay:.48s}.nslide.in .ncard>p{animation-delay:.58s}
+.ncard.urgent{animation:pulse 2s ease-out infinite!important}
+.nslide .ncard{background:linear-gradient(160deg,var(--card),var(--tint))}
+.nslide .ncard.urgent{background:var(--urg)}
+
+/* ===== v2: ক্লাস — গ্যালারি আগে, তারপর প্র্যাকটিক্যাল ===== */
+.cty.g{background:linear-gradient(135deg,#7c3aed,#c026d3);color:#fff}
+.cty.p{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff}
+.hcr:nth-child(n){animation:rise .6s cubic-bezier(.2,.9,.3,1) both}
+@media(prefers-reduced-motion:reduce){.mehero::before,.mglyph,.orb,#me .who,.mc,.mc::after,.mci,.ncard.urgent{animation:none!important}.mc{opacity:1}}
 </style>
 </head>
 <body>
@@ -1467,7 +1511,7 @@ function classHTML(rows){
   rows.forEach(r=>{if(!g.has(r.class_date))g.set(r.class_date,[]);g.get(r.class_date).push(r)});
   return [...g].map(([d,a])=>{
     const df=Math.round((pd(d).u-td)/864e5),bd=df===0?t("c_today"):df===1?t("c_tom"):df===-1?t("c_yest"):"";
-    a.sort((x,y)=>String(x.start_time).localeCompare(String(y.start_time)));
+    a.sort(clsSort);
     return `<article class="cday${df===0?" today":""}"><header class="cdh"><span class="cdw">${esc(wFull(d))}</span><span class="cdd">${esc(dFmt(d))}</span>${bd?`<span class="cdb">${bd}</span>`:""}</header><table class="ctab"><thead><tr><th scope="col">${t("c_thT")}</th><th scope="col">${t("c_thC")}</th></tr></thead>${a.map(classRow).join("")}</table></article>`;
   }).join("");
 }
@@ -1491,7 +1535,7 @@ function drawHomeCls(){
   const T=hcTxt(),td=todayS(),d=addDays(td,HC.off);
   $("hclsT").textContent=T.t[HC.off];$("hclsS").textContent=wFull(d)+" · "+dFmt(d);
   $("hclsSeg").innerHTML=T.seg.map((x,i)=>`<button type="button" data-hc="${i}" class="${i===HC.off?"on":""}">${x}</button>`).join("");
-  const box=$("hclsList"),rows=HC.rows.filter(r=>r.class_date===d).sort((a,b)=>String(a.start_time).localeCompare(String(b.start_time)));
+  const box=$("hclsList"),rows=HC.rows.filter(r=>r.class_date===d).sort(clsSort);
   $("hclsN").textContent=rows.length?(lang==="bn"?bnd(rows.length):rows.length)+T.cnt:"";
   $("hclsN").hidden=!rows.length;
   if(HC.state==="load"){box.innerHTML='<div class="sk"></div><div class="sk"></div>';return}
@@ -1600,6 +1644,42 @@ $("admCList").onclick=async e=>{
 // ===================== ক্লাস নোটিশ শেষ =====================
 (function(){const h=document.querySelector(".hero");for(let i=0;i<9;i++){const b=document.createElement("span");b.className="bub";const z=14+Math.random()*50;b.style.cssText=`width:${z}px;height:${z}px;left:${Math.random()*92}%;top:${Math.random()*92}%;animation-delay:${Math.random()*5}s;animation-duration:${5+Math.random()*6}s`;h.appendChild(b)}})();
 document.addEventListener("pointerdown",e=>{const b=e.target.closest(".go,.ghost,.tabs button,.seg button,.wd button,#bar button,.ib,.tile,#lang,.lnk");if(!b)return;const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height),x=document.createElement("span");x.className="rip";x.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;b.appendChild(x);setTimeout(()=>x.remove(),650)});
+
+/* ===== v2 জাভাস্ক্রিপ্ট ===== */
+const clsRank=c=>c.class_type==="practical"?1:0;
+const clsSort=(x,y)=>clsRank(x)-clsRank(y)||String(x.start_time).localeCompare(String(y.start_time));
+// প্রোফাইল পেজের সাজসজ্জা: কক্ষপথ + বিভাগের জলছাপ
+const _drawMe=drawMe;
+drawMe=function(){
+  _drawMe();
+  const w=document.querySelector("#me .avwrap");
+  if(w&&!w.querySelector(".orb")){w.insertAdjacentHTML("afterbegin",'<span class="orb"></span><span class="orb o2"></span>')}
+  const h=$("meHero"),g={Dental:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3C4.8 3 3 4.8 3 7.2c0 2 1 3.2 1.6 5.2.7 2.3.6 8.600 2.900 8.600 1.800 0 1.700-4.500 4.500-4.500s2.700 4.500 4.500 4.500c2.300 0 2.200-6.300 2.900-8.600.6-2 1.600-3.200 1.600-5.200C21 4.800 19.200 3 17 3c-1.800 0-3 .8-5 .8S8.800 3 7 3z"/></svg>`,Physiotherapy:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,Radiotherapy:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12h.01"/><path d="M14 15.464a4 4 0 0 1-4 0L7.528 19.746a1 1 0 0 0 .465 1.416 10 10 0 0 0 8.014 0 1 1 0 0 0 .465-1.416z"/><path d="M16 12a4 4 0 0 0-2-3.464l2.472-4.282a1 1 0 0 1 1.46-.305 10 10 0 0 1 4.006 6.94A1 1 0 0 1 21 12z"/><path d="M8 12a4 4 0 0 1 2-3.464L7.528 4.254a1 1 0 0 0-1.46-.305 10 10 0 0 0-4.006 6.94A1 1 0 0 0 3 12z"/></svg>`}[ME&&ME.department]||`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
+  let m=h.querySelector(".mglyph");if(!m){m=document.createElement("div");m.className="mglyph";m.setAttribute("aria-hidden","true");h.appendChild(m)}
+  m.innerHTML=g;
+};
+// আজকের নোটিশ (সর্বোচ্চ ৫টি); আজ না থাকলে সর্বশেষ ৩টি
+const dhakaDay=iso=>{try{return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Dhaka",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date(iso))}catch(x){return String(iso).slice(0,10)}};
+function nxCounter(){
+  const hd=document.querySelector("#lat .lhd");if(!hd)return;
+  let c=hd.querySelector(".ncount");
+  if(NX.n<2){if(c)c.remove();return}
+  if(!c){c=document.createElement("span");c.className="ncount";hd.insertBefore(c,hd.querySelector(".live"))}
+  const f=v=>lang==="bn"?bnd(v):v;
+  c.textContent=f(NX.i+1)+" / "+f(NX.n);
+  c.classList.remove("pop");void c.offsetWidth;c.classList.add("pop");
+}
+const _nxGo=nxGo;
+nxGo=function(to){const before=NX.i;_nxGo(to);setTimeout(()=>{if(NX.i!==before||NX.n>1)nxCounter()},960)};
+homeNotices=async function(){
+  const box=$("hn");box.innerHTML='<div class="sk"></div><div class="sk"></div>';
+  const {data,error}=await sb.from("notices").select("title,body,board,image_url,is_emergency,created_at").order("created_at",{ascending:false}).limit(12);
+  if(error){clearInterval(NX.timer);NX.n=0;nxCounter();box.innerHTML=`<p class="mute">${t("n_loadFail")}</p>`;return}
+  if(!data||!data.length){clearInterval(NX.timer);NX.n=0;nxCounter();box.innerHTML=`<p class="mute">${t("none")}</p>`;return}
+  const td=todayS(),today=data.filter(n=>dhakaDay(n.created_at)===td).slice(0,5);
+  nxBuild(today.length?today:data.slice(0,3));
+  nxCounter();
+};
 refresh("home");
 if("serviceWorker" in navigator)window.addEventListener("load",()=>{try{navigator.serviceWorker.register("sw.js").catch(()=>{})}catch(x){}});
 </script>
