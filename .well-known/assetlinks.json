@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "dev.pages.bgallery_dpx.twa",
+        "sha256_cert_fingerprints": ["EB:69:E7:B8:C0:FB:6E:AD:19:1C:66:52:6A:87:E3:E7:29:29:87:E3:38:A8:8F:61:1C:8C:EF:A2:C3:42:88:23"]
+      }
+    }]
