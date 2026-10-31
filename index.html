@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f2a43">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.onesignal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://hahuyaxhgzdgqgwzizti.supabase.co wss://hahuyaxhgzdgqgwzizti.supabase.co https://onesignal.com https://*.onesignal.com; frame-src https://drive.google.com https://docs.google.com https://onesignal.com https://*.onesignal.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="logo.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -677,6 +680,7 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 #me .avwrap.hasph .av.photo{width:132px;height:132px;border:5px solid #fff;box-shadow:0 12px 28px rgba(0,0,0,.3);animation:none}
 #me .av.photo img{object-fit:cover;object-position:50% 20%}
 #me .avwrap.hasph .orb{inset:-8px}#me .avwrap.hasph .orb.o2{inset:-24px}
+#nbtn[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -716,7 +720,7 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 </defs></svg>
 <header class="hero">
 <img class="hlogo" alt="" src="logo.png" onerror="this.onerror=function(){this.style.display='none'};this.src='https://ihtraj.org/img/rc-logo.png'">
-<div class="topbtns"><button id="abtn" class="ib tb" type="button" data-go="about" aria-label="About"><svg class="ic"><use href="#i-info"/></svg></button><a class="ib tb" href="https://ihtraj.org" target="_blank" rel="noopener" aria-label="Official website"><svg class="ic"><use href="#i-globe"/></svg></a><a class="ib tb" href="https://www.facebook.com/share/1EQbFK2GNJ/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"><svg class="ic"><use href="#i-fb"/></svg></a><button id="lang" class="ib tb" type="button" aria-label="Language">EN</button></div>
+<div class="topbtns"><button id="abtn" class="ib tb" type="button" data-go="about" aria-label="About"><svg class="ic"><use href="#i-info"/></svg></button><a class="ib tb" href="https://ihtraj.org" target="_blank" rel="noopener" aria-label="Official website"><svg class="ic"><use href="#i-globe"/></svg></a><a class="ib tb" href="https://www.facebook.com/share/1EQbFK2GNJ/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"><svg class="ic"><use href="#i-fb"/></svg></a><button id="nbtn" class="ib tb" type="button" aria-label="Notifications" hidden><svg class="ic"><use href="#i-bell"/></svg></button><button id="lang" class="ib tb" type="button" aria-label="Language">EN</button></div>
 <span class="bub" style="width:46px;height:46px;left:8%;top:62%"></span><span class="bub" style="width:28px;height:28px;right:18%;top:48%;animation-delay:1.5s"></span><span class="bub" style="width:64px;height:64px;right:6%;bottom:6%;animation-delay:3s"></span>
 <p class="inst" data-i="inst"></p>
 <h1 data-i="site"></h1>
@@ -1703,6 +1707,22 @@ homeNotices=async function(){
   nxBuild(today.length?today:data.slice(0,3));
   nxCounter();
 };
+
+/* ===== নোটিফিকেশন (OneSignal) — নিচের "" এর ভেতরে App ID বসান ===== */
+const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
+(function(){
+  const b=$("nbtn");if(!b||!OS_APP_ID)return;
+  const sc=document.createElement("script");sc.src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";sc.defer=true;document.head.appendChild(sc);
+  window.OneSignalDeferred=window.OneSignalDeferred||[];
+  window.OneSignalDeferred.push(async function(OneSignal){
+    try{
+      await OneSignal.init({appId:OS_APP_ID,serviceWorkerPath:"/sw.js",serviceWorkerParam:{scope:"/"},notifyButton:{enable:false}});
+      const sync=()=>{b.hidden=!!OneSignal.Notifications.permission};
+      sync();OneSignal.Notifications.addEventListener("permissionChange",sync);
+      b.onclick=()=>OneSignal.Notifications.requestPermission();
+    }catch(x){b.hidden=true}
+  });
+})();
 refresh("home");
 if("serviceWorker" in navigator)window.addEventListener("load",()=>{try{navigator.serviceWorker.register("sw.js").catch(()=>{})}catch(x){}});
 </script>
