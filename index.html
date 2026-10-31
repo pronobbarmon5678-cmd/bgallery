@@ -7,7 +7,8 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.onesignal.com https://api.onesignal.com https://onesignal.com https://*.onesignal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://hahuyaxhgzdgqgwzizti.supabase.co wss://hahuyaxhgzdgqgwzizti.supabase.co https://onesignal.com https://*.onesignal.com; frame-src https://drive.google.com https://docs.google.com https://onesignal.com https://*.onesignal.com; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
-<link rel="manifest" href="manifest.webmanifest">
+<meta name="description" content="IHT Rajshahi – class routine, notices and study resources">
+<link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="logo.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1730,6 +1731,7 @@ const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
     }catch(x){b.hidden=true}
   });
 })();
+if("serviceWorker" in navigator)window.addEventListener("load",()=>{try{navigator.serviceWorker.register("/sw.js",{scope:"/"}).catch(()=>{})}catch(x){}});
 /* ===== অ্যান্ড্রয়েডে "অ্যাপ ইনস্টল করুন" বাটন ===== */
 let DIP=null;
 window.addEventListener("beforeinstallprompt",e=>{
