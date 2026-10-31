@@ -1715,12 +1715,17 @@ const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
   /* স্ট্যাটাস বক্স (টেস্টের জন্য): ট্যাপ করলে বন্ধ হবে। কাজ হয়ে গেলে এই বক্স সরিয়ে দেব */
   const L={},LOG=[];
   const show=()=>{let d=document.getElementById("osdbg");if(!d){d=document.createElement("div");d.id="osdbg";d.style.cssText="position:fixed;left:6px;right:6px;top:56px;max-height:70vh;overflow:auto;z-index:99999;background:#111827f2;color:#fff;padding:8px 10px;border-radius:12px;font:11px/1.45 monospace;word-break:break-word;white-space:pre-wrap;border:1px solid #f59e0b";d.onclick=()=>d.remove();document.body.appendChild(d)}
-    d.textContent="PUSH STATUS v4 (ট্যাপ করে বন্ধ)\n"+Object.keys(L).map(k=>k+": "+L[k]).join("\n")+(LOG.length?"\n--- LOG ---\n"+LOG.slice(-10).join("\n"):"")};
+    d.textContent="PUSH STATUS v5 (ট্যাপ করে বন্ধ)\n"+Object.keys(L).map(k=>k+": "+L[k]).join("\n")+(LOG.length?"\n--- LOG ---\n"+LOG.slice(-14).join("\n"):"")};
   const set=(k,v)=>{L[k]=v;show()};
-  const lg=(t,a)=>{try{const m=Array.prototype.map.call(a,x=>typeof x==="string"?x:(x&&x.message)||JSON.stringify(x)).join(" ");if(/onesignal|service|worker|push|app|sync|error|fail|origin|url/i.test(m)){LOG.push(t+": "+m.slice(0,160));show()}}catch(e){}};
+  const lg=(t,a)=>{try{const m=Array.prototype.map.call(a,x=>typeof x==="string"?x:(x&&x.message)||JSON.stringify(x)).join(" ");LOG.push(t+": "+m.slice(0,150));show()}catch(e){}};
   ["log","info","warn","error","debug"].forEach(t=>{const o=console[t];console[t]=function(){lg(t,arguments);return o.apply(console,arguments)}});
   window.addEventListener("error",e=>{LOG.push("ERR: "+(e.message||"")+" "+(e.filename||"").slice(-40));show()});
   window.addEventListener("unhandledrejection",e=>{LOG.push("REJECT: "+String(e.reason&&e.reason.message||e.reason).slice(0,160));show()});
+  document.addEventListener("securitypolicyviolation",e=>{LOG.push("CSP-BLOCK: "+e.violatedDirective+" -> "+String(e.blockedURI).slice(0,90));show()});
+  const _f=window.fetch;window.fetch=function(u,o){const url=String(u&&u.url||u);const tr=/onesignal/i.test(url);const t0=Date.now();if(tr){LOG.push("FETCH> "+url.slice(0,100));show()}
+    return _f.apply(this,arguments).then(r=>{if(tr){LOG.push("FETCH< "+r.status+" "+(Date.now()-t0)+"ms "+url.slice(8,60));show()}return r}).catch(e=>{if(tr){LOG.push("FETCH! "+e.message+" "+url.slice(8,60));show()}throw e})};
+  const _x=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){if(/onesignal/i.test(String(u))){LOG.push("XHR "+m+" "+String(u).slice(8,80));show()}return _x.apply(this,arguments)};
+  let sec=0;const tk=setInterval(()=>{sec+=5;if(L["4.init"]==="চলছে..."||L["4.init"]==="অপেক্ষা..."){set("4.init","চলছে... "+sec+"s")}else clearInterval(tk)},5000);
   set("1.app-mode",(navigator.standalone===true||matchMedia("(display-mode: standalone)").matches)?"HOME-SCREEN (ঠিক)":"BROWSER (ভুল)");
   set("2.Notification-API","Notification" in window?"আছে ("+Notification.permission+")":"নেই");
   set("3.SDK","লোড হচ্ছে...");
