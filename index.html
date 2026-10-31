@@ -1720,9 +1720,33 @@ const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
       const sync=()=>{b.hidden=!!OneSignal.Notifications.permission};
       sync();OneSignal.Notifications.addEventListener("permissionChange",sync);
       b.onclick=()=>OneSignal.Notifications.requestPermission();
+      try{
+        const st=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
+        if(st&&!OneSignal.Notifications.permission&&!localStorage.getItem("push_asked")){
+          localStorage.setItem("push_asked","1");
+          setTimeout(()=>{try{OneSignal.Slidedown.promptPush()}catch(e){}},1500);
+        }
+      }catch(e){}
     }catch(x){b.hidden=true}
   });
 })();
+/* ===== অ্যান্ড্রয়েডে "অ্যাপ ইনস্টল করুন" বাটন ===== */
+let DIP=null;
+window.addEventListener("beforeinstallprompt",e=>{
+  e.preventDefault();DIP=e;
+  if(matchMedia("(display-mode: standalone)").matches)return;
+  const x=document.createElement("button");x.type="button";x.textContent="📲 অ্যাপ ইনস্টল করুন";
+  x.style.cssText="position:fixed;left:50%;transform:translateX(-50%);bottom:100px;z-index:9999;padding:12px 20px;border:0;border-radius:30px;font:700 15px sans-serif;color:#fff;background:linear-gradient(135deg,#f59e0b,#db2777);box-shadow:0 8px 24px rgba(0,0,0,.4)";
+  x.onclick=async()=>{x.remove();try{DIP.prompt();await DIP.userChoice}catch(_){}DIP=null};
+  document.body.appendChild(x);
+});
+/* ===== অ্যাপে ফিরলে (১০ সেকেন্ডের বেশি পরে) নতুন করে ডেটা আনা ===== */
+let HID=0;
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){HID=Date.now();return}
+  if(HID&&Date.now()-HID>10000&&["home","notice","res"].includes(CUR)){try{refresh()}catch(e){}}
+  HID=0;
+});
 refresh("home");
 /* sw.js এখন OneSignal নিজেই রেজিস্টার করে */
 </script>
