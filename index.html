@@ -1715,7 +1715,7 @@ const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
   /* স্ট্যাটাস বক্স (টেস্টের জন্য): ট্যাপ করলে বন্ধ হবে। কাজ হয়ে গেলে এই বক্স সরিয়ে দেব */
   const L={},LOG=[];
   const show=()=>{let d=document.getElementById("osdbg");if(!d){d=document.createElement("div");d.id="osdbg";d.style.cssText="position:fixed;left:6px;right:6px;top:56px;max-height:70vh;overflow:auto;z-index:99999;background:#111827f2;color:#fff;padding:8px 10px;border-radius:12px;font:11px/1.45 monospace;word-break:break-word;white-space:pre-wrap;border:1px solid #f59e0b";d.onclick=()=>d.remove();document.body.appendChild(d)}
-    d.textContent="PUSH STATUS v3 (ট্যাপ করে বন্ধ)\n"+Object.keys(L).map(k=>k+": "+L[k]).join("\n")+(LOG.length?"\n--- LOG ---\n"+LOG.slice(-10).join("\n"):"")};
+    d.textContent="PUSH STATUS v4 (ট্যাপ করে বন্ধ)\n"+Object.keys(L).map(k=>k+": "+L[k]).join("\n")+(LOG.length?"\n--- LOG ---\n"+LOG.slice(-10).join("\n"):"")};
   const set=(k,v)=>{L[k]=v;show()};
   const lg=(t,a)=>{try{const m=Array.prototype.map.call(a,x=>typeof x==="string"?x:(x&&x.message)||JSON.stringify(x)).join(" ");if(/onesignal|service|worker|push|app|sync|error|fail|origin|url/i.test(m)){LOG.push(t+": "+m.slice(0,160));show()}}catch(e){}};
   ["log","info","warn","error","debug"].forEach(t=>{const o=console[t];console[t]=function(){lg(t,arguments);return o.apply(console,arguments)}});
@@ -1732,6 +1732,7 @@ const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
     const rg=()=>navigator.serviceWorker.getRegistrations().then(r=>set("7.SW-registered",r.length?r.map(x=>x.scope+" ["+(x.active?"active":x.installing?"installing":x.waiting?"waiting":"?")+"]").join(", "):"কোনো SW নেই")).catch(e=>set("7.SW-registered","ত্রুটি: "+e.message));
     rg();setTimeout(rg,5000);
   }
+  fetch("https://api.onesignal.com/",{mode:"no-cors"}).then(()=>set("11.api.onesignal","পৌঁছানো যাচ্ছে")).catch(e=>set("11.api.onesignal","ব্লক/নেট সমস্যা: "+e.message));
   const sc=document.createElement("script");sc.src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";sc.defer=true;
   sc.onload=()=>set("3.SDK","লোড হয়েছে");
   sc.onerror=()=>set("3.SDK","লোড হয়নি (নেট/CSP)");
@@ -1742,6 +1743,16 @@ const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
     try{
       try{OneSignal.Debug.setLogLevel("trace")}catch(e){}
       set("4.init","চলছে...");
+      /* একবার পুরোনো সার্ভিস ওয়ার্কার মুছে নতুন করে বসানো */
+      try{
+        if("serviceWorker" in navigator&&localStorage.getItem("sw_reset_v4")!=="1"){
+          const rs=await navigator.serviceWorker.getRegistrations();
+          for(const r of rs){await r.unregister()}
+          if(window.caches){const ks=await caches.keys();for(const k of ks){await caches.delete(k)}}
+          localStorage.setItem("sw_reset_v4","1");
+          set("0.reset","পুরোনো SW মোছা হয়েছে: "+rs.length+"টি");
+        }else{set("0.reset","আগেই করা হয়েছে")}
+      }catch(e){set("0.reset","ত্রুটি: "+e.message)}
       await OneSignal.init({appId:OS_APP_ID,serviceWorkerPath:"/sw.js",serviceWorkerParam:{scope:"/"},notifyButton:{enable:false}});
       set("4.init","সফল");
       set("8.push-supported",String(OneSignal.Notifications.isPushSupported()));
@@ -1753,7 +1764,7 @@ const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
   });
 })();
 refresh("home");
-if("serviceWorker" in navigator)window.addEventListener("load",()=>{try{navigator.serviceWorker.register("sw.js").catch(()=>{})}catch(x){}});
+/* sw.js এখন OneSignal নিজেই রেজিস্টার করে */
 </script>
 </body>
 </html>
