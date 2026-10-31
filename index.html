@@ -1725,7 +1725,7 @@ const OS_APP_ID="28209715-ad58-4715-a062-fb4d4310039e";
         const st=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
         if(st&&!OneSignal.Notifications.permission&&!localStorage.getItem("push_asked")){
           localStorage.setItem("push_asked","1");
-          setTimeout(()=>{try{OneSignal.Slidedown.promptPush()}catch(e){}},1500);
+          setTimeout(()=>{try{OneSignal.Notifications.requestPermission()}catch(e){}},1500);
         }
       }catch(e){}
     }catch(x){b.hidden=true}
