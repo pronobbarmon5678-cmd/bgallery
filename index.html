@@ -295,6 +295,11 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 .seg{display:flex;gap:4px;padding:4px;margin:10px 0 6px;border-radius:999px;background:var(--tint)}
 .seg button{position:relative;overflow:hidden;flex:1;min-width:0;border:0;background:none;color:var(--teal);font:600 15px/1.3 "Hind Siliguri",sans-serif;padding:8px 10px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
 .seg button.on{background:linear-gradient(90deg,#0a6f78,#7c3aed);color:#fff;box-shadow:0 4px 12px rgba(124,58,237,.28)}
+#admSeg button[data-am="n"].on{background:linear-gradient(90deg,#b45309,#f59e0b)}
+#admSeg button[data-am="c"].on{background:linear-gradient(90deg,#0a6f78,#0891b2)}
+.admwarn{margin:8px 0 12px;padding:10px 12px;border-radius:12px;font:600 14px/1.5 "Hind Siliguri",sans-serif}
+.admwarn.n{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+.admwarn.c{background:#cffafe;color:#155e75;border:1px solid #67e8f9}
 .seg button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 #clist{display:grid;gap:14px}
 .cday{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 6px 18px rgba(15,42,67,.08);animation:capIn .55s cubic-bezier(.2,.8,.2,1) both}
@@ -825,7 +830,7 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 <section class="card" id="adm" hidden>
 <div class="seg" id="admSeg"><button type="button" data-am="n" class="on" data-i="a_note"></button><button type="button" data-am="c" data-i="a_class"></button></div>
 <div id="admN">
-<h2 data-i="postN"></h2><p class="mute" id="admHint"></p>
+<h2 data-i="postN"></h2><div class="admwarn n" data-i="a_warnN"></div><p class="mute" id="admHint"></p>
 <form id="admForm">
 <label><span data-i="whichB"></span><select id="aBoard"></select></label>
 <label><span data-i="title"></span><input id="aTitle" required></label>
@@ -837,7 +842,7 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 <h2 style="margin-top:22px" data-i="myN"></h2><div id="admList"></div>
 </div>
 <div id="admC" hidden>
-<h2 data-i="c_postH"></h2><p class="mute" id="cHint"></p>
+<h2 data-i="c_postH"></h2><div class="admwarn c" data-i="a_warnC"></div><p class="mute" id="cHint"></p>
 <form id="clsForm">
 <label><span data-i="c_board"></span><select id="cBoard"></select></label>
 <label><span data-i="c_type"></span><select id="cType" required></select></label>
@@ -959,11 +964,14 @@ const dateS=d=>new Date(d).toLocaleDateString(lang==="bn"?"bn-BD":"en-GB");
 const mail=m=>m+"@bgallery.com";
 const mobOk=m=>/^01[3-9]\d{8}$/.test(m);
 const cleanMob=s=>en(s).replace(/[\s-]/g,"");
+// আগে ভুল করে নোটিশ ফর্মে দেওয়া ক্লাসের তথ্য চেনার নিয়ম: শিরোনামে "ক্লাস" + লেখায় টিচার/সাবজেক্ট/সময় এর অন্তত দুটি
+const isClsNote=n=>{const ti=String(n.title||""),bo=String(n.body||"");if(!/ক্লাস|class/i.test(ti))return false;const k=[/টিচার|শিক্ষক|teacher/i,/সাবজেক্ট|বিষয়|subject/i,/সময়|time/i].filter(r=>r.test(bo)).length;return k>=2};
 const noteHTML=n=>`<div class="ncard b-${bk(n.board)}${n.is_emergency?" urgent":""}"><span class="bchip">${t("b_"+bk(n.board))}</span>${n.is_emergency?` <span class="tag">${t("urgTag")}</span>`:""}<h3>${esc(n.title)}</h3>${n.body?`<p>${esc(n.body)}</p>`:""}${n.image_url?`<img src="${esc(n.image_url)}" alt="" loading="lazy">`:""}<div class="meta">${ic("calendar")} ${dateS(n.created_at)}</div></div>`;
 async function board(b,box,lim){
   $(box).innerHTML='<div class="sk"></div><div class="sk"></div>';
   const {data,error}=await sb.from("notices").select("title,body,board,image_url,is_emergency,created_at").in("board",grp(b)).order("created_at",{ascending:false}).limit(lim);
-  $(box).innerHTML=error?`<p class="mute">${t("n_loadFail")}</p>`:(!data||!data.length)?`<p class="mute">${t("none")}</p>`:data.map(noteHTML).join("");
+  const dd=(data||[]).filter(n=>!isClsNote(n));
+  $(box).innerHTML=error?`<p class="mute">${t("n_loadFail")}</p>`:!dd.length?`<p class="mute">${t("none")}</p>`:dd.map(noteHTML).join("");
 }
 
 /* ===== সর্বশেষ নোটিশ: নিজে নিজে একটার পর একটা ধাক্কা দিয়ে আসে ===== */
@@ -1499,11 +1507,14 @@ $("logForm").onsubmit=async e=>{
 };
 $("out2").onclick=async()=>{await sb.auth.signOut();localStorage.removeItem(SID);await refresh("home")};
 async function loadAdmin(){
-  const {data}=await sb.from("notices").select("id,title,board,is_emergency,created_at").order("created_at",{ascending:false}).limit(20);
-  $("admList").innerHTML=(data&&data.length)?data.map(n=>`<div class="note${n.is_emergency?" urgent":""}"><button class="del" data-id="${n.id}">${t("del")}</button><b>${esc(n.title)}</b><br><small>${esc(t("b_"+bk(n.board)))} · ${dateS(n.created_at)}</small></div>`).join(""):`<p class="mute">${t("noneMine")}</p>`;
+  const {data}=await sb.from("notices").select("id,title,body,board,is_emergency,created_at").order("created_at",{ascending:false}).limit(20);
+  $("admList").innerHTML=(data&&data.length)?data.map(n=>`<div class="note${n.is_emergency?" urgent":""}"><button class="del" data-id="${n.id}">${t("del")}</button><b>${esc(n.title)}</b>${isClsNote(n)?` <small>(${lang==="bn"?"ক্লাসের তথ্য — ক্লাসে দেখাচ্ছে":"class info — shown under Classes"})</small>`:""}<br><small>${esc(t("b_"+bk(n.board)))} · ${dateS(n.created_at)}</small></div>`).join(""):`<p class="mute">${t("noneMine")}</p>`;
 }
 $("admForm").onsubmit=async e=>{
-  e.preventDefault();msg("admMsg","wait",1);
+  e.preventDefault();
+  {const tx=($("aTitle").value+" "+$("aBody").value);
+   if(/ক্লাস|প্র্যাকটিক্যাল|\bclass\b|practical/i.test(tx)&&confirm(t("a_askCls"))){setAdm("c");return}}
+  msg("admMsg","wait",1);
   const {data:{session}}=await sb.auth.getSession();
   let url=null;const f=$("aImg").files[0];
   if(f){
@@ -1536,14 +1547,14 @@ const CLS={
   byBoard:{}
 };
 // ▲▲ তালিকা শেষ ▲▲
-Object.assign(L.bn,{n_loadFail:"নোটিশ লোড করা যায়নি।",c_tabN:"নোটিশ",c_tabC:"ক্লাস",a_note:"নোটিশ দিন",a_class:"ক্লাস যোগ করুন",
+Object.assign(L.bn,{a_warnN:"📢 এটা শুধু সাধারণ নোটিশের ফর্ম। ক্লাসের তথ্য (বিষয়, শিক্ষক, সময়) দিতে ওপরের \"ক্লাস যোগ করুন\" ট্যাবে যান।",a_warnC:"📚 এটা শুধু ক্লাসের ফর্ম। এখানে দিলে ক্লাস \"ক্লাস\" ট্যাবে ও হোমের ক্লাস কার্ডে যাবে, নোটিশে যাবে না।",a_askCls:"মনে হচ্ছে এটা ক্লাসের তথ্য। ক্লাস হলে \"ক্লাস যোগ করুন\" ট্যাব ব্যবহার করুন, নইলে এটা নোটিশ বোর্ডে চলে যাবে।\n\nক্লাসের ট্যাবে যেতে OK চাপুন। সত্যিই নোটিশ দিতে Cancel চাপুন।",n_loadFail:"নোটিশ লোড করা যায়নি।",c_tabN:"নোটিশ",c_tabC:"ক্লাস",a_note:"নোটিশ দিন",a_class:"ক্লাস যোগ করুন",
 c_none:"এখনো কোনো ক্লাস দেওয়া হয়নি।",c_setup:"ক্লাস নোটিশ এখনো চালু হয়নি (ডাটাবেসের সেটআপ বাকি আছে)।",c_loadFail:"ক্লাসের তালিকা লোড করা যায়নি।",
 c_thT:"সময়",c_thC:"বিষয়, শিক্ষক ও পড়া",c_read:"পড়া:",c_today:"আজ",c_tom:"আগামীকাল",c_yest:"গতকাল",
 c_postH:"ক্লাস নোটিশ দিন",c_hintC:"ক্যাপ্টেন: শুধু আপনার নিজের ডিপার্টমেন্টের বোর্ডে ক্লাস দিতে ও মুছতে পারবেন।",c_hintS:"সুপার অ্যাডমিন: সব বোর্ডে ক্লাস দিতে ও মুছতে পারবেন।",
 c_board:"কোন বোর্ডে",c_type:"ক্লাসের ধরন",c_teacher:"শিক্ষক",c_subject:"বিষয়",c_day:"বার ও তারিখ",c_date:"তারিখ",c_from:"কয়টা থেকে",c_to:"কয়টা পর্যন্ত",c_reading:"কী পড়া দিয়েছে (ঐচ্ছিক)",c_readPh:"যেমন: অধ্যায় ৩, পৃষ্ঠা ২০-৩৫",c_pick:"— বেছে নিন —",c_post:"ক্লাস নোটিশ দিন",
 c_mine:"দেওয়া ক্লাস",c_noneMine:"এখনো কোনো ক্লাস দেননি।",
 c_errPick:"শিক্ষক, বিষয়, বার/তারিখ ও সময় সব বেছে নিন।",c_errTime:"শেষের সময় শুরুর সময়ের পরে হতে হবে।",c_posted:"ক্লাস নোটিশ দেওয়া হয়েছে।",c_postFail:"ক্লাস দেওয়া যায়নি।",c_perm:"এই বোর্ডে ক্লাস দেওয়ার অনুমতি নেই।",c_delQ:"এই ক্লাস মুছে ফেলবেন?",c_delFail:"ক্লাস মোছা যায়নি।"});
-Object.assign(L.en,{n_loadFail:"Could not load the notices.",c_tabN:"Notices",c_tabC:"Classes",a_note:"Post notice",a_class:"Add class",
+Object.assign(L.en,{a_warnN:"📢 This form is for general notices only. To post a class (subject, teacher, time) use the \"Add class\" tab above.",a_warnC:"📚 This form is for classes only. A class posted here goes to the Classes tab and the home class card, not to Notices.",a_askCls:"This looks like class information. For a class use the \"Add class\" tab, otherwise it will go to the notice board.\n\nPress OK to go to the class tab. Press Cancel to post it as a notice anyway.",n_loadFail:"Could not load the notices.",c_tabN:"Notices",c_tabC:"Classes",a_note:"Post notice",a_class:"Add class",
 c_none:"No classes have been posted yet.",c_setup:"Class notices are not switched on yet (database setup is pending).",c_loadFail:"Could not load the class list.",
 c_thT:"Time",c_thC:"Subject, teacher & reading",c_read:"Reading:",c_today:"Today",c_tom:"Tomorrow",c_yest:"Yesterday",
 c_postH:"Post a class notice",c_hintC:"Captain: you can post and delete classes only on your own department's board.",c_hintS:"Super admin: you can post and delete classes on every board.",
@@ -1593,7 +1604,9 @@ async function loadClasses(){
   if(tok!==clsTok||MODE!=="c")return;
   if(r.error){box.innerHTML=`<p class="mute">${esc(noTbl(r.error)?t("c_setup"):netErr(r.error)?t("errNet"):t("c_loadFail"))}</p>`;return}
   const rows=(r.data||[]).filter(x=>pd(x.class_date));
-  box.innerHTML=rows.length?classHTML(rows):`<p class="mute">${t("c_none")}</p>`;
+  let old=[];try{const q=await sb.from("notices").select("title,body,board,image_url,is_emergency,created_at").in("board",grp(b)).order("created_at",{ascending:false}).limit(40);old=(q.data||[]).filter(isClsNote)}catch(x){}
+  if(tok!==clsTok||MODE!=="c")return;
+  box.innerHTML=(rows.length||old.length)?(rows.length?classHTML(rows):"")+old.map(noteHTML).join(""):`<p class="mute">${t("c_none")}</p>`;
 }
 /* ===== হোম: কালকের ক্লাস (গ্যালারি + নিজের বিভাগ একসাথে) ===== */
 let HC={off:1,rows:[],tok:0,state:"load"};
@@ -1751,8 +1764,10 @@ homeNotices=async function(){
   const {data,error}=await sb.from("notices").select("title,body,board,image_url,is_emergency,created_at").order("created_at",{ascending:false}).limit(12);
   if(error){clearInterval(NX.timer);NX.n=0;nxCounter();box.innerHTML=`<p class="mute">${t("n_loadFail")}</p>`;return}
   if(!data||!data.length){clearInterval(NX.timer);NX.n=0;nxCounter();box.innerHTML=`<p class="mute">${t("none")}</p>`;return}
-  const td=todayS(),today=data.filter(n=>dhakaDay(n.created_at)===td).slice(0,5);
-  nxBuild(today.length?today:data.slice(0,3));
+  const dn=data.filter(n=>!isClsNote(n));
+  if(!dn.length){clearInterval(NX.timer);NX.n=0;nxCounter();box.innerHTML=`<p class="mute">${t("none")}</p>`;return}
+  const td=todayS(),today=dn.filter(n=>dhakaDay(n.created_at)===td).slice(0,5);
+  nxBuild(today.length?today:dn.slice(0,3));
   nxCounter();
 };
 
