@@ -716,7 +716,16 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 .rq{border:1px solid var(--tint);border-radius:16px;padding:14px;margin:12px 0;background:var(--card)}
 .rq b{font-size:18px}
 .rq .rqm{margin:6px 0;display:flex;flex-wrap:wrap;gap:6px}
-.rq .rqm span{background:var(--tint);color:var(--teal);border-radius:999px;padding:3px 10px;font-size:14px}
+.rq .rqm span{border-radius:999px;padding:4px 12px;font-size:14px;font-weight:600}
+.rq .rqm .c1{background:#ede9fe;color:#4c1d95}
+.rq .rqm .c2{background:#fef3c7;color:#78350f}
+.rq .rqm .c3{background:#fce7f3;color:#831843}
+.rq .rqm .c4{background:#e5e7eb;color:#1f2937}
+.rq .rqm b{font-size:16px}
+.rq .rqtel{display:flex;align-items:center;gap:10px;margin:10px 0 4px;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,#0a6f78,#14a89f);color:#fff;text-decoration:none}
+.rq .rqtel .rqti{font-size:22px;line-height:1}
+.rq .rqtn{flex:1;font:700 22px/1.2 "Hind Siliguri",sans-serif;letter-spacing:1.5px;color:#fff}
+.rq .rqtel small{background:rgba(255,255,255,.22);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:600;color:#fff}
 .rq .okl{color:#0a7a3d;font-weight:600;margin:6px 0}
 .rq .badl{color:#b42318;font-weight:700;margin:6px 0}
 .rq .rqb{display:flex;gap:8px;margin-top:10px}
@@ -1583,7 +1592,8 @@ async function loadReqs(){
   REQ.n=r.data.length;buildBar();
   if(!r.data.length){box.innerHTML=`<p class="mute">${t("reqNone2")}</p>`;return}
   box.innerHTML=r.data.map(q=>`<div class="rq" data-id="${esc(q.id)}"><b>${esc(q.full_name)}</b>
-<div class="rqm"><span>${esc(t("d_"+q.department[0].toUpperCase()+q.department.slice(1)))}</span><span>${t("rRoll")}: ${esc(q.class_roll)}</span><span>${esc(t(q.gender))}</span><span><a href="tel:${esc(q.mobile)}">${esc(q.mobile)}</a></span><span>${esc(dateS(q.created_at))}</span></div>
+<a class="rqtel" href="tel:${esc(q.mobile)}"><span class="rqti">&#9990;</span><span class="rqtn">${esc(q.mobile)}</span><small>${lang==="bn"?"ফোন করুন":"Call"}</small></a>
+<div class="rqm"><span class="c1">${esc(t("d_"+q.department[0].toUpperCase()+q.department.slice(1)))}</span><span class="c2">${t("rRoll")}: <b>${esc(q.class_roll)}</b></span><span class="c3">${esc(t(q.gender))}</span><span class="c4">${esc(dateS(q.created_at))}</span></div>
 <div class="${q.in_directory?"okl":"badl"}">${q.in_directory?"✔ "+t("reqInList"):"⚠ "+t("reqNotList")}</div>
 <div class="rqb"><button type="button" class="ap" data-d="approved">${t("reqApprove")}</button><button type="button" class="rj" data-d="rejected">${t("reqReject")}</button></div></div>`).join("");
 }
