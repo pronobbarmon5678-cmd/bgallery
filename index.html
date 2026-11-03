@@ -734,6 +734,20 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 .rq .rqb button:disabled{opacity:.5}
 #bar button{position:relative}
 #bar .bdg{position:absolute;top:0;right:18%;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#d92d20;color:#fff;font:700 12px/18px sans-serif;font-style:normal;text-align:center}
+
+#dbtn[hidden]{display:none!important}
+.dnow{display:flex;align-items:center;gap:14px;padding:16px;border-radius:20px;background:linear-gradient(135deg,#0a6f78,#14a89f);color:#fff;margin:12px 0}
+.dnow b{font:800 46px/1 "Baloo Da 2",sans-serif}
+.dnow small{display:block;font-size:15px;opacity:.95}
+.ddot{width:14px;height:14px;border-radius:50%;background:#7CFFB2;box-shadow:0 0 0 0 rgba(124,255,178,.7);animation:dpulse 1.6s infinite;flex:none}
+@keyframes dpulse{70%{box-shadow:0 0 0 14px rgba(124,255,178,0)}100%{box-shadow:0 0 0 0 rgba(124,255,178,0)}}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.dt{background:var(--tint);border-radius:18px;padding:14px}
+.dt b{display:block;font:800 30px/1.2 "Baloo Da 2",sans-serif;color:var(--teal)}
+.dt span{font-size:15px;color:var(--mute)}
+.dbars{display:flex;align-items:flex-end;gap:8px;height:130px;margin:10px 0 4px}
+.dbars div{flex:1;text-align:center;font-size:13px;color:var(--mute);display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.dbars i{display:block;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,#14a89f,#0a6f78);margin:2px 0;min-height:3px}
 </style>
 </head>
 <body>
@@ -747,6 +761,7 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
 <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
 <symbol id="i-login" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></symbol>
 <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
 <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
 <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></symbol>
@@ -773,7 +788,7 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 </defs></svg>
 <header class="hero">
 <img class="hlogo" alt="" src="logo.png" onerror="this.onerror=function(){this.style.display='none'};this.src='https://ihtraj.org/img/rc-logo.png'">
-<div class="topbtns"><button id="abtn" class="ib tb" type="button" data-go="about" aria-label="About"><svg class="ic"><use href="#i-info"/></svg></button><a class="ib tb" href="https://ihtraj.org" target="_blank" rel="noopener" aria-label="Official website"><svg class="ic"><use href="#i-globe"/></svg></a><a class="ib tb" href="https://www.facebook.com/share/1EQbFK2GNJ/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"><svg class="ic"><use href="#i-fb"/></svg></a><button id="nbtn" class="ib tb" type="button" aria-label="Notifications" hidden><svg class="ic"><use href="#i-bell"/></svg></button><button id="lang" class="ib tb" type="button" aria-label="Language">EN</button></div>
+<div class="topbtns"><button id="abtn" class="ib tb" type="button" data-go="about" aria-label="About"><svg class="ic"><use href="#i-info"/></svg></button><a class="ib tb" href="https://ihtraj.org" target="_blank" rel="noopener" aria-label="Official website"><svg class="ic"><use href="#i-globe"/></svg></a><a class="ib tb" href="https://www.facebook.com/share/1EQbFK2GNJ/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"><svg class="ic"><use href="#i-fb"/></svg></a><button id="dbtn" class="ib tb" type="button" data-go="dash" aria-label="Dashboard" hidden><svg class="ic"><use href="#i-chart"/></svg></button><button id="nbtn" class="ib tb" type="button" aria-label="Notifications" hidden><svg class="ic"><use href="#i-bell"/></svg></button><button id="lang" class="ib tb" type="button" aria-label="Language">EN</button></div>
 <span class="bub" style="width:46px;height:46px;left:8%;top:62%"></span><span class="bub" style="width:28px;height:28px;right:18%;top:48%;animation-delay:1.5s"></span><span class="bub" style="width:64px;height:64px;right:6%;bottom:6%;animation-delay:3s"></span>
 <p class="inst" data-i="inst"></p>
 <h1 data-i="site"></h1>
@@ -831,6 +846,8 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 </form>
 <div id="regDone" class="regdone" hidden><div class="rdi">&#10003;</div><h3 data-i="reqDoneT"></h3><p data-i="reqDoneB"></p><button type="button" class="go" data-go="home" data-i="reqHome"></button></div>
 </section>
+
+<section class="card" id="dash" hidden><div id="dashBox"></div></section>
 
 <section class="card" id="reqs" hidden>
 <h2 data-i="reqTitle"></h2><div id="reqList"></div>
@@ -1445,7 +1462,7 @@ document.addEventListener("click",e=>{
 });
 function show(v){
   if(v==="res"){$("gate").hidden=LOGGED;$("tiles").hidden=!LOGGED;$("tp").hidden=true;$("sl").hidden=true;$("sol").hidden=true;$("ex").hidden=true;$("syl").hidden=true}
-  CUR=v;["home","notice","res","about","dev","reg","login","me","adm","reqs"].forEach(x=>$(x).hidden=x!==v);hi();window.scrollTo(0,0);
+  CUR=v;["home","notice","res","about","dev","reg","login","me","adm","reqs","dash"].forEach(x=>$(x).hidden=x!==v);hi();window.scrollTo(0,0);
   if(v==="reg"){$("regForm").hidden=false;$("regDone").hidden=true}
   if(v==="reqs")loadReqs();
 }
@@ -1913,6 +1930,48 @@ document.addEventListener("visibilitychange",()=>{
   if(HID&&Date.now()-HID>10000&&["home","notice","res"].includes(CUR)){try{refresh()}catch(e){}}
   HID=0;
 });
+/* ===== ওয়েব ট্রাফিক ড্যাশবোর্ড (শুধু সুপার অ্যাডমিন) ===== */
+const VID=(()=>{const mk=()=>(window.crypto&&crypto.randomUUID)?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2,12);try{let v=localStorage.getItem("bg_vid");if(!v||v.length<8){v=mk();localStorage.setItem("bg_vid",v)}return v}catch(e){return mk()}})();
+const trackVisit=()=>{try{sb.rpc("track_visit",{p_vid:VID}).then(()=>{},()=>{})}catch(e){}};
+trackVisit();
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)trackVisit()});
+let ONL=0,PCH=null,DS=null,DT=null;
+try{
+  PCH=sb.channel("bg-online",{config:{presence:{key:VID}}});
+  PCH.on("presence",{event:"sync"},()=>{ONL=Object.keys(PCH.presenceState()).length;dashDraw()});
+  PCH.subscribe(async st=>{if(st==="SUBSCRIBED"){try{await PCH.track({at:Date.now()})}catch(e){}}});
+}catch(e){}
+const isSA=()=>!!(ME&&ME.role==="super_admin");
+function dashSync(){const b=$("dbtn");if(b)b.hidden=!isSA()}
+async function dashLoad(){
+  if(!isSA())return;
+  try{const r=await sb.rpc("visit_stats");DS=r.error?false:r.data}catch(e){DS=false}
+  dashDraw();
+}
+function dashDraw(){
+  const box=$("dashBox");if(!box||$("dash").hidden)return;
+  const bn=lang==="bn",f=v=>bn?bnd(v):String(v);
+  const T=bn?{h:"ওয়েব ট্রাফিক",now:"এখন অনলাইনে",today:"আজ",yest:"গতকাল",week:"গত ৭ দিনে",month:"গত ৩০ দিনে",total:"মোট (শুরু থেকে)",chart:"শেষ ৭ দিনের ভিজিট",note:"একই ফোন/ব্রাউজার একদিনে একবার গোনা হয়। ১৫ সেকেন্ড পরপর নিজে নিজে নতুন হয়।",fail:"তথ্য আনা যায়নি। SQL চালানো হয়েছে কি না দেখুন।",wait:"লোড হচ্ছে...",back:"← ফিরে যান",unit:"জন"}
+            :{h:"Web traffic",now:"Online now",today:"Today",yest:"Yesterday",week:"Last 7 days",month:"Last 30 days",total:"Total (all time)",chart:"Visits, last 7 days",note:"The same phone/browser is counted once per day. Refreshes every 15 seconds.",fail:"Could not load. Check that the SQL was run.",wait:"Loading...",back:"← Back",unit:""};
+  let h=`<h2>${T.h}</h2><div class="dnow"><span class="ddot"></span><div><b>${f(ONL)}</b><small>${T.now}</small></div></div>`;
+  if(DS===null)h+=`<p class="mute">${T.wait}</p>`;
+  else if(DS===false)h+=`<p class="mute bad">${T.fail}</p>`;
+  else{
+    h+=`<div class="dgrid"><div class="dt"><b>${f(DS.today)}</b><span>${T.today}</span></div><div class="dt"><b>${f(DS.yesterday)}</b><span>${T.yest}</span></div><div class="dt"><b>${f(DS.week)}</b><span>${T.week}</span></div><div class="dt"><b>${f(DS.month)}</b><span>${T.month}</span></div></div><div class="dt"><b>${f(DS.total)}</b><span>${T.total}</span></div>`;
+    const days=DS.days||[],mx=Math.max(1,...days.map(x=>x.c));
+    h+=`<p class="mute" style="margin-top:16px">${T.chart}</p><div class="dbars">${days.map(x=>`<div><span>${f(x.c)}</span><i style="height:${Math.round(x.c/mx*80)}px"></i>${f(String(x.d).slice(8,10))}</div>`).join("")}</div>`;
+  }
+  h+=`<p class="mute" style="font-size:14px;margin-top:12px">${T.note}</p><button type="button" class="ghost" data-go="home">${T.back}</button>`;
+  box.innerHTML=h;
+}
+{const _bb=buildBar;buildBar=function(){_bb.apply(this,arguments);dashSync();dashDraw()}}
+{const _sh=show;show=function(v){
+  if(v==="dash"&&!isSA()){_sh("home");return}
+  _sh(v);
+  clearInterval(DT);DT=null;
+  if(v==="dash"){dashDraw();dashLoad();DT=setInterval(dashLoad,15000)}
+}}
+
 refresh("home");
 /* sw.js এখন OneSignal নিজেই রেজিস্টার করে */
 </script>
