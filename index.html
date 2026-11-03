@@ -708,6 +708,23 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 @keyframes npop{from{transform:scale(1.12);opacity:0;filter:blur(6px)}to{transform:scale(1);opacity:1;filter:blur(0)}}
 @media(prefers-reduced-motion:reduce){#me .avwrap.hasph.nasim::after,#me .avwrap.hasph.nasim .av.photo img{animation:none!important}}
 #nbtn[hidden]{display:none!important}
+
+.regdone{text-align:center;padding:10px 4px}
+.regdone .rdi{width:64px;height:64px;margin:0 auto 10px;border-radius:50%;background:linear-gradient(135deg,#0a6f78,#14a89f);color:#fff;font-size:34px;line-height:64px}
+.regdone h3{margin:6px 0 8px}
+.regdone p{line-height:1.7}
+.rq{border:1px solid var(--tint);border-radius:16px;padding:14px;margin:12px 0;background:var(--card)}
+.rq b{font-size:18px}
+.rq .rqm{margin:6px 0;display:flex;flex-wrap:wrap;gap:6px}
+.rq .rqm span{background:var(--tint);color:var(--teal);border-radius:999px;padding:3px 10px;font-size:14px}
+.rq .okl{color:#0a7a3d;font-weight:600;margin:6px 0}
+.rq .badl{color:#b42318;font-weight:700;margin:6px 0}
+.rq .rqb{display:flex;gap:8px;margin-top:10px}
+.rq .rqb button{flex:1;height:44px;border:0;border-radius:12px;font:700 16px "Hind Siliguri",sans-serif;cursor:pointer;color:#fff}
+.rq .rqb .ap{background:#0a7a3d}.rq .rqb .rj{background:#b42318}
+.rq .rqb button:disabled{opacity:.5}
+#bar button{position:relative}
+#bar .bdg{position:absolute;top:0;right:18%;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#d92d20;color:#fff;font:700 12px/18px sans-serif;font-style:normal;text-align:center}
 </style>
 </head>
 <body>
@@ -794,13 +811,20 @@ main>*:not([hidden]){animation:viewIn .5s cubic-bezier(.2,.8,.2,1)}
 <section class="card" id="reg" hidden>
 <h2 data-i="regBtn"></h2><p class="mute" data-i="regT"></p>
 <form id="regForm">
+<label><span data-i="rName"></span><input id="rName" autocomplete="name" maxlength="60" required></label>
 <label><span data-i="mobile"></span><input id="rMob" type="tel" inputmode="numeric" autocomplete="tel" placeholder="01XXXXXXXXX" required></label>
-<label><span data-i="code"></span><input id="rCode" inputmode="numeric" maxlength="2" placeholder="00" required></label>
-<label><span data-i="pass"></span><input id="rPass" type="password" minlength="6" autocomplete="new-password" required></label>
 <label><span data-i="you"></span><select id="rGender" required></select></label>
+<label><span data-i="rDept"></span><select id="rDept" required></select></label>
+<label><span data-i="rRoll"></span><select id="rRoll" required></select></label>
+<label><span data-i="pass"></span><input id="rPass" type="password" minlength="8" autocomplete="new-password" required></label>
 <button class="go" data-i="regBtn"></button><p id="regMsg" class="msg" role="status"></p>
 <button type="button" class="link" data-go="login" data-i="haveAcc"></button>
 </form>
+<div id="regDone" class="regdone" hidden><div class="rdi">&#10003;</div><h3 data-i="reqDoneT"></h3><p data-i="reqDoneB"></p><button type="button" class="go" data-go="home" data-i="reqHome"></button></div>
+</section>
+
+<section class="card" id="reqs" hidden>
+<h2 data-i="reqTitle"></h2><div id="reqList"></div>
 </section>
 
 <section class="card" id="login" hidden>
@@ -913,6 +937,9 @@ urgTag:"Urgent",onlyImg:"Only image files, please.",imgRead:"Could not read the 
 users:"User management (super admin)",search:"Search by name or roll",save:"Save",saved:"Saved",capOf:"Captain of which department",noCap:"— none —",kicked:"This account was logged in on another device. You have been logged out."}};
 let lang=localStorage.getItem("bg_lang")||"bn";
 const t=k=>L[lang][k]||k;
+var REQ={ok:false,n:0};
+Object.assign(L.bn,{nav_req:"রিকোয়েস্ট",rName:"আপনার নাম",rDept:"ডিপার্টমেন্ট",rRoll:"ক্লাস রোল",pickDept:"ডিপার্টমেন্ট সিলেক্ট করুন",pickRoll:"ক্লাস রোল সিলেক্ট করুন",fillAll:"সব ঘর পূরণ করুন।",passShort:"পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের দিন।",reqDoneT:"আপনার রিকোয়েস্ট পৌঁছে গেছে",reqDoneB:"আপনার রিকোয়েস্টটি অ্যাডমিনদের কাছে পৌঁছে গেছে। তারা যাচাই করে খুব শীঘ্রই আপনাকে অ্যাপ্রুভ করে দেবেন। অনুমোদন পেলে তখন লগইন করতে পারবেন।",reqHome:"হোমে যান",reqPending:"অনুমোদনের অপেক্ষায় আছেন। ক্যাপ্টেন অ্যাপ্রুভ করলে লগইন করতে পারবেন।",reqRejected:"আপনার অনুরোধ বাতিল হয়েছে। সঠিক তথ্য নিয়ে ক্যাপ্টেনের সাথে যোগাযোগ করুন।",reqNone:"এই অ্যাকাউন্টের কোনো রেজিস্ট্রেশন অনুরোধ পাওয়া যায়নি। আবার রেজিস্ট্রেশন করুন।",rollTaken:"এই ডিপার্টমেন্টে এই ক্লাস রোলে আগেই রিকোয়েস্ট এসেছে।",lockedN:"৫ বার ভুল হয়েছে। {n} মিনিট পরে আবার চেষ্টা করুন।",reqTitle:"মেসেজ রিকোয়েস্ট",reqNone2:"কোনো নতুন রিকোয়েস্ট নেই।",reqApprove:"অ্যাপ্রুভ",reqReject:"বাতিল",reqInList:"আইডি কার্ডের তালিকায় আছে",reqNotList:"তালিকায় নেই — বাইরের কেউ হতে পারে",reqRejectQ:"এই রিকোয়েস্ট বাতিল করবেন?",reqFail:"কাজটি হয়নি। আবার চেষ্টা করুন।",reqLoad:"লোড হচ্ছে…"});
+Object.assign(L.en,{nav_req:"Requests",rName:"Your name",rDept:"Department",rRoll:"Class roll",pickDept:"Select department",pickRoll:"Select class roll",fillAll:"Please fill in every field.",passShort:"Password must be at least 8 characters.",reqDoneT:"Your request has been sent",reqDoneB:"Your request has reached the admins. They will verify it and approve you very soon. You can log in after approval.",reqHome:"Go home",reqPending:"Waiting for approval. You can log in once a captain approves you.",reqRejected:"Your request was cancelled. Please contact your captain with the correct details.",reqNone:"No registration request was found for this account. Please register again.",rollTaken:"A request already exists for this class roll in this department.",lockedN:"Too many wrong attempts. Try again in {n} minutes.",reqTitle:"Message requests",reqNone2:"No new requests.",reqApprove:"Approve",reqReject:"Reject",reqInList:"Found in the ID-card list",reqNotList:"Not in the list — may be an outsider",reqRejectQ:"Reject this request?",reqFail:"That did not work. Please try again.",reqLoad:"Loading…"});
 const $=id=>document.getElementById(id);
 const ic=n=>`<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 const en=s=>s.replace(/[০-৯]/g,d=>"০১২৩৪৫৬৭৮৯".indexOf(d)).trim();
@@ -1054,7 +1081,8 @@ async function capShow(b){
 function buildBar(){
   const it=[["home","home","nav_home"],["notice","bell","nav_notice"],["res","book","nav_res"],["acct",LOGGED?"user":"login",LOGGED?"nav_me":"nav_login"]];
   if(LOGGED&&ME&&ME.role!=="student")it.splice(3,0,["adm","shield",ME.role==="super_admin"?"nav_sadm":"nav_cadm"]);
-  $("bar").innerHTML=it.map(i=>`<button data-v="${i[0]}"><i>${ic(i[1])}</i>${t(i[2])}</button>`).join("");
+  if(LOGGED&&REQ.ok)it.splice(it.length-1,0,["reqs","mail","nav_req"]);
+  $("bar").innerHTML=it.map(i=>`<button data-v="${i[0]}"><i>${ic(i[1])}</i>${t(i[2])}${i[0]==="reqs"&&REQ.n?`<em class="bdg">${REQ.n}</em>`:""}</button>`).join("");
   hi();
 }
 function hi(){const m={reg:"acct",login:"acct",me:"acct"}[CUR]||CUR;document.querySelectorAll("#bar button").forEach(b=>b.classList.toggle("on",b.dataset.v===m))}
@@ -1408,7 +1436,9 @@ document.addEventListener("click",e=>{
 });
 function show(v){
   if(v==="res"){$("gate").hidden=LOGGED;$("tiles").hidden=!LOGGED;$("tp").hidden=true;$("sl").hidden=true;$("sol").hidden=true;$("ex").hidden=true;$("syl").hidden=true}
-  CUR=v;["home","notice","res","about","dev","reg","login","me","adm"].forEach(x=>$(x).hidden=x!==v);hi();window.scrollTo(0,0);
+  CUR=v;["home","notice","res","about","dev","reg","login","me","adm","reqs"].forEach(x=>$(x).hidden=x!==v);hi();window.scrollTo(0,0);
+  if(v==="reg"){$("regForm").hidden=false;$("regDone").hidden=true}
+  if(v==="reqs")loadReqs();
 }
 function applyLang(){
   document.querySelectorAll("[data-ic]").forEach(e=>e.innerHTML=ic(e.dataset.ic));
@@ -1418,6 +1448,7 @@ function applyLang(){
   $("lang").textContent=lang==="bn"?"EN":"বাং";$("lang").title=lang==="bn"?"English":"বাংলা";
   drawAbout();
   $("rGender").innerHTML=`<option value="">${t("pick")}</option><option value="male">${t("male")}</option><option value="female">${t("female")}</option>`;
+  {const dv=$("rDept").value,rv=$("rRoll").value;$("rDept").innerHTML=`<option value="">${t("pickDept")}</option>`+["dental","physiotherapy","radiotherapy"].map(k=>`<option value="${k}">${t("d_"+k[0].toUpperCase()+k.slice(1))}</option>`).join("");$("rDept").value=dv;$("rRoll").innerHTML=`<option value="">${t("pickRoll")}</option>`+Array.from({length:80},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join("");$("rRoll").value=rv}
   buildBar();loadNotices();drawMe();if(ME&&ME.role!=="student"){setBoards();loadAdmin()}
   clsApply();loadHomeCls();
   if(!$("tp").hidden)drawTeachers();if(!$("sl").hidden)drawSlides();if(!$("sol").hidden)drawSol();if(!$("ex").hidden)drawEx();if(!$("syl").hidden)drawSyl();
@@ -1485,26 +1516,87 @@ async function refresh(go){
     ME=r.data;
     if(ME&&!go){const b=boardOf(ME.department);if(b)NB=b}
   }
+  await reqInit();
   applyLang();
   show(go||(LOGGED?CUR==="login"||CUR==="reg"?"me":CUR:CUR));
 }
 $("regForm").onsubmit=async e=>{
   e.preventDefault();const m=cleanMob($("rMob").value);
   if(!mobOk(m)){msg("regMsg","badMob",0);return}
+  const nm=$("rName").value.trim(),dp=$("rDept").value,rl=$("rRoll").value,gd=$("rGender").value,pw=$("rPass").value;
+  if(!nm||!dp||!rl||!gd){msg("regMsg","fillAll",0);return}
+  if(pw.length<8){msg("regMsg","passShort",0);return}
   msg("regMsg","wait",1);
-  const {data,error}=await sb.auth.signUp({email:mail(m),password:$("rPass").value,options:{data:{code:en($("rCode").value),gender:$("rGender").value,phone:m}}});
+  let {data,error}=await sb.auth.signUp({email:mail(m),password:pw,options:{data:{phone:m}}});
+  if(error&&/already/i.test(error.message||"")){
+    const x=await sb.auth.signInWithPassword({email:mail(m),password:pw});
+    if(x.error){msg("regMsg","errDup",0);return}
+    data={session:x.data.session};error=null;
+  }
   if(error){msg("regMsg",errKey(error,"reg"),0,error.message);return}
-  if(!data.session){msg("regMsg","regOk",1);return}
-  await claim();msg("regMsg","",1);await refresh("me");
+  if(!data||!data.session){msg("regMsg","regFail",0);return}
+  const uid=data.session.user.id;
+  const pr=await sb.from("profiles").select("id").eq("id",uid).maybeSingle();
+  if(pr.data){await sb.auth.signOut();localStorage.removeItem(SID);msg("regMsg","errDup",0);return}
+  const ins=await sb.from("registration_requests").insert({user_id:uid,full_name:nm,mobile:m,gender:gd,department:dp,class_roll:+rl});
+  await sb.auth.signOut();localStorage.removeItem(SID);
+  if(ins.error){
+    const em=(ins.error.message||"")+(ins.error.details||"");
+    if(/user_id/.test(em)){msg("regMsg","",1);$("regForm").hidden=true;$("regDone").hidden=false;return}
+    if(/uq_req_roll/.test(em)){msg("regMsg","rollTaken",0);return}
+    if(/uq_req_mobile/.test(em)){msg("regMsg","errDup",0);return}
+    msg("regMsg","regFail",0,ins.error.message);return;
+  }
+  msg("regMsg","",1);$("regForm").hidden=true;$("regDone").hidden=false;window.scrollTo(0,0);
 };
 $("logForm").onsubmit=async e=>{
   e.preventDefault();msg("logMsg","wait",1);
   const v=$("lMob").value.trim(),m=cleanMob(v);
-  const email=v.includes("@")?v:mail(m);
-  const {error}=await sb.auth.signInWithPassword({email,password:$("lPass").value});
-  if(error){msg("logMsg",errKey(error,"log"),0,error.message);return}
+  const email=v.includes("@")?v:mail(m),key=v.includes("@")?null:m;
+  if(key){
+    try{const b=await sb.rpc("login_blocked",{p_mobile:key});
+      if(!b.error&&b.data>0){const el=$("logMsg");el.textContent=t("lockedN").replace("{n}",b.data);el.className="msg bad";return}}catch(x){}
+  }
+  const {data:ld,error}=await sb.auth.signInWithPassword({email,password:$("lPass").value});
+  if(error){
+    if(key&&/invalid login/i.test(error.message||""))try{await sb.rpc("login_record",{p_mobile:key,p_success:false})}catch(x){}
+    msg("logMsg",errKey(error,"log"),0,error.message);return
+  }
+  const pr=await sb.from("profiles").select("id").eq("id",ld.user.id).maybeSingle();
+  if(!pr.data){
+    const st=await sb.rpc("my_request_status");
+    await sb.auth.signOut();localStorage.removeItem(SID);
+    msg("logMsg",st.data==="rejected"?"reqRejected":st.data==="pending"?"reqPending":"reqNone",0);return
+  }
+  if(key)try{await sb.rpc("login_record",{p_mobile:key,p_success:true})}catch(x){}
   await claim();msg("logMsg","",1);await refresh("me");
 };
+/* ---- ক্যাপ্টেন/অ্যাডমিনের মেসেজ রিকোয়েস্ট ---- */
+async function reqInit(){REQ.ok=false;REQ.n=0;if(!LOGGED)return;try{const a=await sb.rpc("i_can_review");REQ.ok=a.data===true;if(REQ.ok)await reqCount(true)}catch(x){}}
+async function reqCount(q){if(!REQ.ok)return;try{const r=await sb.from("pending_requests_view").select("id",{count:"exact",head:true}).eq("status","pending");const n=r.count||0;if(n!==REQ.n){REQ.n=n;if(!q)buildBar()}}catch(x){}}
+setInterval(()=>{if(LOGGED&&REQ.ok)reqCount()},60000);
+async function loadReqs(){
+  const box=$("reqList");if(!REQ.ok){box.innerHTML="";return}
+  box.innerHTML=`<p class="mute">${t("reqLoad")}</p>`;
+  const r=await sb.from("pending_requests_view").select("id,full_name,mobile,gender,department,class_roll,in_directory,created_at").eq("status","pending").order("created_at",{ascending:true});
+  if(r.error){box.innerHTML=`<p class="mute">${t("reqFail")}</p>`;return}
+  REQ.n=r.data.length;buildBar();
+  if(!r.data.length){box.innerHTML=`<p class="mute">${t("reqNone2")}</p>`;return}
+  box.innerHTML=r.data.map(q=>`<div class="rq" data-id="${esc(q.id)}"><b>${esc(q.full_name)}</b>
+<div class="rqm"><span>${esc(t("d_"+q.department[0].toUpperCase()+q.department.slice(1)))}</span><span>${t("rRoll")}: ${esc(q.class_roll)}</span><span>${esc(t(q.gender))}</span><span><a href="tel:${esc(q.mobile)}">${esc(q.mobile)}</a></span><span>${esc(dateS(q.created_at))}</span></div>
+<div class="${q.in_directory?"okl":"badl"}">${q.in_directory?"✔ "+t("reqInList"):"⚠ "+t("reqNotList")}</div>
+<div class="rqb"><button type="button" class="ap" data-d="approved">${t("reqApprove")}</button><button type="button" class="rj" data-d="rejected">${t("reqReject")}</button></div></div>`).join("");
+}
+$("reqList").addEventListener("click",async e=>{
+  const b=e.target.closest("button[data-d]");if(!b)return;
+  const card=b.closest(".rq"),d=b.dataset.d;
+  if(d==="rejected"&&!confirm(t("reqRejectQ")))return;
+  card.querySelectorAll("button").forEach(x=>x.disabled=true);
+  const r=await sb.rpc("review_request",{req_id:card.dataset.id,decision:d});
+  if(r.error){alert(t("reqFail")+"\n("+r.error.message+")");card.querySelectorAll("button").forEach(x=>x.disabled=false);return}
+  card.remove();REQ.n=Math.max(0,REQ.n-1);buildBar();
+  if(!$("reqList").querySelector(".rq"))$("reqList").innerHTML=`<p class="mute">${t("reqNone2")}</p>`;
+});
 $("out2").onclick=async()=>{await sb.auth.signOut();localStorage.removeItem(SID);await refresh("home")};
 async function loadAdmin(){
   const {data}=await sb.from("notices").select("id,title,body,board,is_emergency,created_at").order("created_at",{ascending:false}).limit(20);
